@@ -1,0 +1,86 @@
+@startuml
+skinparam componentStyle rectangle
+allow_mixing
+artifact config.yaml
+
+package Core {
+  class Ticket {
+  id
+  attrs
+  subject
+  body
+  }
+  class ConfigManager
+  class Scheduler
+  class Orchestrator
+
+  ConfigManager --> HandlerFactory : loads "models" section
+  ConfigManager --> ProviderFactory : loads "providers" section
+  ConfigManager --> AdapterFactory  : loads "adapters" section
+}
+
+package "ATC Integration" {
+  interface TicketAdapter {
+  + fetch(...);
+  + update(...)
+  }
+  class AdapterFactory
+  class OTOBOAdapter
+  class FreshdeskAdapter
+
+  AdapterFactory --> TicketAdapter : builds
+}
+
+package DataProviders {
+  interface DataProvider {
+  + get_data(ticket): Map
+  }
+  class TicketFieldsProvider
+  class CommentHistoryProvider
+  class CustomerProfileProvider
+
+  TicketFieldsProvider --> ProviderFactory : register("ticket_fields")
+  CommentHistoryProvider --> ProviderFactory : register("comment_history")
+  CustomerProfileProvider --> ProviderFactory : register("customer_profile")
+}
+
+package "AI Models" {
+  interface BaseAIModel {
+  + predict(inputs): Any
+   }
+  abstract class BaseDataPreparer {
+   + prepare(data): Map
+   }
+
+  class SubjectBodyPreparer
+  class QueueModel
+
+  SubjectBodyPreparer --> PreparerRegistry : register("subject_body")
+  QueueModel         --> ModelRegistry     : register("queue_classification")
+}
+
+package Handlers {
+  abstract class BaseModelHandler {
+    + process(ticket): void
+  }
+  class QueueClassificationHandler
+  class SentimentHandler
+
+  QueueClassificationHandler --> HandlerRegistry : register("queue_classification")
+  SentimentHandler           --> HandlerRegistry : register("sentiment_analysis")
+
+  BaseModelHandler --> DataProvider
+  BaseModelHandler --> BaseDataPreparer
+  BaseModelHandler --> BaseAIModel
+  BaseModelHandler --> TicketAdapter
+}
+
+' Workflow
+Orchestrator --> HandlerFactory        : getHandler("queue_classification")
+Orchestrator --> BaseModelHandler      : process(ticket)
+BaseModelHandler --> DataProvider      : get_data(...)
+BaseModelHandler --> BaseDataPreparer  : prepare(...)
+BaseModelHandler --> BaseAIModel       : predict(...)
+BaseModelHandler --> TicketAdapter     : update(...)
+
+@enduml
