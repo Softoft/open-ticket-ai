@@ -5,7 +5,7 @@ from src.ce.run.classification.ticket_classifier import TicketClassifier
 # Pass your token directly
 login(token="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")
 if __name__ == '__main__':
-    tc = TicketClassifier("Tobi-Bueck/atc-queue-model", "Tobi-Bueck/atc-priority-model")
+    tc = TicketClassifier("Tobi-Bueck/atc-queue-attribute_predictor_id", "Tobi-Bueck/atc-priority-attribute_predictor_id")
 
     # Your dynamic (or manual) QUEUE_MAP & PRIORITY_MAP
     QUEUE_MAP = {

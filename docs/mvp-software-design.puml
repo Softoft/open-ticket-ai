@@ -1,25 +1,23 @@
 @startuml
 skinparam componentStyle rectangle
 allow_mixing
-artifact config.yaml
 
 package Core {
-  class Ticket {
-  id
-  attrs
-  subject
-  body
-  }
   class ConfigManager
   class Scheduler
   class Orchestrator
 
-  ConfigManager --> HandlerFactory : loads "models" section
-  ConfigManager --> ProviderFactory : loads "providers" section
-  ConfigManager --> AdapterFactory  : loads "adapters" section
+  ' Injection Container / Registry
+  class DIContainer{
+    + register<T>(name: str, instance: T): void
+    + resolve<T>(name: str): T
+  }
+
+  Scheduler ..> Orchestrator: "schedules"
+
 }
 
-package "ATC Integration" {
+package Integration {
   interface TicketAdapter {
   + fetch(...);
   + update(...)
@@ -31,56 +29,80 @@ package "ATC Integration" {
   AdapterFactory --> TicketAdapter : builds
 }
 
-package DataProviders {
-  interface DataProvider {
+package DataFetchers {
+  interface DataFetcher {
   + get_data(ticket): Map
   }
-  class TicketFieldsProvider
-  class CommentHistoryProvider
-  class CustomerProfileProvider
 
-  TicketFieldsProvider --> ProviderFactory : register("ticket_fields")
-  CommentHistoryProvider --> ProviderFactory : register("comment_history")
-  CustomerProfileProvider --> ProviderFactory : register("customer_profile")
+  class BaseTicket{
+    + id: str
+    + attrs: Map
+  }
+
+  class SimpleTicket extends BaseTicket {
+    + subject: str
+    + body: str
+  }
+
+
+  class SimpleTicketProvider implements DataFetcher {
+    + get_data(filter): SimpleTicket
+    + get_one_by(q_id: str): SimpleTicket
+  }
+}
+
+package DataPreparers{
+    interface BaseDataPreparer {
+        + prepare(): Tokens
+    }
+
+    class SubjectBodyPreparer implements BaseDataPreparer
+
 }
 
 package "AI Models" {
   interface BaseAIModel {
-  + predict(inputs): Any
-   }
-  abstract class BaseDataPreparer {
-   + prepare(data): Map
+    + predict(inputs): Any
    }
 
-  class SubjectBodyPreparer
-  class QueueModel
-
-  SubjectBodyPreparer --> PreparerRegistry : register("subject_body")
-  QueueModel         --> ModelRegistry     : register("queue_classification")
-}
-
-package Handlers {
-  abstract class BaseModelHandler {
-    + process(ticket): void
+  class HuggingFaceModel implements BaseAIModel {
+    + predict(inputs): str
   }
-  class QueueClassificationHandler
-  class SentimentHandler
 
-  QueueClassificationHandler --> HandlerRegistry : register("queue_classification")
-  SentimentHandler           --> HandlerRegistry : register("sentiment_analysis")
+  class InferenceAPIModel implements BaseAIModel {
+    + predict(inputs): str
+  }
 
-  BaseModelHandler --> DataProvider
-  BaseModelHandler --> BaseDataPreparer
-  BaseModelHandler --> BaseAIModel
-  BaseModelHandler --> TicketAdapter
 }
 
-' Workflow
-Orchestrator --> HandlerFactory        : getHandler("queue_classification")
-Orchestrator --> BaseModelHandler      : process(ticket)
-BaseModelHandler --> DataProvider      : get_data(...)
-BaseModelHandler --> BaseDataPreparer  : prepare(...)
-BaseModelHandler --> BaseAIModel       : predict(...)
-BaseModelHandler --> TicketAdapter     : update(...)
+package Modifiers{
+
+    interface Modifier {
+        + modify(ticket_id: str, model_result: str | int): void
+    }
+    class TicketQueueModifier implements Modifier
+    class TicketPriorityModifier implements Modifier
+
+}
+
+class AttributePredictor
+
+AttributePredictor *-- "AI Models"
+AttributePredictor *-- DataPreparers
+AttributePredictor *-- Modifiers
+
+DataPreparers *-- DataFetcher
+
+DataFetcher .-down...> TicketAdapter : "uses"
+Modifier .-right.> TicketAdapter : "uses"
+
+Orchestrator *-- "n" AttributePredictor : "manages"
+
+DIContainer --> ConfigManager : "provides"
+
+
+"AI Models" ...> DIContainer : "registered in"
+
+DataPreparers ...> DIContainer : "registered in"
 
 @enduml

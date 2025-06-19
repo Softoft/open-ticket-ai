@@ -1,0 +1,80 @@
+open_ticket_ai:
+  hf_token_env_var: "HUGGINGFACE_TOKEN"
+
+  # only one ticket‐system_id adapter
+  system:
+    name: otobo
+    type: basic_otobo_adapter
+    params:
+      base_url: "https://your-otobo-instance.com"
+      username: "your_username"
+      password_env_var: "OTOBOPASS"
+  fetchers:
+    - id: basic_ticket
+      type: basic_ticket_fetcher
+      filters:
+        - attribute: "queue"
+          value: "incoming_queue"
+
+  data_preparers:
+    - id: subject_body
+      type: subject_body_preparer
+      params:
+        subject_field: "subject"
+        body_field: "body"
+        repeat_subject: 3
+
+  models:
+    - id: queue_model
+      type: simple_hf_classifier
+      params:
+        hf_model: "open-ticket-ai/queue-classification-german-bert"
+
+    - id: priority_model
+      type: simple_hf_classifier
+      params:
+        hf_model: "open-ticket-ai/priority-classification-german-bert"
+
+  modifiers:
+    - id: queue_updater
+      type: basic_ticket_queue_modifier
+      params:
+        confidence_threshold: 0.8
+        low_confidence_value: "unclassified"
+    - id: priority_updater
+      type: basic_ticket_priority_modifier
+      params:
+        confidence_threshold: 0.6
+        low_confidence_value: 3
+
+  attribute_predictors:
+    - id: queue_classification
+      type: queue_classification_handler
+      fetcher_id: basic_ticket
+      preparer_id: subject_body
+      model_id: queue_model
+      modifier_id: queue_updater
+      params:
+        ticket_system_value2model_values:
+          otobo_queue1:
+            - "IT & Technology/Security Operations"
+          otobo_queue2:
+            - "IT & Technology/Software Development"
+          research_development:
+            - "Science/*"
+          misc:
+            - "*"
+
+    - id: priority_classification
+      type: priority_classification_handler
+      fetcher_id: basic_ticket
+      preparer_id: subject_body
+      model_id: priority_model
+      modifier_id: queue_updater
+      params:
+        ticket_system_value2model_values:
+          1: [ 1 ]
+          2: [ 2 ]
+          3: [ 3 ]
+          4: [ 4 ]
+          5: [ 5 ]
