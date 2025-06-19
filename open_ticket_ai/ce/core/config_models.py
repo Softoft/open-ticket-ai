@@ -1,44 +1,41 @@
-import os
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Callable, Self
 
 import yaml
-from pydantic import BaseModel, Field, HttpUrl, field_validator, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
-from registry import does_registry_contain
-
-
-class SystemConfig(BaseModel):
-    name: str = Field(..., min_length=1)
-    base_url: HttpUrl
-    username: str = Field(..., min_length=1)
-    password_env_var: str = Field(..., min_length=1)
-    incoming_queue: str = Field(..., min_length=1)
-
-    @classmethod
-    @field_validator("type", mode="after")
-    def validate_adapter_type(cls, v: str) -> str:
-        if not does_registry_contain(v):
-            raise ValueError(f"Adapter '{v}' is not registered")
-        return v
+from open_ticket_ai.ce.core import registry
 
 
-class RegistryInstanceConfig(BaseModel):
-    id: str = Field(..., min_length=1)
+# noinspection PyNestedDecorators
+class RegistryValidationMixin(BaseModel):
+    # point to the real registry by default
+    _registry_check = staticmethod(registry.does_registry_contain)
+
     type: str = Field(..., min_length=1)
-    params: Dict[str, Any] = Field(default_factory=dict)
+
+    @field_validator("type", mode="after")
+    @classmethod
+    def validate_registry_type(cls, v: str) -> str:
+        if not cls._registry_check(v):
+            raise ValueError(f"Type '{v}' is not registered")
+        return v
 
     @classmethod
-    @field_validator("type", mode="after")
-    def validate_preparer_type(cls, v: str) -> str:
-        if not does_registry_contain(v):
-            raise ValueError(f"Preparer '{v}' is not registered")
-        return v
+    def _set_registry_check(cls, fn: Callable[[str], bool]):
+        cls._registry_check = staticmethod(fn)
+
+
+class SystemConfig(RegistryValidationMixin):
+    params: dict[str, Any] = Field(default_factory=dict)
+
+
+class RegistryInstanceConfig(RegistryValidationMixin):
+    id: str = Field(..., min_length=1)
+    params: dict[str, Any] = Field(default_factory=dict)
 
 
 class FetcherConfig(RegistryInstanceConfig):
-    interval_secs: int = Field(..., gt=0)
-    filters: List[Dict[str, Any]] = Field(default_factory=list)
-    limit: int = Field(..., ge=1)
+    pass
 
 
 class PreparerConfig(RegistryInstanceConfig):
@@ -53,42 +50,47 @@ class ModelSpec(RegistryInstanceConfig):
     pass
 
 
+class SchedulerConfig(BaseModel):
+    interval: int = Field(..., ge=1, description="Interval for the scheduler to run")
+    unit: str = Field(..., min_length=1,
+                      description="Unit of time for the interval (e.g., 'seconds', 'minutes', 'hours')")
+
+
 class AttributePredictors(RegistryInstanceConfig):
     fetcher_id: str = Field(..., min_length=1)
     preparer_id: str = Field(..., min_length=1)
-    attribute_predictor_id: ModelSpec
+    model_id: str = Field(..., min_length=1, description="ID of the model to use for prediction")
     modifier_id: str = Field(..., min_length=1)
     output_attr: str = Field(..., min_length=1)
-    mapping: Dict[str, List[Any]] = Field(default_factory=dict)
+    params: Dict[str, Any] = Field(default_factory=dict)
 
 
+# noinspection PyNestedDecorators
 class OpenTicketAIConfig(BaseModel):
-    hf_token_env_var: str = Field(..., min_length=1)
-    system: SystemConfig
-    fetchers: List[FetcherConfig] = Field(..., min_length=1)
-    data_preparers: List[PreparerConfig] = Field(..., min_length=1)
-    modifiers: List[ModifierConfig] = Field(..., min_length=1)
-    attribute_predictors: List[AttributePredictors] = Field(..., min_length=1)
+    system: SystemConfig = Field(..., description="System configuration")
+    fetchers: list[FetcherConfig] = Field(..., min_length=1)
+    data_preparers: list[PreparerConfig] = Field(..., min_length=1)
+    models: list[ModelSpec] = Field(..., min_length=1)
+    modifiers: list[ModifierConfig] = Field(..., min_length=1)
+    attribute_predictors: list[AttributePredictors] = Field(..., min_length=1)
 
-    @property
-    def hf_token(self) -> str:
-        return os.getenv(self.hf_token_env_var)
+    @model_validator(mode='after')
+    def cross_validate_references(self) -> Self:
+        fetcher_ids = {f.id for f in self.fetchers}
+        preparer_ids = {p.id for p in self.data_preparers}
+        model_ids = {m.id for m in self.models}
+        modifier_ids = {m.id for m in self.modifiers}
 
-    @classmethod
-    @model_validator(mode="after")
-    def cross_validate_references(cls, values: Dict[str, Any]) -> Dict[str, Any]:
-        fetcher_ids = {f.id for f in values.get("fetchers", [])}
-        preparer_ids = {p.id for p in values.get("data_preparers", [])}
-        modifier_ids = {m.id for m in values.get("modifiers", [])}
-
-        for feature in values["attribute_predictors"]:
-            if feature.fetcher_id not in fetcher_ids:
-                raise ValueError(f"Feature '{feature.id}' refs unknown fetcher '{feature.fetcher_id}'")
-            if feature.preparer_id not in preparer_ids:
-                raise ValueError(f"Feature '{feature.id}' refs unknown preparer '{feature.preparer_id}'")
-            if feature.modifier_id not in modifier_ids:
-                raise ValueError(f"Feature '{feature.id}' refs unknown modifier '{feature.modifier_id}'")
-        return values
+        for attribute_predictor in self.attribute_predictors:
+            if attribute_predictor.fetcher_id not in fetcher_ids:
+                raise ValueError(f"attribute_predictor '{attribute_predictor.id}' refs unknown fetcher '{attribute_predictor.fetcher_id}'")
+            if attribute_predictor.preparer_id not in preparer_ids:
+                raise ValueError(f"attribute_predictor '{attribute_predictor.id}' refs unknown preparer '{attribute_predictor.preparer_id}'")
+            if attribute_predictor.model_id not in model_ids:
+                raise ValueError(f"attribute_predictor '{attribute_predictor.id}' refs unknown model '{attribute_predictor.model_id}'")
+            if attribute_predictor.modifier_id not in modifier_ids:
+                raise ValueError(f"attribute_predictor '{attribute_predictor.id}' refs unknown modifier '{attribute_predictor.modifier_id}'")
+        return self
 
 
 def load_config(path: str) -> OpenTicketAIConfig:
