@@ -5,7 +5,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 class BaseClassifier:
     """
     Shared logic for combining text, tokenizing, and running a HF sequence-classifier.
-    Subclasses only need to pass in their own model name.
+    Subclasses only need to pass in their own attribute_predictor_id name.
     """
     def __init__(
         self,
