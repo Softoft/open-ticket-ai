@@ -5,7 +5,7 @@ import pytest
 from pydantic import ValidationError
 
 from open_ticket_ai.ce.core import registry, config_models
-from open_ticket_ai.ce.core.config_models import RegistryValidationMixin
+from open_ticket_ai.ce.core.mixins.registry_validation_mixin import Registerable
 
 
 def make_minimal_config_dict():
@@ -15,88 +15,49 @@ def make_minimal_config_dict():
     """
     return {
         "system": {
-            "type": "dummy_sys",
+            "provider_key": "dummy_sys",
             "params": {}
         },
         "fetchers": [
             {
                 "id": "fetch1",
-                "type": "dummy_fetcher",
+                "provider_key": "dummy_fetcher",
                 "params": {}
             }
         ],
         "data_preparers": [
             {
                 "id": "prep1",
-                "type": "dummy_preparer",
+                "provider_key": "dummy_preparer",
                 "params": {}
             }
         ],
-        "models": [
+        "ai_inference_services": [
             {
                 "id": "model1",
-                "type": "dummy_model",
+                "provider_key": "dummy_model",
                 "params": {}
             }
         ],
         "modifiers": [
             {
                 "id": "mod1",
-                "type": "dummy_modifier",
+                "provider_key": "dummy_modifier",
                 "params": {}
             }
         ],
         "attribute_predictors": [
             {
                 "id": "pred1",
-                "type": "dummy_predictor",
+                "provider_key": "dummy_predictor",
                 "fetcher_id": "fetch1",
                 "preparer_id": "prep1",
-                "model_id": "model1",
+                "ai_inference_service_id": "model1",
                 "modifier_id": "mod1",
-                "output_attr": "some_field",
                 "params": {}
             }
         ]
     }
-
-
-# ─── RegistryValidationMixin via SystemConfig ──────────────────────────────────────────
-
-def test_systemconfig_allows_registered_type():
-    RegistryValidationMixin._set_registry_check(lambda v: v == "ok_sys")
-    sc = config_models.SystemConfig(type="ok_sys", params={"foo": 1})
-    assert sc.type == "ok_sys"
-    assert sc.params == {"foo": 1}
-
-
-def test_systemconfig_rejects_unregistered():
-    RegistryValidationMixin._set_registry_check(lambda v: False)
-    with pytest.raises(ValidationError) as exc:
-        config_models.SystemConfig(type="bad", params={})
-    assert "Type 'bad' is not registered" in str(exc.value)
-
-
-# ─── RegistryInstanceConfig subclasses ────────────────────────────────────────────────
-
-@pytest.mark.parametrize("cls_name", [
-    "FetcherConfig",
-    "PreparerConfig",
-    "ModifierConfig",
-    "ModelSpec",
-])
-def test_registry_instance_config_types(cls_name):
-    cls = getattr(config_models, cls_name)
-    # only 'good' passes
-    RegistryValidationMixin._set_registry_check(lambda v: v == "good")
-    inst = cls(id="i1", type="good", params={"a": True})
-    assert inst.id == "i1"
-    assert inst.type == "good"
-
-    # 'bad' should be rejected
-    with pytest.raises(ValidationError) as exc:
-        cls(id="i1", type="bad", params={})
-    assert "Type 'bad' is not registered" in str(exc.value)
 
 
 # ─── SchedulerConfig validation ────────────────────────────────────────────────────────
@@ -118,21 +79,9 @@ def test_schedulerconfig_invalid_unit():
         config_models.SchedulerConfig(interval=5, unit="")
 
 
-# ─── AttributePredictors missing/extra fields ───────────────────────────────────────────
-
-def test_attribute_predictor_requires_output_attr():
-    RegistryValidationMixin._set_registry_check(lambda v: True)
-    cfg = make_minimal_config_dict()
-    # remove required output_attr
-    del cfg["attribute_predictors"][0]["output_attr"]
-    with pytest.raises(ValidationError) as exc:
-        config_models.OpenTicketAIConfig(**cfg)
-    # note capital "Field required"
-    assert "Field required" in str(exc.value)
 
 
 def test_attribute_predictor_params_default():
-    RegistryValidationMixin._set_registry_check(lambda v: True)
     cfg = make_minimal_config_dict()
     # omit params → should default to {}
     del cfg["attribute_predictors"][0]["params"]
@@ -143,7 +92,6 @@ def test_attribute_predictor_params_default():
 # ─── cross_validate_references ────────────────────────────────────────────────────────
 
 def test_cross_validate_references_success():
-    RegistryValidationMixin._set_registry_check(lambda v: True)
     cfg = make_minimal_config_dict()
     otc = config_models.OpenTicketAIConfig(**cfg)
     assert otc.fetchers[0].id == "fetch1"
@@ -156,7 +104,6 @@ def test_cross_validate_references_success():
     ("modifier_id", "Z", "unknown modifier"),
 ])
 def test_cross_validate_references_failure(field, bad, errmsg):
-    RegistryValidationMixin._set_registry_check(lambda v: True)
     cfg = make_minimal_config_dict()
     cfg["attribute_predictors"][0][field] = bad
     # The model_validator raises a plain ValueError
@@ -171,7 +118,6 @@ def test_cross_validate_references_failure(field, bad, errmsg):
     "fetchers", "data_preparers", "modifiers", "attribute_predictors"
 ])
 def test_open_ticket_ai_empty_list_fails(list_name):
-    RegistryValidationMixin._set_registry_check(lambda v: True)
     cfg = make_minimal_config_dict()
     cfg[list_name] = []
     with pytest.raises(ValidationError):
@@ -195,6 +141,5 @@ def test_load_config_success(tmp_path):
 
     loaded = config_models.load_config(str(path))
     assert isinstance(loaded, config_models.OpenTicketAIConfig)
-    assert loaded.system.type == "dummy_sys"
+    assert loaded.system.provider_key == "dummy_sys"
     assert loaded.fetchers[0].id == "fetch1"
-    assert loaded.attribute_predictors[0].output_attr == "some_field"

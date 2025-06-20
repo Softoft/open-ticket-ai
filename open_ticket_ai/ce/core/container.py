@@ -1,24 +1,18 @@
 import os
-from typing import Any
 
-from injector import Injector, Module, Binder, singleton
+from injector import Injector, Module, Binder, singleton, provider
 
 from open_ticket_ai.ce.core.config_models import OpenTicketAIConfig, load_config
-# Registries
-from open_ticket_ai.ce.core.registry import (
-    TICKET_SYSTEM_ADAPTER_REGISTRY,
-    FETCHER_REGISTRY,
-    PREPARER_REGISTRY,
-    MODEL_REGISTRY,
-    ATTRIBUTE_PREDICTOR_REGISTRY,
-    MODIFIER_REGISTRY,
-)
+from open_ticket_ai.ce.core.config_validator import OpenTicketAIConfigValidator
+from open_ticket_ai.ce.core.create_registry import create_registry
+from open_ticket_ai.ce.core.registry import Registry
 from open_ticket_ai.ce.core.util.path_util import find_project_root
+from open_ticket_ai.ce.run.ai_models.ai_inference_service import AIInferenceService
 from open_ticket_ai.ce.run.attribute_predictors.attribute_predictor import AttributePredictor
-# Base interfaces
 from open_ticket_ai.ce.run.fetchers.data_fetcher import DataFetcher
 from open_ticket_ai.ce.run.modifiers.modifier import Modifier
 from open_ticket_ai.ce.run.preparers.data_preparer import DataPreparer
+from open_ticket_ai.ce.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 
 CONFIG_PATH = os.getenv('OPEN_TICKET_AI_CONFIG', find_project_root() / 'config.yml')
 
@@ -30,80 +24,63 @@ class AppModule(Module):
 
     def configure(self, binder: Binder):
         open_ticket_ai_config = load_config(CONFIG_PATH)
+        registry = create_registry()
         binder.bind(OpenTicketAIConfig, to=open_ticket_ai_config, scope=singleton)
+        binder.bind(Registry, to=registry, scope=singleton)
+
+    @provider
+    @singleton
+    def provide_validator(
+            self,
+            config: OpenTicketAIConfig,
+            registry: Registry
+    ) -> OpenTicketAIConfigValidator:
+        return OpenTicketAIConfigValidator(config, registry)
 
 
-class DIContainer:
-    """
-    Simplified DI container using Injector for config+object construction.
-    Components are resolved directly from registries without dynamic imports.
-    """
-
+class DIContainer(Injector):
     def __init__(self):
-        self.injector = Injector([AppModule()])
-        # pre-load config
-        self.config: OpenTicketAIConfig = self.injector.get(OpenTicketAIConfig)
+        super().__init__([AppModule()])
+        self.config: OpenTicketAIConfig = self.get(OpenTicketAIConfig)
+        self.registry = self.get(Registry)
 
-    def get_system(self):
+    def get_system(self) -> TicketSystemAdapter:
         """
         Get the system configuration.
         """
-        return self.injector.create_object(TICKET_SYSTEM_ADAPTER_REGISTRY[self.config.system.type])
+        return self.create_object(self.registry.get(self.config.system.provider_key, TicketSystemAdapter))
 
     def get_fetcher(self, fetcher_key: str) -> DataFetcher:
         try:
-            fetcher_class = FETCHER_REGISTRY[fetcher_key]
+            fetcher_class = self.registry.get(fetcher_key, DataFetcher)
         except KeyError:
             raise KeyError(f"Unknown fetcher key: {fetcher_key}")
-        return self.injector.create_object(fetcher_class)
+        return self.create_object(fetcher_class)
 
     def get_preparer(self, preparer_key: str) -> DataPreparer:
         try:
-            preparer_class = PREPARER_REGISTRY[preparer_key]
+            preparer_class = self.registry.get(preparer_key, DataPreparer)
         except KeyError:
             raise KeyError(f"Unknown preparer key: {preparer_key}")
-        return self.injector.create_object(preparer_class)
+        return self.create_object(preparer_class)
 
-    def get_ai_model(self, model_key: str) -> Any:
+    def get_ai_inference_service(self, model_key: str) -> AIInferenceService:
         try:
-            ai_model_class = MODEL_REGISTRY[model_key]
+            ai_model_class = self.registry.get(model_key, AIInferenceService)
         except KeyError:
             raise KeyError(f"Unknown model key: {model_key}")
-        return self.injector.create_object(ai_model_class)
+        return self.create_object(ai_model_class)
 
     def get_modifier(self, modifier_key: str) -> Modifier:
         try:
-            modifier_class = MODIFIER_REGISTRY[modifier_key]
+            modifier_class = self.registry.get(modifier_key, Modifier)
         except KeyError:
             raise KeyError(f"Unknown modifier key: {modifier_key}")
-        return self.injector.create_object(modifier_class)
+        return self.create_object(modifier_class)
 
     def get_predictor(self, predictor_key: str) -> AttributePredictor:
         try:
-            predictor_class = ATTRIBUTE_PREDICTOR_REGISTRY[predictor_key]
+            predictor_class = self.registry.get(predictor_key, AttributePredictor)
         except KeyError:
             raise KeyError(f"Unknown predictor key: {predictor_key}")
-        return self.injector.create_object(predictor_class)
-
-
-# Example usage
-if __name__ == '__main__':
-    container = DIContainer()
-    cfg = container.config
-    print('Configured system:', cfg.system.id)
-
-    # Instantiate all registered components
-    for key, cls in FETCHER_REGISTRY.items():
-        print('Fetcher:', key, '->', container.get_fetcher(key))
-
-    for key, cls in PREPARER_REGISTRY.items():
-        print('Preparer:', key, '->', container.get_preparer(key))
-
-    for key, cls in MODEL_REGISTRY.items():
-        print('Model:', key, '->', container.get_ai_model(key))
-
-    for key, cls in MODIFIER_REGISTRY.items():
-        print('Modifier:', key, '->', container.get_modifier(key))
-
-    for key, cls in ATTRIBUTE_PREDICTOR_REGISTRY.items():
-        print('Predictor:', key, '->', container.get_predictor(key))
+        return self.create_object(predictor_class)

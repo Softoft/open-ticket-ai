@@ -4,7 +4,6 @@ allow_mixing
 
 package Core {
   class ConfigManager
-  class Scheduler
   class Orchestrator
 
   ' Injection Container / Registry
@@ -13,7 +12,6 @@ package Core {
     + resolve<T>(name: str): T
   }
 
-  Scheduler ..> Orchestrator: "schedules"
 
 }
 

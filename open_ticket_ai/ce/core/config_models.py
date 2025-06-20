@@ -1,39 +1,16 @@
-from typing import Any, Dict, Callable, Self
+from typing import Any, Dict, Self
 
 import yaml
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, model_validator
 
-from open_ticket_ai.ce.core import registry
-
-
-# noinspection PyNestedDecorators
-class RegistryValidationMixin(BaseModel):
-    # point to the real registry by default
-    _registry_check = staticmethod(registry.does_registry_contain)
-    _get_registry_types_descriptions = staticmethod(registry.get_registry_types_descriptions)
-
-    type: str = Field(..., min_length=1)
-
-    @field_validator("type", mode="after")
-    @classmethod
-    def validate_registry_type(cls, v: str) -> str:
-        if not cls._registry_check(v):
-            raise ValueError(f"""
-            Type '{v}' is not registered
-            Available types: {', '.join(cls._get_registry_types_descriptions())}
-            """)
-        return v
-
-    @classmethod
-    def _set_registry_check(cls, fn: Callable[[str], bool]):
-        cls._registry_check = staticmethod(fn)
+from open_ticket_ai.ce.core.mixins.registry_validation_mixin import Registerable
 
 
-class SystemConfig(RegistryValidationMixin):
+class SystemConfig(Registerable):
     params: dict[str, Any] = Field(default_factory=dict)
 
 
-class RegistryInstanceConfig(RegistryValidationMixin):
+class RegistryInstanceConfig(Registerable):
     id: str = Field(..., min_length=1)
     params: dict[str, Any] = Field(default_factory=dict)
 
@@ -50,7 +27,7 @@ class ModifierConfig(RegistryInstanceConfig):
     pass
 
 
-class ModelSpec(RegistryInstanceConfig):
+class AIInferenceServiceConfig(RegistryInstanceConfig):
     pass
 
 
@@ -60,12 +37,11 @@ class SchedulerConfig(BaseModel):
                       description="Unit of time for the interval (e.g., 'seconds', 'minutes', 'hours')")
 
 
-class AttributePredictors(RegistryInstanceConfig):
+class AttributePredictorsConfig(RegistryInstanceConfig):
     fetcher_id: str = Field(..., min_length=1)
     preparer_id: str = Field(..., min_length=1)
-    model_id: str = Field(..., min_length=1, description="ID of the model to use for prediction")
+    ai_inference_service_id: str = Field(..., min_length=1, description="ID of the model to use for prediction")
     modifier_id: str = Field(..., min_length=1)
-    output_attr: str = Field(..., min_length=1)
     params: Dict[str, Any] = Field(default_factory=dict)
 
 
@@ -74,15 +50,15 @@ class OpenTicketAIConfig(BaseModel):
     system: SystemConfig = Field(..., description="System configuration")
     fetchers: list[FetcherConfig] = Field(..., min_length=1)
     data_preparers: list[PreparerConfig] = Field(..., min_length=1)
-    models: list[ModelSpec] = Field(..., min_length=1)
+    ai_inference_services: list[AIInferenceServiceConfig] = Field(..., min_length=1)
     modifiers: list[ModifierConfig] = Field(..., min_length=1)
-    attribute_predictors: list[AttributePredictors] = Field(..., min_length=1)
+    attribute_predictors: list[AttributePredictorsConfig] = Field(..., min_length=1)
 
     @model_validator(mode='after')
     def cross_validate_references(self) -> Self:
         fetcher_ids = {f.id for f in self.fetchers}
         preparer_ids = {p.id for p in self.data_preparers}
-        model_ids = {m.id for m in self.models}
+        ai_inference_services_ids = {m.id for m in self.ai_inference_services}
         modifier_ids = {m.id for m in self.modifiers}
 
         for attribute_predictor in self.attribute_predictors:
@@ -92,9 +68,9 @@ class OpenTicketAIConfig(BaseModel):
             if attribute_predictor.preparer_id not in preparer_ids:
                 raise ValueError(
                     f"attribute_predictor '{attribute_predictor.id}' refs unknown preparer '{attribute_predictor.preparer_id}'")
-            if attribute_predictor.model_id not in model_ids:
+            if attribute_predictor.ai_inference_service_id not in ai_inference_services_ids:
                 raise ValueError(
-                    f"attribute_predictor '{attribute_predictor.id}' refs unknown model '{attribute_predictor.model_id}'")
+                    f"attribute_predictor '{attribute_predictor.id}' refs unknown model '{attribute_predictor.ai_inference_service_id}'")
             if attribute_predictor.modifier_id not in modifier_ids:
                 raise ValueError(
                     f"attribute_predictor '{attribute_predictor.id}' refs unknown modifier '{attribute_predictor.modifier_id}'")

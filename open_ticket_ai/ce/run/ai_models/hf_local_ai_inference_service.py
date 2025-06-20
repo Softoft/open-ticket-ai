@@ -1,7 +1,7 @@
-from open_ticket_ai.ce.run.ai_models.base_ai_model import BaseAIModel
+from open_ticket_ai.ce.run.ai_models.ai_inference_service import AIInferenceService
 
 
-class HFAIModel(BaseAIModel):
+class HFAIInferenceService(AIInferenceService):
     """
     A class representing a Hugging Face AI model.
 
@@ -13,5 +13,5 @@ class HFAIModel(BaseAIModel):
     def get_description() -> str:
         return "Hugging Face AI Model - Placeholder for future implementation"
 
-    def __init__(self, model_name: str):
-        super().__init__(model_name)
+    def __init__(self):
+        super().__init__()

@@ -7,5 +7,9 @@ class BasicTicketFetcher(DataFetcher):
     involve fetching data from a database or an API.
     """
 
+    @staticmethod
+    def get_description() -> str:
+        return "Basic ticket fetcher that retrieves ticket data from a source. It is a placeholder for a more complex implementation."
+
     def fetch_data(self, *args, **kwargs):
         pass

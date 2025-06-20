@@ -1,0 +1,241 @@
+{
+  "$defs": {
+    "AIInferenceServiceConfig": {
+      "properties": {
+        "provider_key": {
+          "minLength": 1,
+          "title": "Provider Key",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "provider_key",
+        "id"
+      ],
+      "title": "AIInferenceServiceConfig",
+      "type": "object"
+    },
+    "AttributePredictorsConfig": {
+      "properties": {
+        "provider_key": {
+          "minLength": 1,
+          "title": "Provider Key",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        },
+        "fetcher_id": {
+          "minLength": 1,
+          "title": "Fetcher Id",
+          "type": "string"
+        },
+        "preparer_id": {
+          "minLength": 1,
+          "title": "Preparer Id",
+          "type": "string"
+        },
+        "ai_inference_service_id": {
+          "description": "ID of the model to use for prediction",
+          "minLength": 1,
+          "title": "Ai Inference Service Id",
+          "type": "string"
+        },
+        "modifier_id": {
+          "minLength": 1,
+          "title": "Modifier Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider_key",
+        "id",
+        "fetcher_id",
+        "preparer_id",
+        "ai_inference_service_id",
+        "modifier_id"
+      ],
+      "title": "AttributePredictorsConfig",
+      "type": "object"
+    },
+    "FetcherConfig": {
+      "properties": {
+        "provider_key": {
+          "minLength": 1,
+          "title": "Provider Key",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "provider_key",
+        "id"
+      ],
+      "title": "FetcherConfig",
+      "type": "object"
+    },
+    "ModifierConfig": {
+      "properties": {
+        "provider_key": {
+          "minLength": 1,
+          "title": "Provider Key",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "provider_key",
+        "id"
+      ],
+      "title": "ModifierConfig",
+      "type": "object"
+    },
+    "OpenTicketAIConfig": {
+      "properties": {
+        "system": {
+          "$ref": "#/$defs/SystemConfig",
+          "description": "System configuration"
+        },
+        "fetchers": {
+          "items": {
+            "$ref": "#/$defs/FetcherConfig"
+          },
+          "minItems": 1,
+          "title": "Fetchers",
+          "type": "array"
+        },
+        "data_preparers": {
+          "items": {
+            "$ref": "#/$defs/PreparerConfig"
+          },
+          "minItems": 1,
+          "title": "Data Preparers",
+          "type": "array"
+        },
+        "ai_inference_services": {
+          "items": {
+            "$ref": "#/$defs/AIInferenceServiceConfig"
+          },
+          "minItems": 1,
+          "title": "Ai Inference Services",
+          "type": "array"
+        },
+        "modifiers": {
+          "items": {
+            "$ref": "#/$defs/ModifierConfig"
+          },
+          "minItems": 1,
+          "title": "Modifiers",
+          "type": "array"
+        },
+        "attribute_predictors": {
+          "items": {
+            "$ref": "#/$defs/AttributePredictorsConfig"
+          },
+          "minItems": 1,
+          "title": "Attribute Predictors",
+          "type": "array"
+        }
+      },
+      "required": [
+        "system",
+        "fetchers",
+        "data_preparers",
+        "ai_inference_services",
+        "modifiers",
+        "attribute_predictors"
+      ],
+      "title": "OpenTicketAIConfig",
+      "type": "object"
+    },
+    "PreparerConfig": {
+      "properties": {
+        "provider_key": {
+          "minLength": 1,
+          "title": "Provider Key",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "provider_key",
+        "id"
+      ],
+      "title": "PreparerConfig",
+      "type": "object"
+    },
+    "SystemConfig": {
+      "properties": {
+        "provider_key": {
+          "minLength": 1,
+          "title": "Provider Key",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "provider_key"
+      ],
+      "title": "SystemConfig",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "open_ticket_ai": {
+      "$ref": "#/$defs/OpenTicketAIConfig"
+    }
+  },
+  "required": [
+    "open_ticket_ai"
+  ],
+  "title": "RootConfig",
+  "type": "object"
+}

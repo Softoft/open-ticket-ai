@@ -1,64 +1,66 @@
+$schema: "./config.schema.json"
+
 open_ticket_ai:
 
   # only one ticket‐system_id adapter
   system:
-    type: basic_otobo_adapter
+    provider_key: "OTOBOAdapter"
     params:
       base_url: "https://your-otobo-instance.com"
       username: "your_username"
       password_env_var: "OTOBOPASS"
   fetchers:
     - id: "basic_ticket"
-      type: "basic_ticket_fetcher"
+      provider_key: "BasicTicketFetcher"
       params:
         filters:
           - attribute: "queue"
             value: "incoming_queue"
 
   data_preparers:
-    - id: subject_body
-      type: subject_body_preparer
+    - id: "subject_body"
+      provider_key: "SubjectBodyPreparer"
       params:
         subject_field: "subject"
         body_field: "body"
         repeat_subject: 3
 
-  models:
-    - id: queue_model
-      type: hf_ai_model
+  ai_inference_services:
+    - id: "queue_model"
+      provider_key: "HFAIInferenceService"
       params:
         hf_model: "open-ticket-ai/queue-classification-german-bert"
         hf_token_env_var: "HUGGINGFACE_TOKEN"
 
-    - id: priority_model
-      type: hf_ai_model
+    - id: "priority_model"
+      provider_key: "HFAIInferenceService"
       params:
         hf_model: "open-ticket-ai/priority-classification-german-bert"
         hf_token_env_var: "HUGGINGFACE_TOKEN"
 
 
   modifiers:
-    - id: queue_updater
-      type: queue_modifier
+    - id: "queue_updater"
+      provider_key: "QueueModifier"
       params:
         confidence_threshold: 0.8
         low_confidence_value: "unclassified"
-    - id: priority_updater
-      type: priority_modifier
+    - id: "priority_updater"
+      provider_key: "PriorityModifier"
       params:
         confidence_threshold: 0.6
         low_confidence_value: 3
 
   attribute_predictors:
-    - id: queue_classification
-      type: queue_predictor
-      fetcher_id: basic_ticket
-      preparer_id: subject_body
-      model_id: queue_model
-      modifier_id: queue_updater
+    - id: "queue_classification"
+      provider_key: "QueuePredictor"
+      fetcher_id: "basic_ticket"
+      preparer_id: "subject_body"
+      ai_inference_service_id: "queue_model"
+      modifier_id: "queue_updater"
       schedule:
         interval: 10
-        unit: seconds
+        unit: "seconds"
       params:
         ticket_system_value2model_values:
           otobo_queue1:
@@ -70,15 +72,15 @@ open_ticket_ai:
           misc:
             - "*"
 
-    - id: priority_classification
-      type: priority_predictor
-      fetcher_id: basic_ticket
-      preparer_id: subject_body
-      model_id: priority_model
-      modifier_id: queue_updater
+    - id: "priority_classification"
+      provider_key: "PriorityPredictor"
+      fetcher_id: "basic_ticket"
+      preparer_id: "subject_body"
+      ai_inference_service_id: "priority_model"
+      modifier_id: "queue_updater"
       schedule:
         interval: 10
-        unit: seconds
+        unit: "seconds"
       params:
         ticket_system_value2model_values:
           1: [ 1 ]

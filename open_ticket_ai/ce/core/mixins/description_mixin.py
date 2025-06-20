@@ -7,6 +7,5 @@ class DescriptionMixin:
     """
 
     @staticmethod
-    @abc.abstractmethod
     def get_description() -> str:
-        pass
+        return "No description provided."

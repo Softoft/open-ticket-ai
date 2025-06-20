@@ -1,4 +1,9 @@
-class TicketSystemAdapter:
+from abc import ABC
+
+from open_ticket_ai.ce.core.mixins.description_mixin import DescriptionMixin
+
+
+class TicketSystemAdapter(DescriptionMixin, ABC):
     """
     An abstract base class for ticket system adapters.
     This class defines the
