@@ -1,7 +1,9 @@
 import abc
 
+from open_ticket_ai.ce.core.mixins.description_mixin import DescriptionMixin
 
-class DataPreparer(abc.ABC):
+
+class DataPreparer(DescriptionMixin, abc.ABC):
     """
     Abstract base class for data preparers.
     """

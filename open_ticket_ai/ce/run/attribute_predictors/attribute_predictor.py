@@ -1,7 +1,9 @@
 import abc
 
+from open_ticket_ai.ce.core.mixins.description_mixin import DescriptionMixin
 
-class AttributePredictor(abc.ABC):
+
+class AttributePredictor(DescriptionMixin, abc.ABC):
     """
     Base class for attribute predictors.
     """

@@ -185,7 +185,7 @@ def test_load_config_missing_root(tmp_path):
     p.write_text("something_else: {}")
     with pytest.raises(KeyError) as exc:
         config_models.load_config(str(p))
-    assert "Missing 'open_ticket_ai' root key" in str(exc.value)
+    assert "Missing 'open_ticket_ai' root fetcher_key" in str(exc.value)
 
 
 def test_load_config_success(tmp_path):

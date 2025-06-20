@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Callable, Self
+from typing import Any, Dict, Callable, Self
 
 import yaml
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -10,6 +10,7 @@ from open_ticket_ai.ce.core import registry
 class RegistryValidationMixin(BaseModel):
     # point to the real registry by default
     _registry_check = staticmethod(registry.does_registry_contain)
+    _get_registry_types_descriptions = staticmethod(registry.get_registry_types_descriptions)
 
     type: str = Field(..., min_length=1)
 
@@ -17,7 +18,10 @@ class RegistryValidationMixin(BaseModel):
     @classmethod
     def validate_registry_type(cls, v: str) -> str:
         if not cls._registry_check(v):
-            raise ValueError(f"Type '{v}' is not registered")
+            raise ValueError(f"""
+            Type '{v}' is not registered
+            Available types: {', '.join(cls._get_registry_types_descriptions())}
+            """)
         return v
 
     @classmethod
@@ -83,13 +87,17 @@ class OpenTicketAIConfig(BaseModel):
 
         for attribute_predictor in self.attribute_predictors:
             if attribute_predictor.fetcher_id not in fetcher_ids:
-                raise ValueError(f"attribute_predictor '{attribute_predictor.id}' refs unknown fetcher '{attribute_predictor.fetcher_id}'")
+                raise ValueError(
+                    f"attribute_predictor '{attribute_predictor.id}' refs unknown fetcher '{attribute_predictor.fetcher_id}'")
             if attribute_predictor.preparer_id not in preparer_ids:
-                raise ValueError(f"attribute_predictor '{attribute_predictor.id}' refs unknown preparer '{attribute_predictor.preparer_id}'")
+                raise ValueError(
+                    f"attribute_predictor '{attribute_predictor.id}' refs unknown preparer '{attribute_predictor.preparer_id}'")
             if attribute_predictor.model_id not in model_ids:
-                raise ValueError(f"attribute_predictor '{attribute_predictor.id}' refs unknown model '{attribute_predictor.model_id}'")
+                raise ValueError(
+                    f"attribute_predictor '{attribute_predictor.id}' refs unknown model '{attribute_predictor.model_id}'")
             if attribute_predictor.modifier_id not in modifier_ids:
-                raise ValueError(f"attribute_predictor '{attribute_predictor.id}' refs unknown modifier '{attribute_predictor.modifier_id}'")
+                raise ValueError(
+                    f"attribute_predictor '{attribute_predictor.id}' refs unknown modifier '{attribute_predictor.modifier_id}'")
         return self
 
 
@@ -97,8 +105,9 @@ def load_config(path: str) -> OpenTicketAIConfig:
     """
     Load and validate config. Optionally inject a custom Registry.
     """
-    raw = yaml.safe_load(open(path))
+    with open(path, encoding="utf-8") as f:
+        raw = yaml.safe_load(f)
     cfg = raw.get('open_ticket_ai')
     if cfg is None:
-        raise KeyError("Missing 'open_ticket_ai' root key in config file")
+        raise KeyError("Missing 'open_ticket_ai' root fetcher_key in config file")
     return OpenTicketAIConfig(**cfg)

@@ -1,7 +1,9 @@
 import abc
 
+from open_ticket_ai.ce.core.mixins.description_mixin import DescriptionMixin
 
-class Modifier(abc.ABC):
+
+class Modifier(DescriptionMixin, abc.ABC):
     """
     Abstract base class for all modifiers.
     Modifiers are used to modify or enhance data in some way.
