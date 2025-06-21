@@ -2,7 +2,9 @@ import os
 
 from injector import Injector, Module, Binder, singleton, provider
 
-from open_ticket_ai.ce.core.config_models import OpenTicketAIConfig, load_config
+from open_ticket_ai.ce.core.abstract_container import AbstractContainer
+from open_ticket_ai.ce.core.config_models import OpenTicketAIConfig, load_config, AttributePredictorConfig, \
+    RegistryInstanceConfig
 from open_ticket_ai.ce.core.config_validator import OpenTicketAIConfigValidator
 from open_ticket_ai.ce.core.create_registry import create_registry
 from open_ticket_ai.ce.core.registry import Registry
@@ -11,6 +13,7 @@ from open_ticket_ai.ce.run.ai_models.ai_inference_service import AIInferenceServ
 from open_ticket_ai.ce.run.attribute_predictors.attribute_predictor import AttributePredictor
 from open_ticket_ai.ce.run.fetchers.data_fetcher import DataFetcher
 from open_ticket_ai.ce.run.modifiers.modifier import Modifier
+from open_ticket_ai.ce.run.orchestrator import Orchestrator
 from open_ticket_ai.ce.run.preparers.data_preparer import DataPreparer
 from open_ticket_ai.ce.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 
@@ -38,11 +41,28 @@ class AppModule(Module):
         return OpenTicketAIConfigValidator(config, registry)
 
 
-class DIContainer(Injector):
+class DIContainer(Injector, AbstractContainer):
+
     def __init__(self):
         super().__init__([AppModule()])
         self.config: OpenTicketAIConfig = self.get(OpenTicketAIConfig)
         self.registry = self.get(Registry)
+        self.binder.bind(TicketSystemAdapter, to=self.get_system(), scope=singleton)
+        self.binder.bind(Orchestrator, to=Orchestrator(self.config, self), scope=singleton)
+
+    def _get_instance[T](self, id: str, subclass_of: type[T],
+                         config_list: list[RegistryInstanceConfig]) -> T:
+        """
+        Get an instance from the registry by ID and subclass type.
+        """
+        instance_config = next((c for c in config_list if c.id == id), None)
+        if not instance_config:
+            raise KeyError(f"Unknown instance ID: {id}")
+        self.binder.bind(type(instance_config), instance_config, scope=singleton)
+        instance_class = self.registry.get(instance_config.provider_key, subclass_of)
+        if not instance_class:
+            raise KeyError(f"Unknown provider key: {instance_config.provider_key}")
+        return self.create_object(instance_class)
 
     def get_system(self) -> TicketSystemAdapter:
         """
@@ -50,37 +70,72 @@ class DIContainer(Injector):
         """
         return self.create_object(self.registry.get(self.config.system.provider_key, TicketSystemAdapter))
 
-    def get_fetcher(self, fetcher_key: str) -> DataFetcher:
-        try:
-            fetcher_class = self.registry.get(fetcher_key, DataFetcher)
-        except KeyError:
-            raise KeyError(f"Unknown fetcher key: {fetcher_key}")
-        return self.create_object(fetcher_class)
+    def get_fetcher(self, fetcher_id: str) -> DataFetcher:
+        return self._get_instance(
+            fetcher_id,
+            DataFetcher,
+            self.config.fetchers
+        )
 
     def get_preparer(self, preparer_key: str) -> DataPreparer:
-        try:
-            preparer_class = self.registry.get(preparer_key, DataPreparer)
-        except KeyError:
-            raise KeyError(f"Unknown preparer key: {preparer_key}")
-        return self.create_object(preparer_class)
+        return self._get_instance(
+            preparer_key,
+            DataPreparer,
+            self.config.data_preparers
+        )
 
-    def get_ai_inference_service(self, model_key: str) -> AIInferenceService:
-        try:
-            ai_model_class = self.registry.get(model_key, AIInferenceService)
-        except KeyError:
-            raise KeyError(f"Unknown model key: {model_key}")
-        return self.create_object(ai_model_class)
+    def get_ai_inference_service(self, inference_service_id: str) -> AIInferenceService:
+        return self._get_instance(
+            inference_service_id,
+            AIInferenceService,
+            self.config.ai_inference_services
+        )
 
-    def get_modifier(self, modifier_key: str) -> Modifier:
-        try:
-            modifier_class = self.registry.get(modifier_key, Modifier)
-        except KeyError:
-            raise KeyError(f"Unknown modifier key: {modifier_key}")
-        return self.create_object(modifier_class)
+    def get_modifier(self, modifier_id: str) -> Modifier:
+        return self._get_instance(
+            modifier_id,
+            Modifier,
+            self.config.modifiers
+        )
 
-    def get_predictor(self, predictor_key: str) -> AttributePredictor:
+    def get_predictor(self, predictor_id: str) -> AttributePredictor:
         try:
-            predictor_class = self.registry.get(predictor_key, AttributePredictor)
+            predictor_config: AttributePredictorConfig = next(
+                (p for p in self.config.attribute_predictors if p.id == predictor_id),
+                None
+            )
+            pred_fetcher = self.get_fetcher(predictor_config.fetcher_id)
+            pred_preparer = self.get_preparer(predictor_config.preparer_id)
+            pred_ai_inference_service = self.get_ai_inference_service(predictor_config.ai_inference_service_id)
+            pred_modifier = self.get_modifier(predictor_config.modifier_id)
+
+            self.binder.bind(
+                DataFetcher,
+                to=pred_fetcher,
+                scope=singleton
+            )
+
+            self.binder.bind(
+                DataPreparer,
+                to=pred_preparer,
+                scope=singleton
+            )
+
+            self.binder.bind(
+                AIInferenceService,
+                to=pred_ai_inference_service,
+                scope=singleton
+            )
+
+            self.binder.bind(
+                Modifier,
+                to=pred_modifier,
+                scope=singleton
+            )
+
+            predictor_class = self.registry.get(predictor_config.provider_key, AttributePredictor)
+            self.binder.bind(AttributePredictorConfig, to=predictor_config, scope=singleton)
+            self.binder.bind(AttributePredictor, to=predictor_class, scope=singleton)
         except KeyError:
-            raise KeyError(f"Unknown predictor key: {predictor_key}")
+            raise KeyError(f"Unknown predictor key: {predictor_config.provider_key}")
         return self.create_object(predictor_class)

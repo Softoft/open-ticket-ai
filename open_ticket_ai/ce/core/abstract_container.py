@@ -1,0 +1,34 @@
+import abc
+
+from open_ticket_ai.ce.run.ai_models.ai_inference_service import AIInferenceService
+from open_ticket_ai.ce.run.attribute_predictors.attribute_predictor import AttributePredictor
+from open_ticket_ai.ce.run.fetchers.data_fetcher import DataFetcher
+from open_ticket_ai.ce.run.modifiers.modifier import Modifier
+from open_ticket_ai.ce.run.preparers.data_preparer import DataPreparer
+from open_ticket_ai.ce.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+
+
+class AbstractContainer(abc.ABC):
+    @abc.abstractmethod
+    def get_system(self) -> TicketSystemAdapter:
+        pass
+
+    @abc.abstractmethod
+    def get_fetcher(self, fetcher_key: str) -> DataFetcher:
+        pass
+
+    @abc.abstractmethod
+    def get_preparer(self, preparer_key: str) -> DataPreparer:
+        pass
+
+    @abc.abstractmethod
+    def get_ai_inference_service(self, model_key: str) -> AIInferenceService:
+        pass
+
+    @abc.abstractmethod
+    def get_modifier(self, modifier_key: str) -> Modifier:
+        pass
+
+    @abc.abstractmethod
+    def get_predictor(self, predictor_key: str) -> AttributePredictor:
+        pass

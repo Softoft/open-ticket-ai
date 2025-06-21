@@ -9,9 +9,9 @@ class HFAIInferenceService(AIInferenceService):
     Currently, it does not contain any methods or properties.
     """
 
+    def generate_response(self, prompt: str) -> str:
+        pass
+
     @staticmethod
     def get_description() -> str:
         return "Hugging Face AI Model - Placeholder for future implementation"
-
-    def __init__(self):
-        super().__init__()

@@ -1,5 +1,8 @@
 from abc import ABC
 
+from injector import inject
+
+from open_ticket_ai.ce.core.config_models import OpenTicketAIConfig
 from open_ticket_ai.ce.core.mixins.description_mixin import DescriptionMixin
 
 
@@ -9,6 +12,11 @@ class TicketSystemAdapter(DescriptionMixin, ABC):
     This class defines the
     interface that all ticket system adapters must implement.
     """
+
+    @inject
+    def __init__(self, config: OpenTicketAIConfig):
+        self.config = config
+
     def update_ticket(self, ticket_id: str, data: dict) -> None:
         """
         Update a ticket in the ticket system.

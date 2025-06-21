@@ -6,7 +6,7 @@ from open_ticket_ai.ce.run.fetchers.basic_ticket_fetcher import BasicTicketFetch
 from open_ticket_ai.ce.run.modifiers.priority_modifier import PriorityModifier
 from open_ticket_ai.ce.run.modifiers.queue_modifier import QueueModifier
 from open_ticket_ai.ce.run.preparers.subject_body_preparer import SubjectBodyPreparer
-from open_ticket_ai.ce.ticket_system_integration.otobo.otobo_adapter import OTOBOAdapter
+from open_ticket_ai.ce.ticket_system_integration.otobo_adapter import OTOBOAdapter
 
 
 def create_registry() -> Registry:

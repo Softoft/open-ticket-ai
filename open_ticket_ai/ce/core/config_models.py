@@ -37,11 +37,12 @@ class SchedulerConfig(BaseModel):
                       description="Unit of time for the interval (e.g., 'seconds', 'minutes', 'hours')")
 
 
-class AttributePredictorsConfig(RegistryInstanceConfig):
+class AttributePredictorConfig(RegistryInstanceConfig):
     fetcher_id: str = Field(..., min_length=1)
     preparer_id: str = Field(..., min_length=1)
     ai_inference_service_id: str = Field(..., min_length=1, description="ID of the model to use for prediction")
     modifier_id: str = Field(..., min_length=1)
+    schedule: SchedulerConfig = Field(..., description="Scheduler configuration for the predictor")
     params: Dict[str, Any] = Field(default_factory=dict)
 
 
@@ -52,7 +53,7 @@ class OpenTicketAIConfig(BaseModel):
     data_preparers: list[PreparerConfig] = Field(..., min_length=1)
     ai_inference_services: list[AIInferenceServiceConfig] = Field(..., min_length=1)
     modifiers: list[ModifierConfig] = Field(..., min_length=1)
-    attribute_predictors: list[AttributePredictorsConfig] = Field(..., min_length=1)
+    attribute_predictors: list[AttributePredictorConfig] = Field(..., min_length=1)
 
     @model_validator(mode='after')
     def cross_validate_references(self) -> Self:

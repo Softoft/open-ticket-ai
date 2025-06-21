@@ -1,3 +1,5 @@
+from injector import inject
+
 from open_ticket_ai.ce.core.config_models import OpenTicketAIConfig
 from open_ticket_ai.ce.core.mixins.description_mixin import DescriptionMixin
 from open_ticket_ai.ce.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
@@ -13,8 +15,7 @@ class OTOBOAdapter(TicketSystemAdapter, DescriptionMixin):
     def get_description() -> str:
         return "Adapter for OTOBO ticket system integration, providing methods to create, retrieve, update, and delete tickets."
 
-    def __init__(self, config: OpenTicketAIConfig):
-        pass
+
 
     def create_ticket(self, ticket_data: dict) -> dict:
         """

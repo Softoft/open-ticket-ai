@@ -5,14 +5,10 @@ class PriorityPredictor(AttributePredictor):
     PriorityPredictor returns the priority ID (0=low,1=medium,2=high).
     """
 
+    def run_attribute_prediction(self):
+        print("Running priority prediction...")
+
     @staticmethod
     def get_description() -> str:
         return "Priority Predictor - Predicts the priority of a ticket based on its attributes."
 
-    def predict_attribute(self) -> str | int:
-        pass
-
-    def __init__(
-        self,
-    ):
-        super().__init__()
