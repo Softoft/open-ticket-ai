@@ -77,7 +77,7 @@ open_ticket_ai:
       fetcher_id: "basic_ticket"
       preparer_id: "subject_body"
       ai_inference_service_id: "priority_model"
-      modifier_id: "queue_updater"
+      modifier_id: "priority_updater"
       schedule:
         interval: 10
         unit: "seconds"

@@ -54,6 +54,7 @@ class DIContainer(Injector, AbstractContainer):
                          config_list: list[RegistryInstanceConfig]) -> T:
         """
         Get an instance from the registry by ID and subclass type.
+        TODO: fix this use factory mehod, dont bind binder isnt working because it doesnt override previous bounded
         """
         instance_config = next((c for c in config_list if c.id == id), None)
         if not instance_config:
@@ -62,7 +63,7 @@ class DIContainer(Injector, AbstractContainer):
         instance_class = self.registry.get(instance_config.provider_key, subclass_of)
         if not instance_class:
             raise KeyError(f"Unknown provider key: {instance_config.provider_key}")
-        return self.create_object(instance_class)
+        return instance_class(config=instance_config, ticket_system_adapter=self.get(TicketSystemAdapter))
 
     def get_system(self) -> TicketSystemAdapter:
         """
@@ -109,33 +110,13 @@ class DIContainer(Injector, AbstractContainer):
             pred_ai_inference_service = self.get_ai_inference_service(predictor_config.ai_inference_service_id)
             pred_modifier = self.get_modifier(predictor_config.modifier_id)
 
-            self.binder.bind(
-                DataFetcher,
-                to=pred_fetcher,
-                scope=singleton
-            )
-
-            self.binder.bind(
-                DataPreparer,
-                to=pred_preparer,
-                scope=singleton
-            )
-
-            self.binder.bind(
-                AIInferenceService,
-                to=pred_ai_inference_service,
-                scope=singleton
-            )
-
-            self.binder.bind(
-                Modifier,
-                to=pred_modifier,
-                scope=singleton
-            )
-
-            predictor_class = self.registry.get(predictor_config.provider_key, AttributePredictor)
-            self.binder.bind(AttributePredictorConfig, to=predictor_config, scope=singleton)
-            self.binder.bind(AttributePredictor, to=predictor_class, scope=singleton)
+            predictor_class: AttributePredictor = self.registry.get(predictor_config.provider_key, AttributePredictor)
         except KeyError:
             raise KeyError(f"Unknown predictor key: {predictor_config.provider_key}")
-        return self.create_object(predictor_class)
+        return predictor_class(
+            config=predictor_config,
+            fetcher=pred_fetcher,
+            preparer=pred_preparer,
+            ai_inference_service=pred_ai_inference_service,
+            modifier=pred_modifier
+        )

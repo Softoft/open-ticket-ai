@@ -3,10 +3,11 @@ from abc import ABC
 from injector import inject
 
 from open_ticket_ai.ce.core.config_models import OpenTicketAIConfig
+from open_ticket_ai.ce.core.mixins.configurable_mixin import ConfigurableMixin
 from open_ticket_ai.ce.core.mixins.description_mixin import DescriptionMixin
 
 
-class TicketSystemAdapter(DescriptionMixin, ABC):
+class TicketSystemAdapter(ConfigurableMixin, DescriptionMixin, ABC):
     """
     An abstract base class for ticket system adapters.
     This class defines the
@@ -14,7 +15,8 @@ class TicketSystemAdapter(DescriptionMixin, ABC):
     """
 
     @inject
-    def __init__(self, config: OpenTicketAIConfig):
+    def __init__(self, config: OpenTicketAIConfig, *args, **kwargs):
+        super().__init__(config)
         self.config = config
 
     def update_ticket(self, ticket_id: str, data: dict) -> None:
