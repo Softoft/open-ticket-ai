@@ -1,16 +1,18 @@
 import logging
+
 import typer
+from pyfiglet import Figlet
 
 from open_ticket_ai.ce.app import App
 from open_ticket_ai.ce.core.container import DIContainer
-from pyfiglet import Figlet
 
 cli = typer.Typer()
+
 
 @cli.callback()
 def main(
     verbose: bool = typer.Option(False, "-v", "--verbose", help="INFO-level logging"),
-    debug:   bool = typer.Option(False, "-d", "--debug",   help="DEBUG-level logging"),
+    debug: bool = typer.Option(False, "-d", "--debug", help="DEBUG-level logging"),
 ):
     """Configure logging based on CLI options."""
     # determine log level
@@ -29,6 +31,7 @@ def main(
     )
     logging.getLogger("urllib3").setLevel(logging.WARNING)  # example: quiet noisy libraries
 
+
 @cli.command()
 def start():
     """Initialize the container and start the application."""
@@ -39,6 +42,7 @@ def start():
     container = DIContainer()
     app: App = container.get(App)
     app.run()
+
 
 if __name__ == "__main__":
     cli()

@@ -1,11 +1,13 @@
+import logging
+
 import yaml
 from pydantic import BaseModel
 from rich.console import Console
 from rich.syntax import Syntax
-import logging
 
 logger = logging.getLogger(__name__)
 console = Console()
+
 
 def pretty_print_config(config: BaseModel):
     """Pretty print a pydantic model using ``rich``."""

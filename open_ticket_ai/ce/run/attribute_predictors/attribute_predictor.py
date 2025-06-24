@@ -16,8 +16,16 @@ class AttributePredictor(ConfigurableMixin, DescriptionMixin, abc.ABC):
     Base class for attribute predictors.
     """
 
-    def __init__(self, config: AttributePredictorConfig, fetcher: DataFetcher, preparer: DataPreparer,
-                 ai_inference_service: AIInferenceService, modifier: Modifier, *args, **kwargs):
+    def __init__(
+        self,
+        config: AttributePredictorConfig,
+        fetcher: DataFetcher,
+        preparer: DataPreparer,
+        ai_inference_service: AIInferenceService,
+        modifier: Modifier,
+        *args,
+        **kwargs,
+    ):
         """Initialize the predictor with its dependencies."""
 
         super().__init__(config)

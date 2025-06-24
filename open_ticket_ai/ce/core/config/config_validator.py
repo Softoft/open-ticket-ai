@@ -14,6 +14,7 @@ from open_ticket_ai.ce.run.preparers.data_preparer import DataPreparer
 
 class OpenTicketAIConfigValidator:
     """Validate configuration values against the registry."""
+
     @inject
     def __init__(self, config: OpenTicketAIConfig, registry: Registry):
         """Create a new validator.
@@ -32,13 +33,15 @@ class OpenTicketAIConfigValidator:
             DataPreparer: self.config.data_preparers,
             AIInferenceService: self.config.ai_inference_services,
             Modifier: self.config.modifiers,
-            AttributePredictor: self.config.attribute_predictors
+            AttributePredictor: self.config.attribute_predictors,
         }
         for provider_type, configs in registry_provider_types.items():
             for config in configs:
                 if not self.registry.contains(config.provider_key, provider_type):
-                    raise ValueError(cleandoc(f"""
+                    raise ValueError(
+                        cleandoc(f"""
                         Registry does not contain required {provider_type.__name__} with id '{config.id}'
                         There are following registered providers
                         {self.registry.get_registry_types_descriptions(subclass_of=provider_type)}
-                        """))
+                        """)
+                    )

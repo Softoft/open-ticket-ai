@@ -16,6 +16,7 @@ class OTOBOAdapterConfig(BaseModel):
         username (str): The username for authentication.
         password_env_var (str): The environment variable that contains the password.
     """
+
     server_address: str
     webservice_name: str
     search_operation_url: str
@@ -27,12 +28,14 @@ class OTOBOAdapterConfig(BaseModel):
     def __str__(self):
         """Return a string representation of the configuration."""
 
-        return f"OTOBOServerConfig(server_address={self.server_address}, " \
-               f"webservice_name={self.webservice_name}, " \
-               f"search_operation_url={self.search_operation_url}, " \
-               f"update_operation_url={self.update_operation_url}, " \
-               f"get_operation_url={self.get_operation_url}, " \
-               f"username={self.username})"
+        return (
+            f"OTOBOServerConfig(server_address={self.server_address}, "
+            f"webservice_name={self.webservice_name}, "
+            f"search_operation_url={self.search_operation_url}, "
+            f"update_operation_url={self.update_operation_url}, "
+            f"get_operation_url={self.get_operation_url}, "
+            f"username={self.username})"
+        )
 
     @property
     def password(self) -> str:

@@ -1,5 +1,6 @@
 from open_ticket_ai.ce.run.modifiers.modifier import Modifier
 
+
 class QueueModifier(Modifier):
     """
     Modifier for changing the queue of a ticket.
@@ -7,8 +8,10 @@ class QueueModifier(Modifier):
 
     @staticmethod
     def get_description() -> str:
-        return "Modifies the queue of a ticket based on model predictions. " \
-               "Accepts a string representation of the queue name (e.g., 'Support', 'Sales')."
+        return (
+            "Modifies the queue of a ticket based on model predictions. "
+            "Accepts a string representation of the queue name (e.g., 'Support', 'Sales')."
+        )
 
     def modify(self, ticket_id: str, model_result: str) -> str:
         """
@@ -25,4 +28,3 @@ class QueueModifier(Modifier):
         # For example, checking if the queue exists, if the user has permissions, etc.
 
         return model_result
-

@@ -1,8 +1,9 @@
 import os
-directory_path = 'src'
+
+directory_path = "src"
 
 new_license_notice = """# Copyright (c) 2024 by Softoft, Tobias Bueck Einzelunternehmen
-# This code is part of the "OTOBO - AI Ticket Classification - Basic" and is governed 
+# This code is part of the "OTOBO - AI Ticket Classification - Basic" and is governed
 # by its license agreement. Full license in LICENSE_DE.md / LICENSE_EN.md. This code cannot be copied and/or distributed
 # without the express permission of Softoft, Tobias Bueck Einzelunternehmen.
 """
@@ -11,7 +12,7 @@ new_license_notice = """# Copyright (c) 2024 by Softoft, Tobias Bueck Einzelunte
 def find_start_of_code(lines):
     """Return the index of the first non-comment line."""
     for i, line in enumerate(lines):
-        if line.strip() and not line.strip().startswith('#'):
+        if line.strip() and not line.strip().startswith("#"):
             return i
     return len(lines)
 
@@ -24,7 +25,7 @@ def read_file(filepath):
 
 def write_file(filepath, lines):
     """Write ``lines`` to ``filepath``."""
-    with open(filepath, 'w') as file:
+    with open(filepath, "w") as file:
         file.writelines(lines)
 
 
@@ -37,10 +38,10 @@ def update_license_in_files(directory):
             filepath = os.path.join(subdir, filename)
             lines = read_file(filepath)
             start_of_code = find_start_of_code(lines)
-            updated_lines = [new_license_notice + '\n'] + lines[start_of_code:]
+            updated_lines = [new_license_notice + "\n"] + lines[start_of_code:]
             write_file(filepath, updated_lines)
-            print(f'Updated license in {filepath}')
+            print(f"Updated license in {filepath}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     update_license_in_files(directory_path)

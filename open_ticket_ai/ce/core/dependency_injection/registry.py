@@ -43,5 +43,13 @@ class Registry:
 
     def get_registry_types_descriptions(self, subclass_of: type[DescriptionMixin] = DescriptionMixin) -> str:
         """Return a list of all registered types and descriptions."""
-        return "\n".join([f"{key}: {value.get_description()}" for key, value in self._registry.items()
-                          if issubclass(value, subclass_of)]) or "No registered types found."
+        return (
+            "\n".join(
+                [
+                    f"{key}: {value.get_description()}"
+                    for key, value in self._registry.items()
+                    if issubclass(value, subclass_of)
+                ]
+            )
+            or "No registered types found."
+        )

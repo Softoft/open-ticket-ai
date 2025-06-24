@@ -14,8 +14,15 @@ def create_registry() -> Registry:
 
     registry = Registry()
     registry.register_all(
-        [OTOBOAdapter, BasicTicketFetcher, SubjectBodyPreparer,
-         PriorityPredictor, QueuePredictor,
-         HFAIInferenceService, PriorityModifier, QueueModifier]
+        [
+            OTOBOAdapter,
+            BasicTicketFetcher,
+            SubjectBodyPreparer,
+            PriorityPredictor,
+            QueuePredictor,
+            HFAIInferenceService,
+            PriorityModifier,
+            QueueModifier,
+        ]
     )
     return registry

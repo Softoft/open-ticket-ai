@@ -38,9 +38,6 @@ class OTOBOAdapter(TicketSystemAdapter, DescriptionMixin):
     async def update_ticket(self, ticket_id: str, data: dict) -> dict:
         """Update ``ticket_id`` with ``data`` and return the updated record."""
 
-        update_params: TicketUpdateParams = TicketUpdateParams.model_validate({
-            "TicketID": ticket_id,
-            **data
-        })
+        update_params: TicketUpdateParams = TicketUpdateParams.model_validate({"TicketID": ticket_id, **data})
         result = await self.otobo_client.update_ticket(payload=update_params)
         return result.model_dump()

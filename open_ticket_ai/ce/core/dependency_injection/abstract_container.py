@@ -10,6 +10,7 @@ from open_ticket_ai.ce.ticket_system_integration.ticket_system_adapter import Ti
 
 class AbstractContainer(abc.ABC):
     """Abstract interface for dependency containers."""
+
     @abc.abstractmethod
     def get_system(self) -> TicketSystemAdapter:
         """Return the configured ticket system adapter."""

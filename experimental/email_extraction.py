@@ -1,52 +1,56 @@
 import re
 
-import spacy
-
-nlp = spacy.load('de_core_news_sm')
-
 import nltk
+import spacy
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-nltk.download('stopwords')
+nlp = spacy.load("de_core_news_sm")
+
+nltk.download("stopwords")
+nltk.download("punkt") # Added back punkt download
 
 
 def clean_text(text):
     text = text.lower()
-    stop_words = set(stopwords.words('german'))
+    stop_words = set(stopwords.words("german"))
     word_tokens = word_tokenize(text, language="german")
     filtered_text = [word for word in word_tokens if word not in stop_words]
-    return ' '.join(filtered_text)
+    return " ".join(filtered_text)
 
 
 def remove_signature(email):
-    parts = re.split(r'-{2,}|\*{2,}', email)
+    parts = re.split(r"-{2,}|\*{2,}", email)
     main_body = parts[0]
 
     if len(parts) > 1:
         signature_candidate = parts[-1]
         signature_candidate = re.sub(
-            r'(?i)(mit freundlichen grüßen|beste grüße|herzliche grüße|viele grüße|cheers|thank you|thanks)[^\n]*',
-            '', signature_candidate)
-        signature_candidate = re.sub(r'(?i)\b(Tel|Telephone|Phone|Fax|E-Mail|Email|Web|Website|URL):.*', '',
-                                     signature_candidate)
+            r"(?i)(mit freundlichen grüßen|beste grüße|herzliche grüße|viele grüße|cheers|thank you|thanks)[^\n]*",
+            "",
+            signature_candidate,
+        )
         signature_candidate = re.sub(
-            r'(?i)\b(Address|Adresse|Location|Standort|Company|Firma|Position|Titel|Geschäftsführung):.*', '',
-            signature_candidate)
-        signature_candidate = re.sub(r'[\n\r]+', ' ',
-                                     signature_candidate)
+            r"(?i)\b(Tel|Telephone|Phone|Fax|E-Mail|Email|Web|Website|URL):.*", "", signature_candidate
+        )
+        signature_candidate = re.sub(
+            r"(?i)\b(Address|Adresse|Location|Standort|Company|Firma|Position|Titel|Geschäftsführung):.*",
+            "",
+            signature_candidate,
+        )
+        signature_candidate = re.sub(r"[\n\r]+", " ", signature_candidate)
 
         doc = nlp(signature_candidate)
         for ent in doc.ents:
-            if ent.label_ in ['PER', 'ORG']:
-                signature_candidate = signature_candidate.replace(ent.text, '')
+            if ent.label_ in ["PER", "ORG"]:
+                signature_candidate = signature_candidate.replace(ent.text, "")
 
-        main_body += ' ' + signature_candidate.strip()
+        main_body += " " + signature_candidate.strip()
 
     return main_body.strip()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     email_text = """
     Hallo Herr Müller,
 

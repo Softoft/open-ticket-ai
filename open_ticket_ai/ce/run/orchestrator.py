@@ -5,7 +5,6 @@ from open_ticket_ai.ce.core.config.config_models import OpenTicketAIConfig
 from open_ticket_ai.ce.core.mixins.configurable_mixin import ConfigurableMixin
 
 
-
 class Orchestrator(ConfigurableMixin):
     """Coordinate attribute prediction scheduling."""
 

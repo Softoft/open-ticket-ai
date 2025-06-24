@@ -22,6 +22,7 @@ class AIInferenceService(ConfigurableMixin, DescriptionMixin, abc.ABC):
         self._logger = logging.getLogger(__name__)
         self.ai_inference_config = config
         self._logger.info(f"Initialized AIInferenceService with config: {self.ai_inference_config.model_dump()}")
+
     @abc.abstractmethod
     def generate_response(self, prompt: str) -> str:
         """Generate a model response for the given prompt."""

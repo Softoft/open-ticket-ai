@@ -9,6 +9,7 @@ from open_ticket_ai.ce.core.mixins.description_mixin import DescriptionMixin
 
 class DataFetcher(ConfigurableMixin, DescriptionMixin, abc.ABC):
     """Base class for all data fetchers."""
+
     @inject
     def __init__(self, config: FetcherConfig):
         """Store fetcher configuration."""

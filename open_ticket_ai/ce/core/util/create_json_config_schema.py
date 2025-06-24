@@ -12,7 +12,7 @@ class RootConfig(BaseModel):
     open_ticket_ai: OpenTicketAIConfig
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     schema: dict = RootConfig.model_json_schema()
     project_root_dir = find_project_root()
     with open(project_root_dir / "config.schema.json", "w", encoding="utf-8") as f:

@@ -88,6 +88,50 @@ curl -X POST http://your-server:8080/api/v1/train
 
 Um ein Ticket zu klassifizieren, verwenden Sie den folgenden Befehl:
 
+## Linting and Type Checking
+
+We use Ruff for linting and formatting, and Mypy for type checking.
+
+### Installation
+
+Ensure you have the development dependencies installed:
+
+```bash
+pip install -e .[dev]
+```
+
+### Ruff (Linting and Formatting)
+
+To check for linting issues:
+
+```bash
+ruff check .
+```
+
+To automatically fix linting issues:
+
+```bash
+ruff check . --fix
+```
+
+To format the code:
+
+```bash
+ruff format .
+```
+
+Ruff is configured in the `pyproject.toml` file under the `[tool.ruff]` section.
+
+### Mypy (Type Checking)
+
+To run type checking:
+
+```bash
+mypy .
+```
+
+Mypy is configured in the `pyproject.toml` file under the `[tool.mypy]` section.
+
 ```bash
 curl -X POST http://your-server:8080/api/v1/classify \
      -H "Content-Type: application/json" \

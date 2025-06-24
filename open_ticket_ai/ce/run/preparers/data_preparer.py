@@ -11,8 +11,9 @@ class DataPreparer(ConfigurableMixin, DescriptionMixin, abc.ABC):
     """
     Abstract base class for data preparers.
     """
+
     @inject
-    def __init__(self, config: PreparerConfig,  *args, **kwargs):
+    def __init__(self, config: PreparerConfig, *args, **kwargs):
         """Initialize the preparer with its configuration."""
         super().__init__(config)
         self.preparer_config = config

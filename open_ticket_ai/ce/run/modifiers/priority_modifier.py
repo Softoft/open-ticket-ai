@@ -1,5 +1,6 @@
 from open_ticket_ai.ce.run.modifiers.modifier import Modifier
 
+
 class PriorityModifier(Modifier):
     """
     Modifier for changing the priority of a ticket.
@@ -7,8 +8,10 @@ class PriorityModifier(Modifier):
 
     @staticmethod
     def get_description() -> str:
-        return "Modifies the priority of a ticket based on model predictions. " \
-               "Accepts both string (e.g., 'High', 'Medium', 'Low') and integer (1, 2, 3) representations of priority."
+        return (
+            "Modifies the priority of a ticket based on model predictions. "
+            "Accepts both string (e.g., 'High', 'Medium', 'Low') and integer (1, 2, 3) representations of priority."
+        )
 
     def modify(self, ticket_id: str, model_result: str | int) -> str | int:
         """
@@ -26,4 +29,3 @@ class PriorityModifier(Modifier):
         # For example, normalizing priority values, setting bounds, etc.
 
         return model_result
-

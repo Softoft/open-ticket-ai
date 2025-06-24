@@ -5,7 +5,6 @@ from open_ticket_ai.ce.ticket_system_integration.otobo_adapter_config import OTO
 
 @pytest.fixture
 def system():
-
     return OTOBOAdapterConfig(
         url="https://otobo.example.com",
         username="root@",
