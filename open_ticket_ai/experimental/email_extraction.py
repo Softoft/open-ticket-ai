@@ -12,6 +12,17 @@ nltk.download('stopwords')
 
 
 def clean_text(text):
+"""
+    
+    Cleans a given German text by converting it to lowercase and removing stop words.
+    
+    Args:
+        text (str): The input text to be cleaned.
+    
+    Returns:
+        str: The cleaned text with all stop words removed.
+    
+"""
     text = text.lower()
     stop_words = set(stopwords.words('german'))
     word_tokens = word_tokenize(text, language="german")
@@ -20,6 +31,20 @@ def clean_text(text):
 
 
 def remove_signature(email):
+"""
+    Removes the signature from an email body.
+    
+    Args:
+        email (str): The email body to process.
+    
+    Returns:
+        str: The email body with the signature removed.
+    
+    Note: This function uses regular expressions and spaCy's natural language processing
+    library to identify and remove common signature patterns, including greetings,
+    contact information, and entity mentions. The remaining text is then appended to
+    the main body of the email.
+"""
     parts = re.split(r'-{2,}|\*{2,}', email)
     main_body = parts[0]
 

@@ -11,6 +11,21 @@ nlp = spacy.load("de_core_news_sm")
 fake = Faker("de_DE")
 
 def anonymize_text(text):
+    """
+
+        Anonymize sensitive information in a given text.
+
+        Args:
+            text (str): The input text to anonymize.
+
+        Returns:
+            str: The anonymized text with replaced named entities, email addresses, phone numbers, IBANs, and addresses.
+
+        This function uses the spaCy library to identify named entities (persons, organizations, locations) and replaces them with fake data.
+        Additionally, it uses regular expressions to detect and replace email addresses, phone numbers, IBANs, and addresses with fake data.
+        The function returns the anonymized text.
+
+    """
     doc = nlp(text)
     new_text = text
     # Ersetzungen für erkannte Named Entities (von hinten nach vorn, um Indexprobleme zu vermeiden)
@@ -29,6 +44,17 @@ def anonymize_text(text):
     new_text = re.sub(r'\b[\w.+-]+@[\w-]+\.\w+\b', lambda m: fake.ascii_email(), new_text)
     # Telefonnummern erkennen und ersetzen
     def replace_phone(match):
+        """
+
+            Replaces a matched phone number with a fake one.
+
+            Args:
+                match: A match object containing the phone number to be replaced.
+
+            Returns:
+                str: A fake phone number if the input is a valid German phone number, otherwise the original input string.
+
+        """
         num_str = match.group(0)
         try:
             num = phonenumbers.parse(num_str, "DE")

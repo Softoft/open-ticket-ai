@@ -54,6 +54,18 @@ def process_file(path: Path, root: Path, languages: List[str], model: str, api_k
 
 
 def main() -> None:
+    """
+        Main entry point for translating Markdown documentation using OpenRouter.
+
+        Parses command-line arguments for the translation process, including the input
+        directory of Markdown documents, target languages, OpenRouter model, and output
+        directory. Then, iterates over the input directory, processing each Markdown file
+        using the provided arguments.
+
+        Returns:
+            None
+
+    """
     parser = argparse.ArgumentParser(description="Translate Markdown documentation using OpenRouter")
     parser.add_argument("--docs-dir", default="vitepress-atc-docs", help="Directory containing markdown docs")
     parser.add_argument("--languages", default=",".join(DEFAULT_LANGUAGES), help="Comma separated target languages")
