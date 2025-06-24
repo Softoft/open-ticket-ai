@@ -13,7 +13,7 @@ Follow these steps to install Open Ticket AI:
     cd open-ticket-ai
     ```
 
-2.  **Create a `run_config.yaml`**
+2.  **Create a `config.yml`**
     Refer to the [Configuration](../reference/configuration-reference.md) documentation for details on setting up this file.
 
 3.  **Start with Docker Compose**

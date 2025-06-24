@@ -22,4 +22,4 @@ Ensure you have enough RAM available for the models you intend to use. Refer to 
 ## Deployment Considerations
 
 *   **Co-location vs. Separate Devices**: You can run Open Ticket AI on the same server as your ticket system or on a separate machine.
-*   **Network Configuration**: If running on separate devices, ensure your network configuration allows communication between Open Ticket AI and your ticket system. You will need to adjust the `rest_settings` (specifically the `base_url`) in your `run_config.yaml` to point to the correct network address of your ticket system's API.
+*   **Network Configuration**: If running on separate devices, ensure your network configuration allows communication between Open Ticket AI and your ticket system. You will need to adjust the `rest_settings` (specifically the `base_url`) in your `config.yml` to point to the correct network address of your ticket system's API.
