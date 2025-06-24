@@ -6,21 +6,18 @@ requires-python = ">=3.13"
 dependencies = [
     "huggingface-hub~=0.33.0",
     "pydantic~=2.11.7",
-    "pydantic_core", # Added missing dependency for pydantic
-    "typing_extensions", # Added missing dependency for pydantic_core
-    "spacy", # Added missing dependency for experimental.anonymize_data
-    "Faker", # Added missing dependency for experimental.anonymize_data
-    "phonenumbers", # Added missing dependency for experimental.anonymize_data
+    "pydantic_core",
+    "typing_extensions",
+    "spacy",
+    "Faker",
+    "phonenumbers",
     "pytest~=8.4.0",
-    "pluggy", # Added missing dependency for pytest
-    "pygments", # Added missing dependency for pytest
-    "iniconfig", # Added missing dependency for pytest
+    "pluggy",
+    "pygments",
+    "iniconfig",
     "PyYAML~=6.0.2",
     "transformers~=4.52.4",
     "injector~=0.22.0",
     "schedule~=1.2.2",
+    "otobo>=1.0.1",
 ]
-
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
