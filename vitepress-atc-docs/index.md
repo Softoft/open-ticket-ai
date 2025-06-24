@@ -12,7 +12,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/quickstart-guide
+      link: /get-started
     - theme: alt
       text: Feature Overview
       link: /concepts/community-edition-overview
