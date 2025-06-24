@@ -1,0 +1,70 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+// Layout & components
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+
+$primary: var(--vp-c-accent);
+$border-radius:       0.75rem !default;
+$border-radius-sm:    0.5rem  !default;
+$border-radius-lg:    1rem    !default;
+:root {
+  /* Form controls: use page-bg and text-base */
+  --bs-form-control-bg: var(--vp-c-bg-page) !important;
+  --bs-form-select-bg: var(--vp-c-bg-page) !important;
+  --bs-form-control-color: var(--vp-c-text-base) !important;
+  --bs-form-select-color: var(--vp-c-text-base) !important;
+  --bs-form-control-border-color: var(--vp-c-border-base) !important;
+  --bs-form-select-border-color: var(--vp-c-border-base) !important;
+
+  // 2) now override the ones you care about
+  --bs-border-radius:      0.5rem !important;
+  --bs-border-radius-sm:   0.25rem !important;
+  --bs-border-radius-lg:   1rem !important;
+
+  /* your form-control and button overrides… */
+    /* …etc… */
+
+  /* Button primary: use VitePress accent */
+  --bs-btn-primary-bg: var(--vp-c-accent) !important;
+  --bs-btn-primary-border-color: var(--vp-c-accent) !important;
+  --bs-btn-bg: var(--vp-c-accent) !important;
+  --bs-btn-primary-hover-bg: var(--vp-c-accent-hover) !important;
+  --bs-btn-primary-hover-border-color: var(--vp-c-accent-hover) !important;
+}
+
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/images";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/tables";
+@import "bootstrap/scss/forms";
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/dropdown";
+@import "bootstrap/scss/accordion";
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/navbar";
+@import "bootstrap/scss/card";
+@import "bootstrap/scss/list-group";
+@import "bootstrap/scss/close";
+@import 'bootstrap/scss/spinners';
+@import "bootstrap/scss/placeholders";
+@import "bootstrap/scss/badge";
+
+
+@import "bootstrap/scss/helpers/clearfix";
+@import "bootstrap/scss/helpers/color-bg";
+@import "bootstrap/scss/helpers/icon-link";
+@import "bootstrap/scss/helpers/ratio";
+@import "bootstrap/scss/helpers/position";
+@import "bootstrap/scss/helpers/visually-hidden";
+
+@import "bootstrap/scss/utilities/api";
