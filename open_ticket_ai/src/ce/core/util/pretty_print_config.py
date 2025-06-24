@@ -6,9 +6,8 @@ from rich.console import Console
 from rich.syntax import Syntax
 
 logger = logging.getLogger(__name__)
-console = Console()
 
-def pretty_print_config(config: BaseModel):
+def pretty_print_config(config: BaseModel, console: Console):
     """Pretty print a pydantic model using ``rich``."""
 
     # turn your BaseModel into a dict

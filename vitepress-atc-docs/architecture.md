@@ -13,17 +13,17 @@ The ticket processing pipeline looks like this:
 
 ```
 [ Incoming Ticket ]
-        ↓
+       ↓
 [ Preprocessor ] — cleans & merges subject+body
-        ↓
+       ↓
 [ Transformer Tokenizer ]
-        ↓
+       ↓
 [ Queue Classifier ] → Queue ID + confidence
-        ↓
+       ↓
 [ Priority Classifier ] → Priority score + confidence
-        ↓
+       ↓
 [ Postprocessor ] — applies thresholds, routes or flags
-        ↓
+       ↓
 [ Ticket System Adapter ] — updates ticket via REST API
 ```
 
@@ -43,11 +43,9 @@ All components are registered in a central dependency injection container and co
 ## Diagrams
 
 ### Application Class Diagram
-
 ![Application Class Diagram](/images/application_class_diagram.png)
 
 ### Overview Diagram
-
 ![Overview Diagram](/images/overview.png)
 
 These diagrams illustrate how the pipeline is orchestrated and how each component interacts with the others.
