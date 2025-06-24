@@ -151,10 +151,10 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
-# Pyre type checker
+# Pyre provider_key checker
 .pyre/
 
-# pytype static type analyzer
+# pytype static provider_key analyzer
 .pytype/
 
 # Cython debug symbols
@@ -192,3 +192,6 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+.vitepress/
+.idea/
