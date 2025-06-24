@@ -21,6 +21,7 @@ dependencies = [
     "injector~=0.22.0",
     "schedule~=1.2.2",
     "otobo>=1.0.1",
+    "requests~=2.32.4",
 ]
 
 [project.optional-dependencies]
