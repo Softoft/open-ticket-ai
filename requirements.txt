@@ -1,3 +1,1 @@
-ruff
-pytest
-requests~=2.32.4
+
