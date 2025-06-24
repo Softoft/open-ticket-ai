@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 import sys
 
@@ -72,7 +73,8 @@ def generate_markdown_docs(module_name: str, output_dir: str = "docs"):
     print(f"Generating Markdown for '{module_name}' using 'pdoc --pdf ...'")
 
     # Determine the path for the output .md file
-    # For a package, pdoc --pdf documents the package and its submodules recursively into one stream.
+    # For a package, pdoc --pdf documents the package and its submodules
+    # recursively into one stream.
     # So, we'll name the output file after the package.
     # If module_name is a path like "my_package/my_module.py", extract "my_module"
     if os.path.isfile(module_name) and module_name.endswith(".py"):
@@ -130,6 +132,44 @@ def generate_markdown_docs(module_name: str, output_dir: str = "docs"):
     except Exception as e:
         raise RuntimeError(f"An unexpected error occurred: {e}")
 
+
+def compile_plantuml_diagrams(diagrams_dir: str) -> None:
+    """Compile PlantUML diagrams in ``diagrams_dir`` using the ``plantuml`` CLI.
+
+    Any ``.puml`` or ``.plantuml`` file found in the directory will be rendered
+    to a PNG image with the same base filename. The function does nothing if the
+    directory does not exist.
+
+    Parameters
+    ----------
+    diagrams_dir:
+        Path to the directory containing PlantUML files.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the ``plantuml`` executable is not available on the system.
+    RuntimeError
+        If the ``plantuml`` command fails for any diagram.
+    """
+
+    if not os.path.isdir(diagrams_dir):
+        print(f"Diagram directory '{diagrams_dir}' not found; skipping")
+        return
+
+    if shutil.which("plantuml") is None:
+        raise FileNotFoundError("'plantuml' executable not found. Install PlantUML.")
+
+    for name in os.listdir(diagrams_dir):
+        if not name.endswith((".puml", ".plantuml")):
+            continue
+        src = os.path.join(diagrams_dir, name)
+        try:
+            subprocess.run(["plantuml", src], check=True, capture_output=True, text=True)
+            print(f"Compiled {src}")
+        except subprocess.CalledProcessError as exc:
+            raise RuntimeError(f"Failed to compile {src}: {exc.stderr}") from exc
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python generate_docs.py <module_name> [output_directory]")
@@ -144,6 +184,7 @@ if __name__ == "__main__":
 
     try:
         generate_markdown_docs(module_to_doc, docs_output_dir)
+        compile_plantuml_diagrams("vitepress-atc-docs/public/diagrams")
     except FileNotFoundError as e:
         print(f"Error: {e}")
         sys.exit(1)
