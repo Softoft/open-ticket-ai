@@ -86,6 +86,17 @@ class DIContainer(Injector, AbstractContainer):
         self.binder.bind(TicketSystemAdapter, to=system_adapter_instance, scope=singleton)
 
     def get_instance_config(self, id: str):
+        """Retrieve the configuration for a specific instance by its ID.
+
+        Args:
+            id: The unique identifier of the instance configuration to retrieve.
+
+        Returns:
+            The configuration object for the specified instance.
+
+        Raises:
+            KeyError: If no configuration is found for the given ID.
+        """
         instance_config = next(
             (c for c in self.config.get_all_register_instance_configs() if c.id == id), None)
         if not instance_config:

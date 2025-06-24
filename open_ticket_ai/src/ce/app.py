@@ -34,7 +34,13 @@ class App:
         self.orchestrator = orchestrator
 
     def run(self):
-        """Validate configuration and start the scheduler loop."""
+        """Validate configuration and start the scheduler loop.
+        
+        This method:
+        1. Validates the application configuration
+        2. Sets up scheduled jobs using the orchestrator
+        3. Enters an infinite loop to run pending scheduled tasks
+        """
         try:
             self.validator.validate_registry()
         except ValueError as e:

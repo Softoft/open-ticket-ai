@@ -1,3 +1,9 @@
+"""Open Ticket AI CLI entry point.
+
+This module provides the command-line interface for the Open Ticket AI application.
+It configures logging levels and launches the main application.
+"""
+
 import logging
 
 import typer
@@ -13,7 +19,12 @@ def main(
     verbose: bool = typer.Option(False, "-v", "--verbose", help="INFO-level logging"),
     debug:   bool = typer.Option(False, "-d", "--debug",   help="DEBUG-level logging"),
 ):
-    """Configure logging based on CLI options."""
+    """Configure logging based on CLI options.
+
+    Args:
+        verbose (bool): Enable INFO-level logging when True.
+        debug (bool): Enable DEBUG-level logging when True.
+    """
     # determine log level
     if debug:
         level = logging.DEBUG

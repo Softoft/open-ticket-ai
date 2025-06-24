@@ -47,5 +47,12 @@ class TicketSystemAdapter(RegistryInstanceConfig, ABC):
 
     @abstractmethod
     async def find_first_ticket(self, query: dict) -> dict | None:
-        """Return the first ticket that matches ``query`` if any."""
+        """Return the first ticket that matches ``query`` if any.
+
+        Args:
+            query: Search parameters for the ticket system.
+
+        Returns:
+            Optional[dict]: The first matching ticket or None if no ticket is found.
+        """
         pass

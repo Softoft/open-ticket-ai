@@ -13,6 +13,7 @@ class RootConfig(BaseModel):
 
 
 if __name__ == '__main__':
+    """Generates JSON schema for RootConfig and writes it to config.schema.json."""
     schema: dict = RootConfig.model_json_schema()
     project_root_dir = find_project_root()
     with open(project_root_dir / "config.schema.json", "w", encoding="utf-8") as f:

@@ -4,16 +4,27 @@ import re
 from openai import AsyncOpenAI
 from pathlib import Path
 
+"""Automatically adds Google-style docstrings to Python files using AI.
+
+This script traverses a project directory, sends each Python file to an AI model
+(via OpenRouter), and requests the addition of missing docstrings. The AI model
+returns the entire file with docstrings added, and the script overwrites the original file.
+
+The script excludes certain directories and files as specified in the configuration.
+
+Note: This script requires the OPEN_ROUTER_API_KEY environment variable to be set.
+"""
+
 # --- Configuration ---
 
 # Set the base path to the root of your project
 BASE_PATH = Path(__file__).parent.parent.parent
-# Directories to exclude
+# Directories to exluded_patterns
 EXCLUDE_DIRS = {
     '.venv', '__pycache__', 'build', 'dist', 'docs',
     'vitepress-atc-docs', '.idea', '.github', 'node_modules'
 }
-# Files to exclude
+# Files to exluded_patterns
 EXCLUDE_FILES = {'__init__.py'}
 
 # Configure the OpenAI client to use OpenRouter
@@ -28,6 +39,12 @@ client = AsyncOpenAI(
 def find_python_files(path: Path) -> list[Path]:
     """
     Recursively finds all Python files in a given path, respecting exclusion rules.
+
+    Args:
+        path: The root directory path to start searching from.
+
+    Returns:
+        A list of Path objects representing Python files to process.
     """
     py_files = []
     for item in path.rglob('*.py'):
@@ -44,6 +61,12 @@ def clean_ai_response(response_text: str) -> str:
     """
     Cleans the AI's response to ensure it's only valid Python code.
     It removes markdown code fences and any leading/trailing text.
+
+    Args:
+        response_text: The raw text response from the AI model.
+
+    Returns:
+        Cleaned Python code string extracted from the response.
     """
     # Pattern to find a python code block
     code_block_pattern = re.compile(r"```python\n(.*?)\n```", re.DOTALL)
@@ -84,14 +107,13 @@ async def add_docstrings_to_file_content(file_content: str) -> str | None:
     """
     try:
         response = await client.chat.completions.create(
-            model="meta-llama/llama-3-70b-instruct",
+            model="deepseek/deepseek-r1-0528",
             messages=[
                 {"role": "system",
                  "content": "You are a helpful Python assistant that adds docstrings to code."},
                 {"role": "user", "content": prompt},
             ],
             temperature=0.1,  # Low temperature for deterministic code generation
-            max_tokens=4000,  # Adjust as needed for larger files
         )
         new_content = response.choices[0].message.content
         return clean_ai_response(new_content)

@@ -56,9 +56,25 @@ def setup_test_directory(tmp_path):
     ]
 )
 def test_find_start_of_code(lines, expected_index):
+    """Tests the find_start_of_code function with various line inputs.
+
+    Args:
+        lines: List of strings representing lines of a file.
+        expected_index: The expected index where the code starts.
+    """
     assert find_start_of_code(lines) == expected_index
 
 def test_update_license_in_files(setup_test_directory):
+    """Tests the update_license_in_files function by updating files in a test directory.
+
+    It checks that:
+      - Python files get the new license notice at the top and retain their original content.
+      - Already licensed files are updated without duplicating the license.
+      - Non-Python files are not modified.
+
+    Args:
+        setup_test_directory: Pytest fixture that sets up a temporary test directory.
+    """
     test_dir = setup_test_directory
     update_license_in_files(test_dir)
 

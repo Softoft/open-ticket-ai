@@ -8,6 +8,15 @@ from open_ticket_ai.src.ce.core.util.pretty_print_config import pretty_print_con
 
 
 class RegistryProvidableInstance:
+    """Base class for objects that can be provided by a registry.
+
+    This class provides common functionality for registry-managed objects including
+    configuration storage, pretty printing of configuration, and provider registration.
+
+    Attributes:
+        console (Console): Rich console instance for output formatting.
+        config (RegistryInstanceConfig): Configuration object for this instance.
+    """
 
     @inject
     def __init__(self, config: RegistryInstanceConfig, console: Console | None = None):

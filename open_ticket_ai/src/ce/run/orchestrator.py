@@ -18,6 +18,12 @@ class Orchestrator:
     """Execute ticket processing pipelines."""
 
     def __init__(self, config: OpenTicketAIConfig, container: AbstractContainer):
+        """Initialize the Orchestrator with configuration and DI container.
+
+        Args:
+            config: Configuration settings for the orchestrator.
+            container: Dependency injection container providing pipeline instances.
+        """
         self.config = config
         self.container = container
         self._logger = logging.getLogger(__name__)

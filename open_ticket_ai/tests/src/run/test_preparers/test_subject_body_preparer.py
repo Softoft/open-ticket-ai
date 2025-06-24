@@ -6,6 +6,12 @@ from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 
 
 def test_subject_body_preparer_process_concatenates_fields():
+    """Tests the SubjectBodyPreparer's process method.
+
+    This test verifies that:
+    1. During initialization, the preparer calls pretty_print_config with its config
+    2. The process method correctly concatenates 'subject' and 'body' fields from context data
+    """
     cfg = PreparerConfig(id="sb", provider_key="subject-body", params={})
     with patch(
         "open_ticket_ai.src.ce.core.mixins.registry_providable_instance.pretty_print_config"

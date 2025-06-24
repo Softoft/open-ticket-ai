@@ -50,6 +50,15 @@ texts = [
 
 @pytest.mark.parametrize("text", texts)
 def test_remove_personal_info(text):
+    """Tests that the anonymize_text function removes all specified personal information.
+
+    This test is parameterized with various text examples containing personal data such as names,
+    addresses, email addresses, phone numbers, IBANs, and credit card details. It verifies that
+    after processing by anonymize_text, none of the forbidden personal information strings remain.
+
+    Args:
+        text (str): Input text containing personal information to be anonymized.
+    """
     result = anonymize_text(text)
 
     # keine spezifischen Originaldaten
@@ -68,4 +77,3 @@ def test_remove_personal_info(text):
     ]
     for item in forbidden:
         assert item not in result, f"Persönliche Information '{item}' nicht entfernt"
-

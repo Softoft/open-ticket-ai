@@ -1,193 +1,182 @@
-import os
-import shutil
-import subprocess
-import sys
+#!/usr/bin/env python3
+import ast
+from pathlib import Path
 
 
-def generate_markdown_docs(module_name: str, output_dir: str = "docs"):
+def _format_args(args_node: ast.arguments) -> str:
+    """Formats an ast.arguments node into a string like (arg1, arg2, kwarg=None)."""
+    args = []
+    # Positional and keyword-only arguments before *args
+    pos_args_count = len(args_node.posonlyargs) + len(args_node.args)
+    defaults_start = pos_args_count - len(args_node.defaults)
+
+    # Positional-only args
+    for i, arg in enumerate(args_node.posonlyargs):
+        if i >= defaults_start:
+            default = ast.unparse(args_node.defaults[i - defaults_start])
+            args.append(f"{arg.arg}={default}")
+        else:
+            args.append(arg.arg)
+
+    # Add / to indicate end of positional-only
+    if args_node.posonlyargs:
+        args.append('/')
+
+    # Regular args
+    for i, arg in enumerate(args_node.args):
+        default_idx = i + len(args_node.posonlyargs) - defaults_start
+        if default_idx >= 0:
+            default = ast.unparse(args_node.defaults[default_idx])
+            args.append(f"{arg.arg}={default}")
+        else:
+            args.append(arg.arg)
+
+    # *args
+    if args_node.vararg:
+        args.append(f"*{args_node.vararg.arg}")
+
+    # Keyword-only args
+    if args_node.kwonlyargs:
+        if not args_node.vararg:
+            args.append('*')
+        for i, arg in enumerate(args_node.kwonlyargs):
+            if args_node.kw_defaults[i] is not None:
+                default = ast.unparse(args_node.kw_defaults[i])
+                args.append(f"{arg.arg}={default}")
+            else:
+                args.append(arg.arg)
+
+    # **kwargs
+    if args_node.kwarg:
+        args.append(f"**{args_node.kwarg.arg}")
+
+    return f"({', '.join(args)})"
+
+
+def parse_python_file(file_path: Path) -> str:
     """
-    Generates Markdown documentation from Python docstrings using pdoc.
-
-    This script takes a Python module name as input and generates Markdown
-    files for each submodule and class, placing them in the specified
-    output directory.
-
-    Prerequisites:
-        - Python 3.x
-        - pdoc3 library (`pip install pdoc3`)
-
-    Usage:
-        python generate_docs.py <module_name> [output_directory]
-
-    Examples:
-        1. Generate documentation for a module named 'my_package' and
-           output to the default 'docs/' directory:
-           ```bash
-           python generate_docs.py my_package
-           ```
-
-        2. Generate documentation for 'my_package' and output to a
-           custom directory named 'api_docs/':
-           ```bash
-           python generate_docs.py my_package api_docs
-           ```
-
-        3. If 'my_package' is not in the current directory, ensure it's
-           in your PYTHONPATH:
-           ```bash
-           export PYTHONPATH=$PYTHONPATH:/path/to/my_package_parent_dir
-           python generate_docs.py my_package
-           ```
-
-    The script will create the output directory if it doesn't exist.
-    The generated Markdown files will be placed directly into the
-    specified output directory. For example, if `module_name` is `my_package`
-    and `output_dir` is `docs`, and `my_package` has `utils.py`, then
-    `docs/utils.md` will be created.
+    Parses a single Python file and returns its documentation in Markdown format.
 
     Args:
-        module_name: The name of the Python module/package to document.
-                     This module must be importable (i.e., in PYTHONPATH).
-        output_dir: The directory where the Markdown files will be saved.
-                    Defaults to "docs".
+        file_path (Path): The path to the Python file.
 
-    Raises:
-        RuntimeError: If pdoc fails to generate the documentation.
-        FileNotFoundError: If the specified module cannot be found.
+    Returns:
+        str: A string containing the Markdown documentation.
     """
-    print(f"Generating Markdown documentation for '{module_name}'...")
-
-    # Ensure the output directory exists
-    os.makedirs(output_dir, exist_ok=True)
-
     try:
-        # Try to import the module to check if it exists and is importable
-        __import__(module_name)
-    except ImportError:
-        raise FileNotFoundError(
-            f"Module '{module_name}' not found or not in PYTHONPATH. "
-            "Please ensure the module is installed or its path is in PYTHONPATH."
-        )
-
-    # --- Using --pdf to capture Markdown output ---
-    print(f"Generating Markdown for '{module_name}' using 'pdoc --pdf ...'")
-
-    # Determine the path for the output .md file
-    # For a package, pdoc --pdf documents the package and its submodules
-    # recursively into one stream.
-    # So, we'll name the output file after the package.
-    # If module_name is a path like "my_package/my_module.py", extract "my_module"
-    if os.path.isfile(module_name) and module_name.endswith(".py"):
-        base_name = os.path.splitext(os.path.basename(module_name))[0]
-        # However, pdoc usually takes import paths, not file paths.
-        # For simplicity, we'll assume module_name is an importable name.
-        # If it's a package, pdoc handles it. If it's a module, pdoc handles it.
-        markdown_file_name = f"{base_name}.md"
-    else: # It's likely a package name
-        markdown_file_name = f"{module_name}.md"
-
-    markdown_output_file = os.path.join(output_dir, markdown_file_name)
-
-
-    pdoc_command = [
-        sys.executable,
-        "-m",
-        "pdoc",
-        module_name,
-        "--pdf",  # This flag tells pdoc to output Markdown to stdout
-    ]
-
-    try:
-        # Ensure the current directory is in PYTHONPATH for pdoc to find the module
-        env = os.environ.copy()
-        current_dir = os.getcwd()
-        # Add current directory to PYTHONPATH, which is where example_package resides
-        env["PYTHONPATH"] = f"{current_dir}{os.pathsep}{env.get('PYTHONPATH', '')}"
-
-        print(f"Running command: {' '.join(pdoc_command)}")
-        print(f"Using PYTHONPATH: {env.get('PYTHONPATH')}")
-
-        process = subprocess.run(
-            pdoc_command,
-            capture_output=True,
-            text=True,
-            check=True,
-            env=env, # Pass the modified environment
-        )
-
-        # Write the captured stdout (which is Markdown) to the file
-        with open(markdown_output_file, "w", encoding="utf-8") as f:
-            f.write(process.stdout)
-
-        print(f"Successfully generated Markdown documentation: {markdown_output_file}")
-        if process.stderr:
-            print(f"pdoc stderr (warnings etc.):\n{process.stderr}")
-
-
-    except subprocess.CalledProcessError as e:
-        error_message = f"pdoc failed with error code {e.returncode}.\n"
-        error_message += f"Stdout: {e.stdout}\n"
-        error_message += f"Stderr: {e.stderr}"
-        raise RuntimeError(error_message)
+        with open(file_path, encoding="utf-8") as source_file:
+            source_code = source_file.read()
+        tree = ast.parse(source_code)
     except Exception as e:
-        raise RuntimeError(f"An unexpected error occurred: {e}")
+        return f"### Error parsing `{file_path}`\n\n```\n{e}\n```\n\n"
+
+    markdown_parts = []
+
+    # Module-level docstring
+    module_docstring = ast.get_docstring(tree)
+    if module_docstring:
+        markdown_parts.append(f"{module_docstring}\n")
+
+    # Iterate through top-level nodes (classes and functions)
+    for node in tree.body:
+        if isinstance(node, ast.ClassDef):
+            markdown_parts.append(f"### `class {node.name}`\n")
+            class_docstring = ast.get_docstring(node)
+            if class_docstring:
+                markdown_parts.append(f"{class_docstring}\n")
+
+            # Find methods within the class
+            for method_node in node.body:
+                if isinstance(method_node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    is_async = "async " if isinstance(method_node, ast.AsyncFunctionDef) else ""
+                    method_name = method_node.name
+                    args_str = _format_args(method_node.args)
+                    markdown_parts.append(f"#### `{is_async}def {method_name}{args_str}`\n")
+
+                    method_docstring = ast.get_docstring(method_node)
+                    if method_docstring:
+                        markdown_parts.append(f"```text\n{method_docstring}\n```\n")
+
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            is_async = "async " if isinstance(node, ast.AsyncFunctionDef) else ""
+            func_name = node.name
+            args_str = _format_args(node.args)
+            markdown_parts.append(f"### `{is_async}def {func_name}{args_str}`\n")
+
+            func_docstring = ast.get_docstring(node)
+            if func_docstring:
+                markdown_parts.append(f"```text\n{func_docstring}\n```\n")
+
+    return "\n".join(markdown_parts)
 
 
-def compile_plantuml_diagrams(diagrams_dir: str) -> None:
-    """Compile PlantUML diagrams in ``diagrams_dir`` using the ``plantuml`` CLI.
-
-    Any ``.puml`` or ``.plantuml`` file found in the directory will be rendered
-    to a PNG image with the same base filename. The function does nothing if the
-    directory does not exist.
-
-    Parameters
-    ----------
-    diagrams_dir:
-        Path to the directory containing PlantUML files.
-
-    Raises
-    ------
-    FileNotFoundError
-        If the ``plantuml`` executable is not available on the system.
-    RuntimeError
-        If the ``plantuml`` command fails for any diagram.
+def generate_documentation(src_dir: str, output_file: str = "documentation.md",
+                           title: str = "Project Documentation",
+                           excluded_patterns: list[str] = None) -> None:
     """
+    Generates Markdown documentation from Python docstrings in a directory.
 
-    if not os.path.isdir(diagrams_dir):
-        print(f"Diagram directory '{diagrams_dir}' not found; skipping")
+    Args:
+        src_dir (str): The source directory to scan for Python files.
+        output_file (str): The name of the output Markdown file.
+        title (str): The main title for the documentation file.
+        :param excluded_patterns:
+    """
+    excluded_patterns = excluded_patterns or []
+    src_path = Path(src_dir)
+    if not src_path.is_dir():
+        print(f"Error: Source directory '{src_path}' not found.")
         return
 
-    if shutil.which("plantuml") is None:
-        raise FileNotFoundError("'plantuml' executable not found. Install PlantUML.")
+    output_path = Path(output_file)
 
-    for name in os.listdir(diagrams_dir):
-        if not name.endswith((".puml", ".plantuml")):
+    all_markdown_content = [f"# {title}\n"]
+
+    # Use rglob to recursively find all .py files
+    python_files = sorted(list(src_path.rglob("*.py")))
+
+    filtered_files = []
+    for py_file in python_files:
+        # Check if the file should be excluded
+        if any(py_file.match(pattern) for pattern in excluded_patterns):
+            print(f"Excluding: {py_file.relative_to(src_path.parent)}")
             continue
-        src = os.path.join(diagrams_dir, name)
-        try:
-            subprocess.run(["plantuml", src], check=True, capture_output=True, text=True)
-            print(f"Compiled {src}")
-        except subprocess.CalledProcessError as exc:
-            raise RuntimeError(f"Failed to compile {src}: {exc.stderr}") from exc
+        filtered_files.append(py_file)
 
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python generate_docs.py <module_name> [output_directory]")
-        print("\nExample: python generate_docs.py my_package")
-        print("Example: python generate_docs.py my_package custom_docs_folder")
-        sys.exit(1)
-
-    module_to_doc = sys.argv[1]
-    docs_output_dir = "docs"
-    if len(sys.argv) > 2:
-        docs_output_dir = sys.argv[2]
+    for py_file in filtered_files:
+        # Get a relative path for cleaner headings
+        relative_path = py_file.relative_to(src_path.parent)
+        print(f"Processing: {relative_path}")
+        all_markdown_content.append(f"## Module: `{relative_path}`\n")
+        file_markdown = parse_python_file(py_file)
+        all_markdown_content.append(file_markdown)
+        all_markdown_content.append("\n---\n")
 
     try:
-        generate_markdown_docs(module_to_doc, docs_output_dir)
-        compile_plantuml_diagrams("vitepress-atc-docs/public/diagrams")
-    except FileNotFoundError as e:
-        print(f"Error: {e}")
-        sys.exit(1)
-    except RuntimeError as e:
-        print(f"Error: {e}")
-        sys.exit(1)
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write("\n".join(all_markdown_content))
+        print(f"\n✅ Documentation successfully generated at: {output_path.resolve()}")
+    except IOError as e:
+        print(f"\n❌ Error writing to file '{output_path}': {e}")
+
+
+if __name__ == "__main__":
+    # --- Configuration ---
+    # 1. Set the path to the directory you want to document.
+    #    For example, 'my_project' or '.' for the current directory.
+    SOURCE_DIRECTORY = "../../../open_ticket_ai/src"
+
+    # 2. Set the desired name for the output documentation file.
+    OUTPUT_FILE = "documentation.md"
+
+    # 3. Set the main title for your documentation.
+    DOC_TITLE = "Project Documentation"
+    # ---------------------
+
+    # Run the documentation generator with the settings above.
+    generate_documentation(
+        src_dir=SOURCE_DIRECTORY,
+        output_file=OUTPUT_FILE,
+        title=DOC_TITLE,
+        excluded_patterns=["*.test.py", "*.spec.py", "tests/", "docs/", "scripts/", "**/__init__.py"]
+    )

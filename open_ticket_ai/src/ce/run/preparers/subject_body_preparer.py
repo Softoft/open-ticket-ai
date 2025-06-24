@@ -7,10 +7,27 @@ class SubjectBodyPreparer(Pipe):
     """Extract and concatenate the ticket subject and body."""
 
     def __init__(self, config: RegistryInstanceConfig):
+        """Initializes the SubjectBodyPreparer with configuration.
+
+        Args:
+            config (RegistryInstanceConfig): Configuration parameters for the preparer.
+        """
         super().__init__(config)
         self.preparer_config = config
 
     def process(self, context: PipelineContext) -> PipelineContext:
+        """Processes ticket data to prepare subject and body content.
+
+        Extracts subject and body fields from context data, repeats the subject
+        as specified in configuration, and concatenates with the body. Stores
+        the result in context under 'prepared_data' key.
+
+        Args:
+            context (PipelineContext): Pipeline context containing ticket data.
+
+        Returns:
+            PipelineContext: Updated context with prepared data.
+        """
         subject_field = self.preparer_config.params.get("subject_field", "subject")
         body_field = self.preparer_config.params.get("body_field", "body")
         repeat_subject = int(self.preparer_config.params.get("repeat_subject", 1))
@@ -24,5 +41,9 @@ class SubjectBodyPreparer(Pipe):
 
     @staticmethod
     def get_description() -> str:
-        return "Prepares the subject and body of a ticket for processing by extracting relevant information."
+        """Provides a description of the pipe's functionality.
 
+        Returns:
+            str: Description of the pipe's purpose.
+        """
+        return "Prepares the subject and body of a ticket for processing by extracting relevant information."

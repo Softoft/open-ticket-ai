@@ -9,7 +9,16 @@ import open_ticket_ai.src.ce.app as app_module
 
 
 class TestAppRun:
+    """Test suite for the App.run() method functionality."""
+
     def test_run_validation_passes(self, monkeypatch):
+        """Tests that App.run() executes validation and scheduling when validation passes.
+        
+        Ensures:
+            - Validator is called exactly once
+            - Orchestrator sets schedules exactly once
+            - Console output occurs as expected
+        """
         validator = MagicMock()
         orchestrator = MagicMock()
         app = App(config=MagicMock(), validator=validator, orchestrator=orchestrator)
@@ -30,6 +39,12 @@ class TestAppRun:
         print_mock.assert_called_once()
 
     def test_run_validation_error_logs(self, monkeypatch, caplog):
+        """Tests that App.run() logs validation errors appropriately.
+        
+        Ensures:
+            - Validation errors are logged at ERROR level
+            - Orchestrator still attempts to set schedules after validation failure
+        """
         validator = MagicMock()
         validator.validate_registry.side_effect = ValueError("bad config")
         orchestrator = MagicMock()
@@ -49,7 +64,14 @@ class TestAppRun:
 
 
 class TestMainModule:
+    """Test suite for main module functionality."""
+
     def test_main_sets_logging_level(self, monkeypatch):
+        """Tests that main() correctly sets logging verbosity levels.
+        
+        Verifies:
+            - Logging level is set to INFO when verbose=True
+        """
         basic_cfg = MagicMock()
         monkeypatch.setattr(main_module.logging, "basicConfig", basic_cfg)
         monkeypatch.setattr(main_module.logging, "getLogger", lambda name=None: MagicMock())
@@ -58,6 +80,13 @@ class TestMainModule:
         assert basic_cfg.call_args.kwargs["level"] == logging.INFO
 
     def test_start_creates_container_and_runs_app(self, monkeypatch, capsys):
+        """Tests the full application startup sequence.
+        
+        Ensures:
+            - Dependency container is initialized
+            - App instance is retrieved and executed
+            - Expected console output (figlet art) is present
+        """
         app_mock = MagicMock()
         container_mock = MagicMock(get=MagicMock(return_value=app_mock))
         monkeypatch.setattr(main_module, "DIContainer", MagicMock(return_value=container_mock))
@@ -71,4 +100,3 @@ class TestMainModule:
         app_mock.run.assert_called_once()
         captured = capsys.readouterr()
         assert "art" in captured.out
-

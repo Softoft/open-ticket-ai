@@ -15,30 +15,58 @@ class OTOBOAdapter(TicketSystemAdapter):
 
     @staticmethod
     def get_description() -> str:
+        """Return a description of the adapter's functionality.
+
+        Returns:
+            str: A description of the OTOBO adapter.
+        """
         return "Adapter for OTOBO ticket system integration, providing methods to retrieve and update tickets."
 
     @inject
     def __init__(self, config: SystemConfig, otobo_client: OTOBOClient):
-        """Create a new adapter instance."""
+        """Initialize the OTOBO adapter with configuration and client.
 
+        Args:
+            config (SystemConfig): System configuration object.
+            otobo_client (OTOBOClient): Client for interacting with OTOBO API.
+        """
         super().__init__(config)
         self.otobo_client = otobo_client
 
     async def find_tickets(self, query: dict) -> list[dict]:
-        """Return all tickets matching ``query``."""
+        """Return all tickets matching ``query``.
 
+        Args:
+            query (dict): Search parameters for tickets.
+
+        Returns:
+            list[dict]: List of tickets matching the query.
+        """
         result = await self.otobo_client.search_and_get(query=TicketSearchParams(**query))
         return [ticket.model_dump() for ticket in result.Ticket]
 
     async def find_first_ticket(self, query: dict) -> dict | None:
-        """Return the first ticket found for ``query`` if available."""
+        """Return the first ticket found for ``query`` if available.
 
+        Args:
+            query (dict): Search parameters for tickets.
+
+        Returns:
+            dict | None: First matching ticket dictionary or None if none found.
+        """
         result = await self.find_tickets(query)
         return result[0] if len(result) >= 1 else None
 
     async def update_ticket(self, ticket_id: str, data: dict) -> dict:
-        """Update ``ticket_id`` with ``data`` and return the updated record."""
+        """Update ``ticket_id`` with ``data`` and return the updated record.
 
+        Args:
+            ticket_id (str): ID of the ticket to update.
+            data (dict): Update parameters for the ticket.
+
+        Returns:
+            dict: Updated ticket record.
+        """
         update_params: TicketUpdateParams = TicketUpdateParams.model_validate({
             "TicketID": ticket_id,
             **data

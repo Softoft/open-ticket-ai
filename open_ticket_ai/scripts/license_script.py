@@ -1,7 +1,16 @@
 import os
 
+"""Script to update license notices in Python files within a specified directory.
+
+This script walks through all Python files in a given directory and replaces
+any existing license notice at the top of the file with a new license notice.
+Non-comment code and empty/whitespace-only files are handled appropriately.
+"""
+
+# Path to the directory containing Python files to update
 directory_path = 'src'
 
+# The new license notice text to insert at the top of files
 new_license_notice = """# Copyright (c) 2024 by Softoft, Tobias Bueck Einzelunternehmen
 # This code is part of the "OTOBO - AI Ticket Classification - Basic" and is governed 
 # by its license agreement. Full license in LICENSE_DE.md / LICENSE_EN.md. This code cannot be copied and/or distributed
@@ -10,7 +19,14 @@ new_license_notice = """# Copyright (c) 2024 by Softoft, Tobias Bueck Einzelunte
 
 
 def find_start_of_code(lines):
-    """Return the index of the first non-comment line."""
+    """Return the index of the first non-comment line.
+
+    Args:
+        lines (list): List of strings representing lines in a file.
+
+    Returns:
+        int: Index of the first line that is not a comment or whitespace.
+    """
     for i, line in enumerate(lines):
         if line.strip() and not line.strip().startswith('#'):
             return i
@@ -18,19 +34,39 @@ def find_start_of_code(lines):
 
 
 def read_file(filepath):
-    """Read all lines from ``filepath``."""
+    """Read all lines from ``filepath``.
+
+    Args:
+        filepath (str): Path to the file to read.
+
+    Returns:
+        list: List of strings representing lines in the file.
+    """
     with open(filepath) as file:
         return file.readlines()
 
 
 def write_file(filepath, lines):
-    """Write ``lines`` to ``filepath``."""
+    """Write ``lines`` to ``filepath``.
+
+    Args:
+        filepath (str): Path to the file to write.
+        lines (list): List of strings to write to the file.
+    """
     with open(filepath, 'w') as file:
         file.writelines(lines)
 
 
 def update_license_in_files(directory):
-    """Insert the license notice at the top of all ``.py`` files."""
+    """Insert the license notice at the top of all ``.py`` files.
+
+    Walks through all Python files in the specified directory and replaces
+    any existing license notice with the new license notice. Handles empty
+    files and files containing only comments appropriately.
+
+    Args:
+        directory (str): Path to the directory containing files to update.
+    """
     for subdir, dirs, files in os.walk(directory):
         for filename in files:
             if not filename.endswith(".py"):
