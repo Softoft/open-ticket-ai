@@ -1,182 +1,242 @@
 #!/usr/bin/env python3
+"""
+A script to generate beautiful Markdown documentation from Python source code.
+
+This script uses Python's `ast` module to traverse the source code,
+extracting classes, functions, and their docstrings. It then parses the
+docstrings (supports Google, reStructuredText, and Numpydoc styles) and
+formats the output into a clean, modern Markdown file.
+
+Features:
+-   Class and function-based structure.
+-   Rich parsing of docstrings for parameters, returns, and raises sections.
+-   Inclusion of type hints in signatures.
+-   Modern Markdown styling with badges and collapsible sections.
+-   Fully configurable via command-line arguments.
+"""
 import ast
+import argparse
 from pathlib import Path
+from typing import List, Optional, Union
+
+from docstring_parser import Docstring, parse
 
 
-def _format_args(args_node: ast.arguments) -> str:
-    """Formats an ast.arguments node into a string like (arg1, arg2, kwarg=None)."""
-    args = []
-    # Positional and keyword-only arguments before *args
-    pos_args_count = len(args_node.posonlyargs) + len(args_node.args)
-    defaults_start = pos_args_count - len(args_node.defaults)
+# --- Helper Classes for Styling and Structure ---
 
-    # Positional-only args
-    for i, arg in enumerate(args_node.posonlyargs):
-        if i >= defaults_start:
-            default = ast.unparse(args_node.defaults[i - defaults_start])
-            args.append(f"{arg.arg}={default}")
+class DocstringStyler:
+    """Provides methods to style parsed docstring components into Markdown."""
+
+    @staticmethod
+    def style_params(params: List[dict], title: str) -> str:
+        """Styles a list of parameters into a Markdown list."""
+        if not params:
+            return ""
+        parts = [f"\n**{title}:**\n"]
+        for param in params:
+            type_name = f"`{param.type_name}`" if param.type_name else ""
+            default_val = f" (default: `{param.default}`)" if param.default else ""
+            description = f" - {param.description}" if param.description else ""
+            parts.append(
+                f"- **`{param.arg_name}`** ({type_name}){default_val}{description}"
+            )
+        return "\n".join(parts) + "\n"
+
+    @staticmethod
+    def style_returns(returns: Optional[dict]) -> str:
+        """Styles the returns section into Markdown."""
+        if not returns:
+            return ""
+        type_name = f"`{returns.type_name}`" if returns.type_name else ""
+        description = f" - {returns.description}" if returns.description else ""
+        return f"\n**Returns:** ({type_name}){description}\n"
+
+
+class MarkdownVisitor(ast.NodeVisitor):
+    """
+    An AST visitor that traverses a Python file and builds a Markdown documentation string.
+    """
+
+    def __init__(self, file_path: Path):
+        self.file_path = file_path
+        self.markdown_parts: List[str] = []
+        self.current_class_name: Optional[str] = None
+
+    def _format_signature(self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef]) -> str:
+        """Formats a function/method signature, including type hints."""
+        args_list = []
+        # Process positional and regular arguments
+        for arg in node.args.posonlyargs + node.args.args:
+            arg_str = arg.arg
+            if arg.annotation:
+                arg_str += f": {ast.unparse(arg.annotation)}"
+            args_list.append(arg_str)
+        # *args
+        if node.args.vararg:
+            args_list.append(f"*{node.args.vararg.arg}")
+        # Keyword-only args
+        if node.args.kwonlyargs:
+            if not node.args.vararg:
+                args_list.append('*')
+            for kw_arg in node.args.kwonlyargs:
+                kw_arg_str = kw_arg.arg
+                if kw_arg.annotation:
+                    kw_arg_str += f": {ast.unparse(kw_arg.annotation)}"
+                args_list.append(kw_arg_str)
+        # **kwargs
+        if node.args.kwarg:
+            args_list.append(f"**{node.args.kwarg.arg}")
+
+        signature = f"({', '.join(args_list)})"
+        if node.returns:
+            signature += f" -> {ast.unparse(node.returns)}"
+        return signature
+
+    def _process_docstring(self, docstring_raw: Optional[str]):
+        """Parses a docstring and formats it into Markdown."""
+        if not docstring_raw:
+            return ""
+
+        docstring: Docstring = parse(docstring_raw)
+        parts = [f"{docstring.short_description}\n"]
+        if docstring.long_description:
+            parts.append(f"{docstring.long_description}\n")
+
+        parts.append(DocstringStyler.style_params(docstring.params, "Parameters"))
+        parts.append(DocstringStyler.style_params(docstring.raises, "Raises"))
+        parts.append(DocstringStyler.style_returns(docstring.returns))
+
+        return "".join(parts)
+
+    def visit_ClassDef(self, node: ast.ClassDef):
+        """Processes a class definition."""
+        self.current_class_name = node.name
+        self.markdown_parts.append(
+            f"### <span style='color: #8E44AD;'>class</span> `{node.name}`\n")
+
+        class_doc_md = self._process_docstring(ast.get_docstring(node))
+        if class_doc_md:
+            self.markdown_parts.append(class_doc_md)
+
+        self.generic_visit(node)  # Visit methods inside the class
+        self.current_class_name = None
+
+    def visit_FunctionDef(self, node: ast.FunctionDef):
+        """Processes a function or method definition."""
+        self._process_function_node(node)
+
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef):
+        """Processes an async function or method definition."""
+        self._process_function_node(node, is_async=True)
+
+    def _process_function_node(self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef],
+                               is_async: bool = False):
+        """Shared logic for processing sync and async functions."""
+        func_name = node.name
+        if func_name.startswith("_") and not func_name.startswith("__"):
+            return  # Skip private methods/functions
+
+        signature = self._format_signature(node)
+        prefix = "<span style='color: #2980B9;'>async def</span>" if is_async else "<span style='color: #2980B9;'>def</span>"
+
+        # Method vs Function styling
+        if self.current_class_name:
+            badge = "<span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span>"
+            summary = f"#### {badge} {prefix} `{func_name}{signature}`"
         else:
-            args.append(arg.arg)
+            summary = f"### {prefix} `{func_name}{signature}`"
 
-    # Add / to indicate end of positional-only
-    if args_node.posonlyargs:
-        args.append('/')
+        doc_md = self._process_docstring(ast.get_docstring(node))
 
-    # Regular args
-    for i, arg in enumerate(args_node.args):
-        default_idx = i + len(args_node.posonlyargs) - defaults_start
-        if default_idx >= 0:
-            default = ast.unparse(args_node.defaults[default_idx])
-            args.append(f"{arg.arg}={default}")
-        else:
-            args.append(arg.arg)
+        if self.current_class_name:  # Use collapsible sections for methods
+            self.markdown_parts.append(
+                f"\n<details>\n<summary>{summary}</summary>\n\n{doc_md}\n</details>\n")
+        else:  # Top-level functions are not collapsed
+            self.markdown_parts.append(f"\n{summary}\n\n{doc_md}\n")
 
-    # *args
-    if args_node.vararg:
-        args.append(f"*{args_node.vararg.arg}")
-
-    # Keyword-only args
-    if args_node.kwonlyargs:
-        if not args_node.vararg:
-            args.append('*')
-        for i, arg in enumerate(args_node.kwonlyargs):
-            if args_node.kw_defaults[i] is not None:
-                default = ast.unparse(args_node.kw_defaults[i])
-                args.append(f"{arg.arg}={default}")
-            else:
-                args.append(arg.arg)
-
-    # **kwargs
-    if args_node.kwarg:
-        args.append(f"**{args_node.kwarg.arg}")
-
-    return f"({', '.join(args)})"
+    def get_markdown(self) -> str:
+        """Returns the accumulated Markdown content."""
+        module_docstring = self._process_docstring(
+            ast.get_docstring(ast.parse(self.file_path.read_text(encoding="utf-8"))))
+        return module_docstring + "\n" + "\n".join(self.markdown_parts)
 
 
 def parse_python_file(file_path: Path) -> str:
-    """
-    Parses a single Python file and returns its documentation in Markdown format.
-
-    Args:
-        file_path (Path): The path to the Python file.
-
-    Returns:
-        str: A string containing the Markdown documentation.
-    """
+    """Parses a Python file and returns its documentation in Markdown."""
     try:
-        with open(file_path, encoding="utf-8") as source_file:
-            source_code = source_file.read()
+        source_code = file_path.read_text(encoding="utf-8")
         tree = ast.parse(source_code)
+        visitor = MarkdownVisitor(file_path)
+        visitor.visit(tree)
+        return visitor.get_markdown()
     except Exception as e:
-        return f"### Error parsing `{file_path}`\n\n```\n{e}\n```\n\n"
-
-    markdown_parts = []
-
-    # Module-level docstring
-    module_docstring = ast.get_docstring(tree)
-    if module_docstring:
-        markdown_parts.append(f"{module_docstring}\n")
-
-    # Iterate through top-level nodes (classes and functions)
-    for node in tree.body:
-        if isinstance(node, ast.ClassDef):
-            markdown_parts.append(f"### `class {node.name}`\n")
-            class_docstring = ast.get_docstring(node)
-            if class_docstring:
-                markdown_parts.append(f"{class_docstring}\n")
-
-            # Find methods within the class
-            for method_node in node.body:
-                if isinstance(method_node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                    is_async = "async " if isinstance(method_node, ast.AsyncFunctionDef) else ""
-                    method_name = method_node.name
-                    args_str = _format_args(method_node.args)
-                    markdown_parts.append(f"#### `{is_async}def {method_name}{args_str}`\n")
-
-                    method_docstring = ast.get_docstring(method_node)
-                    if method_docstring:
-                        markdown_parts.append(f"```text\n{method_docstring}\n```\n")
-
-        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            is_async = "async " if isinstance(node, ast.AsyncFunctionDef) else ""
-            func_name = node.name
-            args_str = _format_args(node.args)
-            markdown_parts.append(f"### `{is_async}def {func_name}{args_str}`\n")
-
-            func_docstring = ast.get_docstring(node)
-            if func_docstring:
-                markdown_parts.append(f"```text\n{func_docstring}\n```\n")
-
-    return "\n".join(markdown_parts)
+        return f"### ⚠️ Error parsing `{file_path}`\n\n```\n{e}\n```\n"
 
 
-def generate_documentation(src_dir: str, output_file: str = "documentation.md",
-                           title: str = "Project Documentation",
-                           excluded_patterns: list[str] = None) -> None:
-    """
-    Generates Markdown documentation from Python docstrings in a directory.
+# --- Main Generation Logic ---
 
-    Args:
-        src_dir (str): The source directory to scan for Python files.
-        output_file (str): The name of the output Markdown file.
-        title (str): The main title for the documentation file.
-        :param excluded_patterns:
-    """
-    excluded_patterns = excluded_patterns or []
-    src_path = Path(src_dir)
+def main():
+    """Main function to run the documentation generator."""
+    parser = argparse.ArgumentParser(
+        description="Generate Markdown documentation from Python source code.",
+        formatter_class=argparse.RawTextHelpFormatter
+    )
+    parser.add_argument(
+        "src_dir",
+        type=str,
+        help="Source directory to scan for Python files."
+    )
+    parser.add_argument(
+        "--output", "-o",
+        type=str,
+        default="DOCUMENTATION.md",
+        help="Path to the output Markdown file. (default: DOCUMENTATION.md)"
+    )
+    parser.add_argument(
+        "--title", "-t",
+        type=str,
+        default="Project Documentation",
+        help="Main title for the documentation file. (default: Project Documentation)"
+    )
+    parser.add_argument(
+        "--exclude", "-e",
+        nargs='*',
+        default=["**/__init__.py", "**/tests/*", "**/.*"],
+        help="Glob patterns to exclude files/directories. (default: '**/__init__.py' '**/tests/*' '**/.*')"
+    )
+    args = parser.parse_args()
+
+    src_path = Path(args.src_dir)
     if not src_path.is_dir():
-        print(f"Error: Source directory '{src_path}' not found.")
+        print(f"❌ Error: Source directory '{src_path}' not found.")
         return
 
-    output_path = Path(output_file)
+    all_markdown_content = [f"# {args.title}\n"]
+    all_python_files = list(src_path.rglob("*.py"))
 
-    all_markdown_content = [f"# {title}\n"]
-
-    # Use rglob to recursively find all .py files
-    python_files = sorted(list(src_path.rglob("*.py")))
-
+    # Filter out excluded files
     filtered_files = []
-    for py_file in python_files:
-        # Check if the file should be excluded
-        if any(py_file.match(pattern) for pattern in excluded_patterns):
-            print(f"Excluding: {py_file.relative_to(src_path.parent)}")
+    for py_file in all_python_files:
+        if any(py_file.match(pattern) for pattern in args.exclude):
             continue
         filtered_files.append(py_file)
 
-    for py_file in filtered_files:
-        # Get a relative path for cleaner headings
+    sorted_files = sorted(filtered_files)
+
+    for py_file in sorted_files:
         relative_path = py_file.relative_to(src_path.parent)
-        print(f"Processing: {relative_path}")
+        print(f"📄 Processing: {relative_path}")
         all_markdown_content.append(f"## Module: `{relative_path}`\n")
         file_markdown = parse_python_file(py_file)
         all_markdown_content.append(file_markdown)
         all_markdown_content.append("\n---\n")
 
     try:
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write("\n".join(all_markdown_content))
-        print(f"\n✅ Documentation successfully generated at: {output_path.resolve()}")
+        Path(args.output).write_text("\n".join(all_markdown_content), encoding="utf-8")
+        print(f"\n✅ Documentation successfully generated at: {Path(args.output).resolve()}")
     except IOError as e:
-        print(f"\n❌ Error writing to file '{output_path}': {e}")
+        print(f"\n❌ Error writing to file '{args.output}': {e}")
 
 
 if __name__ == "__main__":
-    # --- Configuration ---
-    # 1. Set the path to the directory you want to document.
-    #    For example, 'my_project' or '.' for the current directory.
-    SOURCE_DIRECTORY = "../../../open_ticket_ai/src"
-
-    # 2. Set the desired name for the output documentation file.
-    OUTPUT_FILE = "documentation.md"
-
-    # 3. Set the main title for your documentation.
-    DOC_TITLE = "Project Documentation"
-    # ---------------------
-
-    # Run the documentation generator with the settings above.
-    generate_documentation(
-        src_dir=SOURCE_DIRECTORY,
-        output_file=OUTPUT_FILE,
-        title=DOC_TITLE,
-        excluded_patterns=["*.test.py", "*.spec.py", "tests/", "docs/", "scripts/", "**/__init__.py"]
-    )
+    main()
