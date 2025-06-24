@@ -11,11 +11,13 @@ from open_ticket_ai.src.ce.core.config import config_models
 @pytest.fixture
 def minimal_config_dict():
     """
-    Build the smallest valid dict for OpenTicketAIConfig,
-    with one fetcher, one preparer, one modifier and one predictor.
+    Build the smallest valid dict for ``OpenTicketAIConfig``.
+    The config now follows the new pipes and filters structure with
+    ``pipelines`` instead of ``attribute_predictors``.
     """
     return {
         "system": {
+            "id": "system_id",
             "provider_key": "dummy_sys",
             "params": {}
         },
@@ -49,13 +51,15 @@ def minimal_config_dict():
         ],
         "pipelines": [
             {
-                "id": "attribute_predictor_id_1",
-                "provider_key": "dummy_predictor",
-                "fetcher_id": "fetcher_id_1",
-                "preparer_id": "preparer_id_1",
-                "ai_inference_service_id": "ai_inference_service_id_1",
-                "modifier_id": "modifier_id_1",
+                "id": "pipeline_id_1",
+                "provider_key": "dummy_pipeline",
                 "schedule": {"interval": 1, "unit": "seconds"},
+                "pipes": [
+                    "fetcher_id_1",
+                    "preparer_id_1",
+                    "ai_inference_service_id_1",
+                    "modifier_id_1",
+                ],
                 "params": {}
             }
         ]
@@ -84,7 +88,11 @@ class TestSchedulerConfig:
 
 class TestOpenTicketAIConfig:
     @pytest.mark.parametrize("list_name", [
-        "fetchers", "data_preparers", "modifiers", "attribute_predictors", "ai_inference_services"
+        "fetchers",
+        "data_preparers",
+        "modifiers",
+        "ai_inference_services",
+        "pipelines",
     ])
     def test_empty_list_for_core_components_raises_validation_error(self, list_name,
                                                                     minimal_config_dict):
@@ -97,41 +105,40 @@ class TestOpenTicketAIConfig:
         assert cfg.system.provider_key == "dummy_sys"
         assert len(cfg.fetchers) == 1
         assert cfg.fetchers[0].id == "fetcher_id_1"
-        assert cfg.attribute_predictors[0].schedule.interval == 1
+        assert cfg.pipelines[0].schedule.interval == 1
 
     @pytest.mark.parametrize(
-        "list_name_to_alter, ref_id_field_in_predictor, expected_error_message_part",
+        "list_name_to_alter, pipe_index, expected_error_message_part",
         [
-            ("fetchers", "fetcher_id", "refs unknown fetcher"),
-            ("data_preparers", "preparer_id", "refs unknown preparer"),
-            ("ai_inference_services", "ai_inference_service_id", "refs unknown model"),
-            ("modifiers", "modifier_id", "refs unknown modifier"),
+            ("fetchers", 0, "unknown pipe component"),
+            ("data_preparers", 1, "unknown pipe component"),
+            ("ai_inference_services", 2, "unknown pipe component"),
+            ("modifiers", 3, "unknown pipe component"),
         ],
     )
     def test_invalid_cross_reference_raises_value_error(
-        self, list_name_to_alter, ref_id_field_in_predictor, expected_error_message_part,
+        self, list_name_to_alter, pipe_index, expected_error_message_part,
         minimal_config_dict
     ):
         # Make the reference invalid by changing the ID in the referenced list
         original_id = minimal_config_dict[list_name_to_alter][0]["id"]
         minimal_config_dict[list_name_to_alter][0]["id"] = "invalid_id_for_ref"
 
-        # Update the predictor's reference to a non-existent ID
-        minimal_config_dict["attribute_predictors"][0][
-            ref_id_field_in_predictor] = "non_existent_id"
+        # Update the pipeline's reference to a non-existent ID
+        minimal_config_dict["pipelines"][0]["pipes"][pipe_index] = "non_existent_id"
 
         with pytest.raises(ValueError) as exc:
             config_models.OpenTicketAIConfig(**minimal_config_dict)
 
         assert expected_error_message_part in str(exc.value)
-        predictor_id = minimal_config_dict["attribute_predictors"][0]["id"]
-        assert f"attribute_predictor '{predictor_id}'" in str(exc.value)
-        assert "'non_existent_id'" in str(exc.value)
+        pipeline_id = minimal_config_dict["pipelines"][0]["id"]
+        assert pipeline_id in str(exc.value)
+        assert "non_existent_id" in str(exc.value)
 
         # Restore original id to prevent interference with other parametrized tests if dict is somehow reused
         # (though pytest fixtures should typically prevent this for dicts)
         minimal_config_dict[list_name_to_alter][0]["id"] = original_id
-        minimal_config_dict["attribute_predictors"][0][ref_id_field_in_predictor] = original_id
+        minimal_config_dict["pipelines"][0]["pipes"][pipe_index] = original_id
 
     def test_duplicate_ids_in_component_list_allowed_by_basemodel_but_picked_by_set_logic(self,
                                                                                           minimal_config_dict):
@@ -149,10 +156,10 @@ class TestOpenTicketAIConfig:
         assert len(cfg_instance.fetchers) == 2
 
         # Cross-validation will use the set of IDs, so "fetcher_id_1" is known.
-        # If a predictor references "fetcher_id_1", it should still be considered valid.
-        minimal_config_dict["attribute_predictors"][0]["fetcher_id"] = "fetcher_id_1"
+        # If a pipeline references "fetcher_id_1" it should still be considered valid.
+        minimal_config_dict["pipelines"][0]["pipes"][0] = "fetcher_id_1"
         cfg_instance_ref_ok = config_models.OpenTicketAIConfig(**minimal_config_dict)
-        assert cfg_instance_ref_ok.attribute_predictors[0].fetcher_id == "fetcher_id_1"
+        assert cfg_instance_ref_ok.pipelines[0].pipes[0] == "fetcher_id_1"
         # Note: To strictly prevent duplicate IDs within a single list (e.g., two fetchers with the same ID),
         # a dedicated validator in `OpenTicketAIConfig` would be needed.
 
@@ -165,6 +172,4 @@ class TestLoadConfig:
         p.write_text("something_else: {}")
         with pytest.raises(KeyError) as exc:
             config_models.load_config(str(p))
-        assert "Missing 'open_ticket_ai' root fetcher_key" in str(
-            exc.value)  # Note: message is "root fetcher_key" which is a bit confusing
-        # but this is the existing message. Consider revising if it's a typo.
+        assert "Missing 'open_ticket_ai' root key" in str(exc.value)

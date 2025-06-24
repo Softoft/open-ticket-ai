@@ -87,5 +87,13 @@ class OpenTicketAIConfig(BaseModel):
 
 # load_config function remains the same
 def load_config(path: str) -> OpenTicketAIConfig:
-    # ... no change here
-    pass
+    """Load a YAML configuration file from ``path``."""
+    import yaml
+
+    with open(path, "r", encoding="utf-8") as fh:
+        data = yaml.safe_load(fh)
+
+    if "open_ticket_ai" not in data:
+        raise KeyError("Missing 'open_ticket_ai' root key")
+
+    return OpenTicketAIConfig(**data["open_ticket_ai"])

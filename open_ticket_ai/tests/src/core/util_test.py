@@ -33,13 +33,12 @@ def test_find_project_root_invalid_name_raises():
 
 # --- Tests for pretty_print_config.pretty_print_config ---
 
-def test_pretty_print_config_outputs_yaml(monkeypatch):
+def test_pretty_print_config_outputs_yaml():
     printed = []
     fake_console = SimpleNamespace(print=lambda x: printed.append(x))
-    monkeypatch.setattr(pretty_print_config, "console", fake_console)
 
     cfg = DummyModel(foo=1, bar="baz")
-    pretty_print_config.pretty_print_config(cfg)
+    pretty_print_config.pretty_print_config(cfg, fake_console)
 
     assert len(printed) == 1
     arg = printed[0]
