@@ -18,6 +18,8 @@ class AttributePredictor(ConfigurableMixin, DescriptionMixin, abc.ABC):
 
     def __init__(self, config: AttributePredictorConfig, fetcher: DataFetcher, preparer: DataPreparer,
                  ai_inference_service: AIInferenceService, modifier: Modifier, *args, **kwargs):
+        """Initialize the predictor with its dependencies."""
+
         super().__init__(config)
         self.attribute_predictor_config = config
         self.fetcher = fetcher
@@ -26,6 +28,7 @@ class AttributePredictor(ConfigurableMixin, DescriptionMixin, abc.ABC):
         self.modifier = modifier
 
     def set_schedule(self):
+        """Register a scheduled job for ``run_attribute_prediction``."""
         schedule_config = self.attribute_predictor_config.schedule
         getattr(schedule.every(schedule_config.interval), schedule_config.unit).do(
             lambda: self.run_attribute_prediction()

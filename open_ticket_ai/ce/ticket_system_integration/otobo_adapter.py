@@ -18,18 +18,26 @@ class OTOBOAdapter(TicketSystemAdapter, DescriptionMixin):
 
     @inject
     def __init__(self, config: SystemConfig, otobo_client: OTOBOClient):
+        """Create a new adapter instance."""
+
         super().__init__(config)
         self.otobo_client = otobo_client
 
     async def find_tickets(self, query: dict) -> list[dict]:
+        """Return all tickets matching ``query``."""
+
         result = await self.otobo_client.search_and_get(query=TicketSearchParams(**query))
         return [ticket.model_dump() for ticket in result.Ticket]
 
     async def find_first_ticket(self, query: dict) -> dict | None:
+        """Return the first ticket found for ``query`` if available."""
+
         result = await self.find_tickets(query)
         return result[0] if len(result) >= 1 else None
 
     async def update_ticket(self, ticket_id: str, data: dict) -> dict:
+        """Update ``ticket_id`` with ``data`` and return the updated record."""
+
         update_params: TicketUpdateParams = TicketUpdateParams.model_validate({
             "TicketID": ticket_id,
             **data

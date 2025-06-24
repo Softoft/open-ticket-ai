@@ -14,18 +14,12 @@ class Modifier(ConfigurableMixin, DescriptionMixin, abc.ABC):
     """
     @inject
     def __init__(self, config: ModifierConfig,  *args, **kwargs):
-        """
-        Initializes the Modifier with a configuration.
-
-        :param config: Configuration for the modifier.
-        """
+        """Initialize the modifier with its configuration."""
         super().__init__(config)
         self.modifier_config = config
 
     @abc.abstractmethod
     def modify(self, original_data: dict, model_result: str | int):
-        """
-        Abstract method to modify data.
-        Implementations should define how to modify the data.
-        """
+        """Modify ``original_data`` based on ``model_result``."""
+
         pass

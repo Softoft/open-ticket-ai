@@ -6,6 +6,8 @@ class QueuePredictor(AttributePredictor):
     """
 
     def run_attribute_prediction(self):
+        """Run the queue prediction pipeline."""
+
         print("Running queue prediction...")
 
     @staticmethod

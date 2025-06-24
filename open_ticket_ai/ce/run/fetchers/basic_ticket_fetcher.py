@@ -16,4 +16,5 @@ class BasicTicketFetcher(DataFetcher):
 
 
     def fetch_data(self, *args, **kwargs):
+        """Retrieve ticket data from the configured source."""
         pass

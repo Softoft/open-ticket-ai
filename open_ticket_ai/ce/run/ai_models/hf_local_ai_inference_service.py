@@ -10,6 +10,7 @@ class HFAIInferenceService(AIInferenceService):
     """
 
     def generate_response(self, prompt: str) -> str:
+        """Generate a response using a local Hugging Face model."""
         pass
 
     @staticmethod

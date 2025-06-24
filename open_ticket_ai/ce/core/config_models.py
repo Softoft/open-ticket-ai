@@ -7,37 +7,44 @@ from open_ticket_ai.ce.core.mixins.registry_validation_mixin import Registerable
 
 
 class SystemConfig(Registerable):
+    """Configuration for the ticket system adapter."""
+
     params: dict[str, Any] = Field(default_factory=dict)
 
 
 class RegistryInstanceConfig(Registerable):
+    """Base configuration for registry instances."""
+
     id: str = Field(..., min_length=1)
     params: dict[str, Any] = Field(default_factory=dict)
 
 
 class FetcherConfig(RegistryInstanceConfig):
-    pass
+    """Configuration for data fetchers."""
 
 
 class PreparerConfig(RegistryInstanceConfig):
-    pass
+    """Configuration for data preparers."""
 
 
 class ModifierConfig(RegistryInstanceConfig):
-    pass
+    """Configuration for modifiers."""
 
 
 class AIInferenceServiceConfig(RegistryInstanceConfig):
-    pass
+    """Configuration for AI inference services."""
 
 
 class SchedulerConfig(BaseModel):
+    """Configuration for scheduling recurring tasks."""
+
     interval: int = Field(..., ge=1, description="Interval for the scheduler to run")
     unit: str = Field(..., min_length=1,
                       description="Unit of time for the interval (e.g., 'seconds', 'minutes', 'hours')")
 
 
 class AttributePredictorConfig(RegistryInstanceConfig):
+    """Configuration for attribute predictors."""
     fetcher_id: str = Field(..., min_length=1)
     preparer_id: str = Field(..., min_length=1)
     ai_inference_service_id: str = Field(..., min_length=1, description="ID of the model to use for prediction")
@@ -48,6 +55,7 @@ class AttributePredictorConfig(RegistryInstanceConfig):
 
 # noinspection PyNestedDecorators
 class OpenTicketAIConfig(BaseModel):
+    """Root configuration model for Open Ticket AI."""
     system: SystemConfig = Field(..., description="System configuration")
     fetchers: list[FetcherConfig] = Field(..., min_length=1)
     data_preparers: list[PreparerConfig] = Field(..., min_length=1)
@@ -57,6 +65,7 @@ class OpenTicketAIConfig(BaseModel):
 
     @model_validator(mode='after')
     def cross_validate_references(self) -> Self:
+        """Validate that all predictor references exist."""
         fetcher_ids = {f.id for f in self.fetchers}
         preparer_ids = {p.id for p in self.data_preparers}
         ai_inference_services_ids = {m.id for m in self.ai_inference_services}
@@ -79,8 +88,13 @@ class OpenTicketAIConfig(BaseModel):
 
 
 def load_config(path: str) -> OpenTicketAIConfig:
-    """
-    Load and validate config. Optionally inject a custom Registry.
+    """Load and validate a configuration file.
+
+    Args:
+        path: Path to the YAML configuration file.
+
+    Returns:
+        Parsed :class:`OpenTicketAIConfig` instance.
     """
     with open(path, encoding="utf-8") as f:
         raw = yaml.safe_load(f)

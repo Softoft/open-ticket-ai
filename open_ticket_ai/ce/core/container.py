@@ -23,11 +23,10 @@ CONFIG_PATH = os.getenv('OPEN_TICKET_AI_CONFIG', find_project_root() / 'config.y
 
 
 class AppModule(Module):
-    """
-    DI module: binds only the validated config as singleton.
-    """
+    """Injector module that binds the validated configuration."""
 
     def configure(self, binder: Binder):
+        """Bind core configuration objects."""
         open_ticket_ai_config = load_config(CONFIG_PATH)
         registry = create_registry()
         binder.bind(OpenTicketAIConfig, to=open_ticket_ai_config, scope=singleton)
@@ -40,14 +39,13 @@ class AppModule(Module):
             config: OpenTicketAIConfig,
             registry: Registry
     ) -> OpenTicketAIConfigValidator:
+        """Provide a configuration validator instance."""
         return OpenTicketAIConfigValidator(config, registry)
 
     @provider
     @singleton
     def provide_otobo_client(self, config: OpenTicketAIConfig) -> OTOBOClient:
-        """
-        Provides an instance of the OTOBO client based on the system configuration.
-        """
+        """Create an :class:`OTOBOClient` using the system configuration."""
         otobo_config = OTOBOAdapterConfig.model_validate(config.system.params)
         return OTOBOClient(
             config=OTOBOClientConfig(
@@ -66,8 +64,10 @@ class AppModule(Module):
         )
 
 class DIContainer(Injector, AbstractContainer):
+    """Dependency injection container for Open Ticket AI."""
 
     def __init__(self):
+        """Initialize the container and bind common instances."""
         super().__init__([AppModule()])
         self.config: OpenTicketAIConfig = self.get(OpenTicketAIConfig)
         self.registry = self.get(Registry)
@@ -77,8 +77,15 @@ class DIContainer(Injector, AbstractContainer):
 
     def _get_instance[T](self, id: str, subclass_of: type[T],
                          config_list: list[RegistryInstanceConfig]) -> T:
-        """
-        Get an instance from the registry by ID and subclass type.
+        """Return an instance from the registry.
+
+        Args:
+            id: Identifier of the desired instance.
+            subclass_of: Expected base class of the instance.
+            config_list: List of configuration entries to search in.
+
+        Returns:
+            The created instance of ``subclass_of``.
         """
         instance_config = next((c for c in config_list if c.id == id), None)
         if not instance_config:
@@ -89,12 +96,11 @@ class DIContainer(Injector, AbstractContainer):
         return self.create_object(instance_class, additional_kwargs={"config":instance_config})
 
     def get_system(self) -> TicketSystemAdapter:
-        """
-        Get the system configuration.
-        """
+        """Return the configured ticket system adapter."""
         return self.create_object(self.registry.get(self.config.system.provider_key, TicketSystemAdapter))
 
     def get_fetcher(self, fetcher_id: str) -> DataFetcher:
+        """Instantiate a data fetcher by its ID."""
         return self._get_instance(
             fetcher_id,
             DataFetcher,
@@ -102,6 +108,7 @@ class DIContainer(Injector, AbstractContainer):
         )
 
     def get_preparer(self, preparer_key: str) -> DataPreparer:
+        """Instantiate a preparer by its ID."""
         return self._get_instance(
             preparer_key,
             DataPreparer,
@@ -109,6 +116,7 @@ class DIContainer(Injector, AbstractContainer):
         )
 
     def get_ai_inference_service(self, inference_service_id: str) -> AIInferenceService:
+        """Instantiate an AI inference service by its ID."""
         return self._get_instance(
             inference_service_id,
             AIInferenceService,
@@ -116,6 +124,7 @@ class DIContainer(Injector, AbstractContainer):
         )
 
     def get_modifier(self, modifier_id: str) -> Modifier:
+        """Instantiate a modifier by its ID."""
         return self._get_instance(
             modifier_id,
             Modifier,
@@ -123,6 +132,7 @@ class DIContainer(Injector, AbstractContainer):
         )
 
     def get_predictor(self, predictor_id: str) -> AttributePredictor:
+        """Create an attribute predictor instance by its ID."""
         try:
             predictor_config: AttributePredictorConfig = next(
                 (p for p in self.config.attribute_predictors if p.id == predictor_id),
