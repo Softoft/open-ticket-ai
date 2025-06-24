@@ -13,9 +13,9 @@ class ConfigurableMixin:
     """
 
     @inject
-    def __init__(self, config: BaseModel, console: Console):
+    def __init__(self, config: BaseModel, console: Console | None = None):
         """Store the configuration and pretty print it."""
-        self.console = console
+        self.console = console or Console()
         self.config = config
         logger = logging.getLogger(__name__)
         logger.info(f"Initializing {self.__class__.__name__} with config:")
