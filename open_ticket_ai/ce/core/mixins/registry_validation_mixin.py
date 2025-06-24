@@ -1,6 +1,4 @@
-from typing import Callable
-
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
 from open_ticket_ai.ce.core import registry
 

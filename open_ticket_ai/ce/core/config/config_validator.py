@@ -2,7 +2,7 @@ from inspect import cleandoc
 
 from injector import inject
 
-from open_ticket_ai.ce.core.config_models import OpenTicketAIConfig
+from open_ticket_ai.ce.core.config.config_models import OpenTicketAIConfig
 from open_ticket_ai.ce.core.mixins.registry_validation_mixin import Registerable
 from open_ticket_ai.ce.core.registry import Registry
 from open_ticket_ai.ce.run.ai_models.ai_inference_service import AIInferenceService

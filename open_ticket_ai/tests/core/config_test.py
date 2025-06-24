@@ -1,11 +1,9 @@
 # tests/core/config_test.py
 
-import yaml
 import pytest
 from pydantic import ValidationError
 
-from open_ticket_ai.ce.core import registry, config_models
-from open_ticket_ai.ce.core.mixins.registry_validation_mixin import Registerable
+from open_ticket_ai.ce.core.config import config_models
 
 
 def make_minimal_config_dict():

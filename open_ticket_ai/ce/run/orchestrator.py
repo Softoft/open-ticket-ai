@@ -1,7 +1,7 @@
 import logging
 
 from open_ticket_ai.ce.core.abstract_container import AbstractContainer
-from open_ticket_ai.ce.core.config_models import OpenTicketAIConfig
+from open_ticket_ai.ce.core.config.config_models import OpenTicketAIConfig
 from open_ticket_ai.ce.core.mixins.configurable_mixin import ConfigurableMixin
 
 
