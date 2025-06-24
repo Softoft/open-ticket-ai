@@ -5,7 +5,9 @@ from open_ticket_ai.src.ce.run.attribute_predictors.attribute_predictor import A
 from open_ticket_ai.src.ce.run.fetchers.data_fetcher import DataFetcher
 from open_ticket_ai.src.ce.run.modifiers.modifier import Modifier
 from open_ticket_ai.src.ce.run.preparers.data_preparer import DataPreparer
-from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import (
+    TicketSystemAdapter,
+)
 
 
 class AbstractContainer(abc.ABC):

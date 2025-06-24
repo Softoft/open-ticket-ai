@@ -1,5 +1,6 @@
 from open_ticket_ai.src.ce.run.modifiers.modifier import Modifier
 
+
 class QueueModifier(Modifier):
     """
     Modifier for changing the queue of a ticket.

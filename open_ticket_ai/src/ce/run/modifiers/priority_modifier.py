@@ -1,5 +1,6 @@
 from open_ticket_ai.src.ce.run.modifiers.modifier import Modifier
 
+
 class PriorityModifier(Modifier):
     """
     Modifier for changing the priority of a ticket.

@@ -1,14 +1,16 @@
 import os
 
-from injector import Injector, Module, Binder, singleton, provider
-from otobo import OTOBOClientConfig, OTOBOClient, AuthData, TicketOperation
+from injector import Binder, Injector, Module, provider, singleton
+from otobo import AuthData, OTOBOClient, OTOBOClientConfig, TicketOperation
 
-from open_ticket_ai.src.ce.core import AbstractContainer
-from open_ticket_ai.src.ce.core.config.config_models import OpenTicketAIConfig, load_config, AttributePredictorConfig, \
-    RegistryInstanceConfig
+from open_ticket_ai.src.ce.core import AbstractContainer, Registry, create_registry
+from open_ticket_ai.src.ce.core.config.config_models import (
+    AttributePredictorConfig,
+    OpenTicketAIConfig,
+    RegistryInstanceConfig,
+    load_config,
+)
 from open_ticket_ai.src.ce.core.config.config_validator import OpenTicketAIConfigValidator
-from open_ticket_ai.src.ce.core import create_registry
-from open_ticket_ai.src.ce.core import Registry
 from open_ticket_ai.src.ce.core.util.path_util import find_project_root
 from open_ticket_ai.src.ce.run.ai_models.ai_inference_service import AIInferenceService
 from open_ticket_ai.src.ce.run.attribute_predictors.attribute_predictor import AttributePredictor
@@ -17,7 +19,9 @@ from open_ticket_ai.src.ce.run.modifiers.modifier import Modifier
 from open_ticket_ai.src.ce.run.orchestrator import Orchestrator
 from open_ticket_ai.src.ce.run.preparers.data_preparer import DataPreparer
 from open_ticket_ai.src.ce.ticket_system_integration.otobo_adapter_config import OTOBOAdapterConfig
-from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import (
+    TicketSystemAdapter,
+)
 
 CONFIG_PATH = os.getenv('OPEN_TICKET_AI_CONFIG', find_project_root() / 'config.yml')
 

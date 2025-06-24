@@ -1,4 +1,5 @@
 import os
+
 directory_path = 'src'
 
 new_license_notice = """# Copyright (c) 2024 by Softoft, Tobias Bueck Einzelunternehmen

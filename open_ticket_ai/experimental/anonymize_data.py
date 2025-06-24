@@ -1,8 +1,10 @@
 # Installationen und Modelldownload (falls noch nicht geschehen)
 import re
+
+import phonenumbers
 import spacy
 from faker import Faker
-import phonenumbers
+
 
 # spaCy-German-Modell und Faker-Generator mit deutscher Lokalisierung
 nlp = spacy.load("de_core_news_sm")

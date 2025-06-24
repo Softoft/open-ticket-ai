@@ -1,9 +1,10 @@
 import logging
+
 import typer
+from pyfiglet import Figlet
 
 from open_ticket_ai.src.ce.app import App
 from open_ticket_ai.src.ce.core import DIContainer
-from pyfiglet import Figlet
 
 cli = typer.Typer()
 

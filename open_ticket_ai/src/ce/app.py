@@ -1,13 +1,13 @@
+import logging
 import time
 
 import schedule
 from injector import inject
+from rich.console import Console
 
 from open_ticket_ai.src.ce.core.config.config_models import OpenTicketAIConfig
 from open_ticket_ai.src.ce.core.config.config_validator import OpenTicketAIConfigValidator
 from open_ticket_ai.src.ce.run.orchestrator import Orchestrator
-from rich.console import Console
-import logging
 
 console = Console()
 

@@ -1,5 +1,6 @@
 from open_ticket_ai.src.ce.run.attribute_predictors.attribute_predictor import AttributePredictor
 
+
 class PriorityPredictor(AttributePredictor):
     """
     PriorityPredictor returns the priority ID (0=low,1=medium,2=high).

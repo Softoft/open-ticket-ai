@@ -1,7 +1,5 @@
 from pydantic import BaseModel, Field
 
-from open_ticket_ai.src.ce.core import registry
-
 
 # noinspection PyNestedDecorators
 class Registerable(BaseModel):

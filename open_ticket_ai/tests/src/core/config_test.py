@@ -1,17 +1,18 @@
 # tests/core/config_test.py
 
-import pytest
-from pydantic import ValidationError
 from unittest.mock import MagicMock
 
+import pytest
+from pydantic import ValidationError
+
 from open_ticket_ai.src.ce.core.config import config_models
-from open_ticket_ai.src.ce.core.config import OpenTicketAIConfigValidator
-from open_ticket_ai.src.ce.core import Registry
+from open_ticket_ai.src.ce.core.config.config_validator import OpenTicketAIConfigValidator
+from open_ticket_ai.src.ce.core.dependency_injection.registry import Registry
 from open_ticket_ai.src.ce.run.ai_models.ai_inference_service import AIInferenceService
 from open_ticket_ai.src.ce.run.attribute_predictors.attribute_predictor import AttributePredictor
 from open_ticket_ai.src.ce.run.fetchers.data_fetcher import DataFetcher
 from open_ticket_ai.src.ce.run.modifiers.modifier import Modifier
-from open_ticket_ai.src.ce import DataPreparer
+from open_ticket_ai.src.ce.run.preparers.data_preparer import DataPreparer
 
 
 # --- Test Fixtures and Helper Functions ---

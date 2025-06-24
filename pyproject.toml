@@ -22,3 +22,24 @@ dependencies = [
     "schedule~=1.2.2",
     "otobo>=1.0.1",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+]
+
+[tool.setuptools.packages.find]
+include = ["open_ticket_ai*"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+# Add specific lint configurations here if needed in the future
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+ignore_missing_imports = true

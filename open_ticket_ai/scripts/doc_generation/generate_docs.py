@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 
+
 def generate_markdown_docs(module_name: str, output_dir: str = "docs"):
     """
     Generates Markdown documentation from Python docstrings using pdoc.

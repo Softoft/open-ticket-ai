@@ -1,5 +1,6 @@
 from pathlib import Path
 
+
 def find_project_root(project_name: str = 'open_ticket_ai') -> Path:
     """Search parent directories for the project root."""
 

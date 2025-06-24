@@ -1,5 +1,6 @@
 from open_ticket_ai.src.ce.run.attribute_predictors.attribute_predictor import AttributePredictor
 
+
 class QueuePredictor(AttributePredictor):
     """
     QueuePredictor returns the queue ID (0–9).
