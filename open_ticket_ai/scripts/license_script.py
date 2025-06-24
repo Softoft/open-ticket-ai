@@ -38,7 +38,19 @@ def update_license_in_files(directory):
             filepath = os.path.join(subdir, filename)
             lines = read_file(filepath)
             start_of_code = find_start_of_code(lines)
-            updated_lines = [new_license_notice + '\n'] + lines[start_of_code:]
+
+            # Check if the file is empty or contains only whitespace
+            is_empty_or_whitespace_only = not any(line.strip() for line in lines)
+
+            if start_of_code == len(lines) and not is_empty_or_whitespace_only:
+                # File contains only comments (and possibly blank lines)
+                updated_lines = [new_license_notice + '\n'] + lines
+            else:
+                # File has executable code, or is empty/whitespace only
+                # For empty/whitespace only files, lines[start_of_code:] will be empty,
+                # so only license notice is added, which is correct.
+                updated_lines = [new_license_notice + '\n'] + lines[start_of_code:]
+
             write_file(filepath, updated_lines)
             print(f'Updated license in {filepath}')
 
