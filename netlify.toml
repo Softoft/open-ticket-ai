@@ -1,0 +1,19 @@
+[build]
+base = "vitepress-atc-docs/"
+command = "npm run docs:build"
+publish = ".vitepress/dist"
+
+# Set cache headers for assets
+[[headers]]
+for = "/_assets/*"
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+# Handle SPA routing
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+force = false
+conditions = { Language = ["en"] }
+

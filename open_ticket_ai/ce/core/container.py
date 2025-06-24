@@ -1,6 +1,7 @@
 import os
 
 from injector import Injector, Module, Binder, singleton, provider
+from otobo import OTOBOClientConfig, OTOBOClient, AuthData, TicketOperation
 
 from open_ticket_ai.ce.core.abstract_container import AbstractContainer
 from open_ticket_ai.ce.core.config_models import OpenTicketAIConfig, load_config, AttributePredictorConfig, \
@@ -15,6 +16,7 @@ from open_ticket_ai.ce.run.fetchers.data_fetcher import DataFetcher
 from open_ticket_ai.ce.run.modifiers.modifier import Modifier
 from open_ticket_ai.ce.run.orchestrator import Orchestrator
 from open_ticket_ai.ce.run.preparers.data_preparer import DataPreparer
+from open_ticket_ai.ce.ticket_system_integration.otobo_adapter_config import OTOBOAdapterConfig
 from open_ticket_ai.ce.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 
 CONFIG_PATH = os.getenv('OPEN_TICKET_AI_CONFIG', find_project_root() / 'config.yml')
@@ -40,6 +42,28 @@ class AppModule(Module):
     ) -> OpenTicketAIConfigValidator:
         return OpenTicketAIConfigValidator(config, registry)
 
+    @provider
+    @singleton
+    def provide_otobo_client(self, config: OpenTicketAIConfig) -> OTOBOClient:
+        """
+        Provides an instance of the OTOBO client based on the system configuration.
+        """
+        otobo_config = OTOBOAdapterConfig.model_validate(config.system.params)
+        return OTOBOClient(
+            config=OTOBOClientConfig(
+                base_url=otobo_config.server_address,
+                service=otobo_config.service_name,
+                auth=AuthData(
+                    UserLogin=otobo_config.user,
+                    Password=otobo_config.password
+                ),
+                operations={
+                    TicketOperation.SEARCH.value: otobo_config.search_operation_url,
+                    TicketOperation.GET.value: otobo_config.get_operation_url,
+                    TicketOperation.UPDATE.value: otobo_config.update_operation_url,
+                }
+            )
+        )
 
 class DIContainer(Injector, AbstractContainer):
 
@@ -47,6 +71,7 @@ class DIContainer(Injector, AbstractContainer):
         super().__init__([AppModule()])
         self.config: OpenTicketAIConfig = self.get(OpenTicketAIConfig)
         self.registry = self.get(Registry)
+
         self.binder.bind(TicketSystemAdapter, to=self.get_system(), scope=singleton)
         self.binder.bind(Orchestrator, to=Orchestrator(self.config, self), scope=singleton)
 
@@ -54,16 +79,14 @@ class DIContainer(Injector, AbstractContainer):
                          config_list: list[RegistryInstanceConfig]) -> T:
         """
         Get an instance from the registry by ID and subclass type.
-        TODO: fix this use factory mehod, dont bind binder isnt working because it doesnt override previous bounded
         """
         instance_config = next((c for c in config_list if c.id == id), None)
         if not instance_config:
             raise KeyError(f"Unknown instance ID: {id}")
-        self.binder.bind(type(instance_config), instance_config, scope=singleton)
         instance_class = self.registry.get(instance_config.provider_key, subclass_of)
         if not instance_class:
             raise KeyError(f"Unknown provider key: {instance_config.provider_key}")
-        return instance_class(config=instance_config, ticket_system_adapter=self.get(TicketSystemAdapter))
+        return self.create_object(instance_class, additional_kwargs={"config":instance_config})
 
     def get_system(self) -> TicketSystemAdapter:
         """

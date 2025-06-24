@@ -1,8 +1,8 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 from injector import inject
 
-from open_ticket_ai.ce.core.config_models import OpenTicketAIConfig
+from open_ticket_ai.ce.core.config_models import SystemConfig
 from open_ticket_ai.ce.core.mixins.configurable_mixin import ConfigurableMixin
 from open_ticket_ai.ce.core.mixins.description_mixin import DescriptionMixin
 
@@ -15,24 +15,36 @@ class TicketSystemAdapter(ConfigurableMixin, DescriptionMixin, ABC):
     """
 
     @inject
-    def __init__(self, config: OpenTicketAIConfig, *args, **kwargs):
+    def __init__(self, config: SystemConfig):
         super().__init__(config)
         self.config = config
 
-    def update_ticket(self, ticket_id: str, data: dict) -> None:
+    @abstractmethod
+    async def update_ticket(self, ticket_id: str, data: dict) -> dict | None:
         """
         Update a ticket in the ticket system.
 
         :param ticket_id: The ID of the ticket to update.
         :param data: A dictionary containing the data to update the ticket with.
         """
-        raise NotImplementedError("Subclasses must implement this method.")
+        pass
 
-    def fetch_ticket(self, ticket_id: str) -> dict:
+    @abstractmethod
+    async def find_tickets(self, query: dict) -> list[dict]:
         """
-        Fetch a ticket from the ticket system.
+        Search for tickets in the ticket system.
 
-        :param ticket_id: The ID of the ticket to fetch.
-        :return: A dictionary containing the ticket data.
+        :param query: A dictionary containing the search parameters.
+        :return: A list of dictionaries containing the matching tickets.
         """
-        raise NotImplementedError("Subclasses must implement this method.")
+        pass
+
+    @abstractmethod
+    async def find_first_ticket(self, query: dict) -> dict | None:
+        """
+        Find the first ticket matching the search query.
+
+        :param query: The search parameters to filter tickets.
+        :return: The first matching ticket or None if no tickets found.
+        """
+        pass

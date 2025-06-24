@@ -23,7 +23,7 @@ class Modifier(ConfigurableMixin, DescriptionMixin, abc.ABC):
         self.modifier_config = config
 
     @abc.abstractmethod
-    def modify(self, ticket_id: str, model_result: str | int):
+    def modify(self, original_data: dict, model_result: str | int):
         """
         Abstract method to modify data.
         Implementations should define how to modify the data.

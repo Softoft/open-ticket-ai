@@ -6,8 +6,12 @@ open_ticket_ai:
   system:
     provider_key: "OTOBOAdapter"
     params:
-      base_url: "https://your-otobo-instance.com"
-      username: "your_username"
+      server_address: "http://18.193.56.84"
+      webservice_name: "OTAI"
+      search_operation_url: "ticket/search"
+      update_operation_url: "ticket"
+      get_operation_url: "ticket/get"
+      username: "root@locallhost"
       password_env_var: "OTOBOPASS"
   fetchers:
     - id: "basic_ticket"

@@ -22,7 +22,7 @@ class DataPreparer(ConfigurableMixin, DescriptionMixin, abc.ABC):
         self.preparer_config = config
 
     @abc.abstractmethod
-    def prepare(self) -> str:
+    def prepare(self, data: dict) -> str:
         """
         Prepare the data for processing.
 

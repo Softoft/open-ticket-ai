@@ -1,0 +1,21 @@
+
+services:
+  atc:
+    image: your-docker-repo/atc:latest
+    container_name: atc
+    ports:
+      - "8080:80"
+    env_file: .env
+    # Für lokale OTOBO-Installation (non-docker) Pfad mounten:
+    volumes:
+      - "${OTOBO_PATH:-}/otobo:/opt/otobo:ro"
+    depends_on:
+      - setup
+
+  setup:
+    image: your-docker-repo/atc-setup-otobo:latest
+    container_name: atc-setup
+    env_file: .env
+    entrypoint: ["/usr/local/bin/setup-otobo.sh"]
+    # Skript läuft nur einmal am Start und beendet sich:
+    restart: "no"
