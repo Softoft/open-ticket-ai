@@ -1,25 +1,28 @@
-import pytest
 from unittest.mock import patch
 
-from open_ticket_ai.src.ce.run.preparers.data_preparer import DataPreparer
 from open_ticket_ai.src.ce.core.config.config_models import PreparerConfig
-
-class DummyPreparer(DataPreparer):
-    def prepare(self, data: dict) -> str:
-        return f"processed {data['key']}"
+from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
+from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 
 
-def test_data_preparer_cannot_instantiate_abstract(config=None):
-    cfg = PreparerConfig(id='p1', provider_key='dummy')
-    with pytest.raises(TypeError):
-        DataPreparer(cfg)
+class DummyPreparer(Pipe):
+    def __init__(self, cfg):
+        super().__init__(cfg)
+        self.preparer_config = cfg
+
+    def process(self, context: PipelineContext) -> PipelineContext:
+        context.data["prepared_data"] = context.data.get("key")
+        return context
 
 
-def test_data_preparer_init_and_prepare():
-    cfg = PreparerConfig(id='p2', provider_key='dummy', params={'x': 1})
-    with patch('open_ticket_ai.src.ce.core.mixins.configurable_mixin.pretty_print_config') as pp:
+def test_preparer_process_updates_context():
+    cfg = PreparerConfig(id="p1", provider_key="dummy")
+    with patch(
+        "open_ticket_ai.src.ce.core.mixins.registry_providable_instance.pretty_print_config"
+    ) as pp:
         preparer = DummyPreparer(cfg)
-        pp.assert_called_once_with(cfg)
-    assert preparer.preparer_config == cfg
-    assert DummyPreparer.get_description() == 'No description provided.'
-    assert preparer.prepare({'key': 'value'}) == 'processed value'
+        pp.assert_called_once()
+        assert pp.call_args.args[0] is cfg
+    ctx = PipelineContext(ticket_id="1", data={"key": "value"})
+    out = preparer.process(ctx)
+    assert out.data["prepared_data"] == "value"

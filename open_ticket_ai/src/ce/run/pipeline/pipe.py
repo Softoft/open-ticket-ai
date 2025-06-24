@@ -3,11 +3,10 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 
 from .context import PipelineContext
-from ...core.mixins.configurable_mixin import ConfigurableMixin
 from ...core.mixins.registry_providable_instance import RegistryProvidableInstance
 
 
-class Pipe(ConfigurableMixin, RegistryProvidableInstance, ABC):
+class Pipe(RegistryProvidableInstance, ABC):
     """Interface for all pipeline components."""
 
     @abstractmethod
