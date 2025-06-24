@@ -12,10 +12,10 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /get-started
+      link: /guide/quickstart-guide
     - theme: alt
       text: Feature Overview
-      link: /overview
+      link: /concepts/community-edition-overview
 
 features:
   - title: Einfache Installation
