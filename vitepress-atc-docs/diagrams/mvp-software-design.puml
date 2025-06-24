@@ -2,23 +2,19 @@
 skinparam componentStyle rectangle
 allow_mixing
 
-' ===================================
-' The Core Orchestration and DI
-' ===================================
-package "Core" {
+package "Core" as Core {
   class DIContainer {
-    + register<T>(name: str, instance: T): void
-    + resolve<T>(name: str): T
+    + get_pipeline(config): Pipeline
+    + get_instance(id, type): T
   }
 
-  class ConfigManager
-  DIContainer --> ConfigManager : provides
+  class Orchestrator {
+    + setup_and_run()
+  }
 
   class Scheduler
-  class Orchestrator
-  Scheduler ..> Orchestrator: "schedules"
+  Orchestrator o-- Scheduler : manages
 
-  ' --- The new Pipeline Pattern components ---
   class PipelineContext {
     + ticket_id: str
     + data: map
@@ -38,74 +34,43 @@ package "Core" {
   Pipeline ..> PipelineContext
 }
 
-' ===================================
-' External System Integration
-' ===================================
-package "Integration" {
-  interface TicketAdapter {
+package "Integration" as Integration {
+  interface TicketSystemAdapter {
     + fetch(...)
     + update(...)
   }
-  class AdapterFactory
-  AdapterFactory --> TicketAdapter : builds
-  class OTOBOAdapter
-  class FreshdeskAdapter
+  class OTOBOAdapter implements TicketSystemAdapter
 }
 
-' ===================================
-' Data Source for the Pipeline
-' ===================================
-package "DataFetchers (Source)" as DataFetchers {
-  interface DataFetcher {
-    + get_data(ticket_id): map
-  }
-  DataFetcher ..> TicketAdapter : uses
+package "Concrete Pipes" as ConcretePipes {
 
-  class SimpleTicketProvider implements DataFetcher
-}
-
-' ===================================
-' The Pipes (Filters and Sink)
-' ===================================
-package "Pipes" {
-
-  ' --- Filter Pipes ---
-  package "Filters" {
-    abstract class AbstractDataPreparerPipe
-    class SubjectBodyPreparer extends AbstractDataPreparerPipe
-
-    abstract class AbstractAIPipe
-    class HuggingFaceAIPipe extends AbstractAIPipe
-    class InferenceAIPipe extends AbstractAIPipe
+  package "FetcherPipes" as FetcherPipes {
+    class BasicTicketFetcher
+    BasicTicketFetcher .up.|> Pipe
+    BasicTicketFetcher ..> TicketSystemAdapter : uses
   }
 
-  ' --- Sink Pipe ---
-  package "Sink" {
-    abstract class AbstractModifierPipe{
-      # ticket_adapter: TicketAdapter
-    }
-    class TicketQueueModifierPipe extends AbstractModifierPipe
-    class TicketPriorityModifierPipe extends AbstractModifierPipe
+  package "DataPreparerPipes" as DataPreparerPipes {
+    class SubjectBodyPreparer
+    class SetFieldFromModelOutput
+    SubjectBodyPreparer .up.|> Pipe
+    SetFieldFromModelOutput .up.|> Pipe
+  }
 
-    AbstractModifierPipe ..> TicketAdapter : uses
+  package "AIModelPipes" as AIModelPipes {
+    class HFAIInferenceService
+    HFAIInferenceService .up.|> Pipe
+  }
+
+  package "ModifierPipes (Sinks)" as ModifierPipes {
+    class GenericTicketUpdater
+    GenericTicketUpdater .up.|> Pipe
+    GenericTicketUpdater ..> TicketSystemAdapter : uses
   }
 }
 
+DIContainer --> ConcretePipes : "creates & injects"
+DIContainer --> Integration : "creates & injects"
+Orchestrator ..> DIContainer : "uses"
 
-' ===================================
-' General Relationships
-' ===================================
-
-' The Orchestrator uses a DataFetcher to get the initial data
-' to create the PipelineContext before starting a Pipeline.
-Orchestrator ..> DataFetcher : uses
-
-' Components are registered in the DI Container for resolution
-Pipes ..> DIContainer : registered in
-DataFetchers ..> DIContainer : registered in
-Integration ..> DIContainer: registered in
-
-AbstractDataPreparerPipe .up.|> Pipe
-AbstractAIPipe .up.|> Pipe
-AbstractModifierPipe .up.|> Pipe
 @enduml
