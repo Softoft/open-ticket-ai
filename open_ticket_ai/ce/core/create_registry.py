@@ -10,6 +10,8 @@ from open_ticket_ai.ce.ticket_system_integration.otobo_adapter import OTOBOAdapt
 
 
 def create_registry() -> Registry:
+    """Create the default class registry."""
+
     registry = Registry()
     registry.register_all(
         [OTOBOAdapter, BasicTicketFetcher, SubjectBodyPreparer,

@@ -16,35 +16,37 @@ class TicketSystemAdapter(ConfigurableMixin, DescriptionMixin, ABC):
 
     @inject
     def __init__(self, config: SystemConfig):
+        """Initialize the adapter with system configuration."""
+
         super().__init__(config)
         self.config = config
 
     @abstractmethod
     async def update_ticket(self, ticket_id: str, data: dict) -> dict | None:
-        """
-        Update a ticket in the ticket system.
+        """Update a ticket in the system.
 
-        :param ticket_id: The ID of the ticket to update.
-        :param data: A dictionary containing the data to update the ticket with.
+        Args:
+            ticket_id: Ticket identifier.
+            data: Attributes to update.
+
+        Returns:
+            Optional[dict]: Updated ticket information.
         """
         pass
 
     @abstractmethod
     async def find_tickets(self, query: dict) -> list[dict]:
-        """
-        Search for tickets in the ticket system.
+        """Search for tickets matching ``query``.
 
-        :param query: A dictionary containing the search parameters.
-        :return: A list of dictionaries containing the matching tickets.
+        Args:
+            query: Search parameters for the ticket system.
+
+        Returns:
+            list[dict]: Matching tickets.
         """
         pass
 
     @abstractmethod
     async def find_first_ticket(self, query: dict) -> dict | None:
-        """
-        Find the first ticket matching the search query.
-
-        :param query: The search parameters to filter tickets.
-        :return: The first matching ticket or None if no tickets found.
-        """
+        """Return the first ticket that matches ``query`` if any."""
         pass

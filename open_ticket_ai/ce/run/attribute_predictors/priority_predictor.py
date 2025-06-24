@@ -6,6 +6,8 @@ class PriorityPredictor(AttributePredictor):
     """
 
     def run_attribute_prediction(self):
+        """Fetch data, run the model and apply the modifier."""
+
         fetched_data: dict = self.fetcher.fetch_data()
         prepared_data: str = self.preparer.prepare(fetched_data)
         result = self.ai_inference_service.generate_response(prepared_data)

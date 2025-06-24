@@ -13,19 +13,18 @@ class DataPreparer(ConfigurableMixin, DescriptionMixin, abc.ABC):
     """
     @inject
     def __init__(self, config: PreparerConfig,  *args, **kwargs):
-        """
-        Initializes the DataPreparer with a configuration.
-
-        :param config: Configuration for the data preparer.
-        """
+        """Initialize the preparer with its configuration."""
         super().__init__(config)
         self.preparer_config = config
 
     @abc.abstractmethod
     def prepare(self, data: dict) -> str:
-        """
-        Prepare the data for processing.
+        """Prepare ``data`` for processing.
 
-        :return: The input tokens
+        Args:
+            data: Raw ticket data.
+
+        Returns:
+            str: The prepared input string.
         """
         pass

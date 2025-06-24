@@ -11,6 +11,8 @@ class ConfigurableMixin:
     """
 
     def __init__(self, config: BaseModel):
+        """Store the configuration and pretty print it."""
+
         logger = logging.getLogger(__name__)
         logger.info(f"Initializing {self.__class__.__name__} with config:")
         pretty_print_config(config)

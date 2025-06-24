@@ -25,6 +25,8 @@ class OTOBOAdapterConfig(BaseModel):
     password_env_var: str
 
     def __str__(self):
+        """Return a string representation of the configuration."""
+
         return f"OTOBOServerConfig(server_address={self.server_address}, " \
                f"webservice_name={self.webservice_name}, " \
                f"search_operation_url={self.search_operation_url}, " \

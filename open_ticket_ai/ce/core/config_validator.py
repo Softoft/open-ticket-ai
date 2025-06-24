@@ -13,15 +13,20 @@ from open_ticket_ai.ce.run.preparers.data_preparer import DataPreparer
 
 
 class OpenTicketAIConfigValidator:
+    """Validate configuration values against the registry."""
     @inject
     def __init__(self, config: OpenTicketAIConfig, registry: Registry):
+        """Create a new validator.
+
+        Args:
+            config: Loaded ``OpenTicketAIConfig`` instance.
+            registry: Registry containing available classes.
+        """
         self.config = config
         self.registry = registry
 
     def validate_registry(self) -> None:
-        """
-        Validate that all configured components are present in the provided registry.
-        """
+        """Ensure all configured providers are registered."""
         registry_provider_types: dict[type, list[Registerable]] = {
             DataFetcher: self.config.fetchers,
             DataPreparer: self.config.data_preparers,
