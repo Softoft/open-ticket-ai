@@ -14,6 +14,8 @@ import logging
 console = Console()
 
 class App:
+    """Main application entry point."""
+
     @inject
     def __init__(
             self,
@@ -21,12 +23,20 @@ class App:
             validator: OpenTicketAIConfigValidator,
             orchestrator: Orchestrator
     ):
+        """Initialize the application.
+
+        Args:
+            config: Loaded configuration for the application.
+            validator: Validator used to check the configuration.
+            orchestrator: Orchestrator used to run attribute predictors.
+        """
         self._logger = logging.getLogger(__name__)
         self.config = config
         self.validator = validator
         self.orchestrator = orchestrator
 
     def run(self):
+        """Validate configuration and start the scheduler loop."""
         try:
             self.validator.validate_registry()
         except ValueError as e:

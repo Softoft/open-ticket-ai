@@ -7,6 +7,8 @@ from open_ticket_ai.ce.core.util.path_util import find_project_root
 
 
 class RootConfig(BaseModel):
+    """Wrapper model used for schema generation."""
+
     open_ticket_ai: OpenTicketAIConfig
 
 

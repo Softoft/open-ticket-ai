@@ -8,4 +8,5 @@ class DescriptionMixin:
 
     @staticmethod
     def get_description() -> str:
+        """Return a human readable description for the class."""
         return "No description provided."

@@ -8,6 +8,8 @@ logger = logging.getLogger(__name__)
 console = Console()
 
 def pretty_print_config(config: BaseModel):
+    """Pretty print a pydantic model using ``rich``."""
+
     # turn your BaseModel into a dict
     cfg_dict = config.model_dump()
 

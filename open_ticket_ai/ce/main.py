@@ -12,6 +12,7 @@ def main(
     verbose: bool = typer.Option(False, "-v", "--verbose", help="INFO-level logging"),
     debug:   bool = typer.Option(False, "-d", "--debug",   help="DEBUG-level logging"),
 ):
+    """Configure logging based on CLI options."""
     # determine log level
     if debug:
         level = logging.DEBUG
@@ -30,6 +31,7 @@ def main(
 
 @cli.command()
 def start():
+    """Initialize the container and start the application."""
     logger = logging.getLogger(__name__)
     f = Figlet(font="slant")
     logger.info("Starting Open Ticket AI")
