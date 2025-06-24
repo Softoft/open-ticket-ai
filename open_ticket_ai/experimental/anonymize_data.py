@@ -38,6 +38,12 @@ def anonymize_text(text):
             pass
         return num_str
     new_text = re.sub(r'\+?\d[\d\s\-\(\)]{7,}\d', replace_phone, new_text)
+    # IBAN erkennen und ersetzen
+    new_text = re.sub(
+        r"\b[A-Z]{2}\d{2}[A-Z0-9]{11,30}\b",
+        lambda m: fake.iban(),
+        new_text,
+    )
     # (Optional) Einfache Erkennung von Adressen mit Straßenname und Nummer
     new_text = re.sub(
         r'\b[A-ZÄÖÜ][a-zäöüß]+(?:straße|Str\.|Weg|Platz)\s*\d+[a-zA-Z]?\b',
