@@ -2,7 +2,7 @@ import abc
 
 import schedule
 
-from open_ticket_ai.src.ce.core.config.config_models import AttributePredictorConfig
+from open_ticket_ai.src.ce.core.config.config_models import PipelineConfig
 from open_ticket_ai.src.ce.core.mixins.configurable_mixin import ConfigurableMixin
 from open_ticket_ai.src.ce.core.mixins.description_mixin import DescriptionMixin
 from open_ticket_ai.src.ce.run.ai_models.ai_inference_service import AIInferenceService

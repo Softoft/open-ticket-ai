@@ -2,7 +2,7 @@ import logging
 
 from injector import inject
 from pydantic import BaseModel
-from rich import Console
+from rich.console import Console
 
 from open_ticket_ai.src.ce.core.util.pretty_print_config import pretty_print_config
 

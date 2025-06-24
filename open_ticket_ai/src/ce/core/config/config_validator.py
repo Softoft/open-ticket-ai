@@ -38,7 +38,8 @@ class OpenTicketAIConfigValidator:
             for config in configs:
                 if not self.registry.contains(config.provider_key, provider_type):
                     raise ValueError(cleandoc(f"""
-                        Registry does not contain required {provider_type.__name__} with id '{config.id}'
+                        Registry does not contain required {provider_type.__name__} with id
+                        '{config.id}'
                         There are following registered providers
                         {self.registry.get_registry_types_descriptions(subclass_of=provider_type)}
                         """))

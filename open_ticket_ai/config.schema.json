@@ -1,6 +1,7 @@
 {
   "$defs": {
     "AIInferenceServiceConfig": {
+      "description": "Configuration for AI inference services.",
       "properties": {
         "provider_key": {
           "minLength": 1,
@@ -25,57 +26,8 @@
       "title": "AIInferenceServiceConfig",
       "type": "object"
     },
-    "AttributePredictorsConfig": {
-      "properties": {
-        "provider_key": {
-          "minLength": 1,
-          "title": "Provider Key",
-          "type": "string"
-        },
-        "id": {
-          "minLength": 1,
-          "title": "Id",
-          "type": "string"
-        },
-        "params": {
-          "additionalProperties": true,
-          "title": "Params",
-          "type": "object"
-        },
-        "fetcher_id": {
-          "minLength": 1,
-          "title": "Fetcher Id",
-          "type": "string"
-        },
-        "preparer_id": {
-          "minLength": 1,
-          "title": "Preparer Id",
-          "type": "string"
-        },
-        "ai_inference_service_id": {
-          "description": "ID of the model to use for prediction",
-          "minLength": 1,
-          "title": "Ai Inference Service Id",
-          "type": "string"
-        },
-        "modifier_id": {
-          "minLength": 1,
-          "title": "Modifier Id",
-          "type": "string"
-        }
-      },
-      "required": [
-        "provider_key",
-        "id",
-        "fetcher_id",
-        "preparer_id",
-        "ai_inference_service_id",
-        "modifier_id"
-      ],
-      "title": "AttributePredictorsConfig",
-      "type": "object"
-    },
     "FetcherConfig": {
+      "description": "Configuration for data fetchers.",
       "properties": {
         "provider_key": {
           "minLength": 1,
@@ -101,6 +53,7 @@
       "type": "object"
     },
     "ModifierConfig": {
+      "description": "Configuration for modifiers.",
       "properties": {
         "provider_key": {
           "minLength": 1,
@@ -126,10 +79,10 @@
       "type": "object"
     },
     "OpenTicketAIConfig": {
+      "description": "Root configuration model for Open Ticket AI.",
       "properties": {
         "system": {
-          "$ref": "#/$defs/SystemConfig",
-          "description": "System configuration"
+          "$ref": "#/$defs/SystemConfig"
         },
         "fetchers": {
           "items": {
@@ -163,12 +116,12 @@
           "title": "Modifiers",
           "type": "array"
         },
-        "attribute_predictors": {
+        "pipelines": {
           "items": {
-            "$ref": "#/$defs/AttributePredictorsConfig"
+            "$ref": "#/$defs/PipelineConfig"
           },
           "minItems": 1,
-          "title": "Attribute Predictors",
+          "title": "Pipelines",
           "type": "array"
         }
       },
@@ -178,12 +131,42 @@
         "data_preparers",
         "ai_inference_services",
         "modifiers",
-        "attribute_predictors"
+        "pipelines"
       ],
       "title": "OpenTicketAIConfig",
       "type": "object"
     },
+    "PipelineConfig": {
+      "description": "Configuration for a single pipeline workflow.",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "schedule": {
+          "$ref": "#/$defs/SchedulerConfig"
+        },
+        "pipes": {
+          "description": "Ordered list of all pipe component IDs to execute, starting with a fetcher.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Pipes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "schedule",
+        "pipes"
+      ],
+      "title": "PipelineConfig",
+      "type": "object"
+    },
     "PreparerConfig": {
+      "description": "Configuration for data preparers.",
       "properties": {
         "provider_key": {
           "minLength": 1,
@@ -208,7 +191,29 @@
       "title": "PreparerConfig",
       "type": "object"
     },
+    "SchedulerConfig": {
+      "description": "Configuration for scheduling recurring tasks.",
+      "properties": {
+        "interval": {
+          "minimum": 1,
+          "title": "Interval",
+          "type": "integer"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "interval",
+        "unit"
+      ],
+      "title": "SchedulerConfig",
+      "type": "object"
+    },
     "SystemConfig": {
+      "description": "Configuration for the ticket system adapter.",
       "properties": {
         "provider_key": {
           "minLength": 1,
@@ -228,6 +233,7 @@
       "type": "object"
     }
   },
+  "description": "Wrapper model used for schema generation.",
   "properties": {
     "open_ticket_ai": {
       "$ref": "#/$defs/OpenTicketAIConfig"
