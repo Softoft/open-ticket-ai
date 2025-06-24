@@ -15,7 +15,7 @@ Choosing the right hardware is important for the performance of Open Ticket AI, 
 
 ## Memory (RAM)
 
-Ensure you have enough RAM available for the models you intend to use. Refer to the [Training the Model](./training.md#4-model-selection-hardware) section for examples of RAM requirements for specific models.
+Ensure you have enough RAM available for the models you intend to use. Refer to the [Training the Model](./training-models.md#4-model-selection-hardware) section for examples of RAM requirements for specific models.
 
 *   For the default BERT models, you will generally need at least 4GB of RAM dedicated to the model, plus additional RAM for the operating system and the ticket system itself if they are running on the same host.
 

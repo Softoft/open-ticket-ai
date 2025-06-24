@@ -14,7 +14,7 @@ Follow these steps to install Open Ticket AI:
     ```
 
 2.  **Create a `run_config.yaml`**
-    Refer to the [Configuration](./configuration.md) documentation for details on setting up this file.
+    Refer to the [Configuration](../reference/configuration-reference.md) documentation for details on setting up this file.
 
 3.  **Start with Docker Compose**
     This command will build the necessary Docker images and start the application services in detached mode.
