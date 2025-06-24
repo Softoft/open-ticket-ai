@@ -12,9 +12,7 @@ from open_ticket_ai.src.ce.run.preparers.data_preparer import DataPreparer
 
 
 class AttributePredictor(ConfigurableMixin, DescriptionMixin, abc.ABC):
-    """
-    Base class for attribute predictors.
-    """
+    """Deprecated: use :mod:`open_ticket_ai.src.ce.run.pipeline` instead."""
 
     def __init__(self, config: AttributePredictorConfig, fetcher: DataFetcher, preparer: DataPreparer,
                  ai_inference_service: AIInferenceService, modifier: Modifier, *args, **kwargs):
