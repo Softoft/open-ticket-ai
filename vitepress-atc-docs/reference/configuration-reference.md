@@ -1,74 +1,123 @@
 ---
 title: Configuring Open Ticket AI
-description: How to configure Open Ticket AI using run_config.yaml.
+description: How to configure Open Ticket AI using `config.yml`.
 ---
 
 # Configuration
 
-Open Ticket AI is configured using a `run_config.yaml` file placed at the project root.
+Open Ticket AI is configured using a `config.yml` file placed at the project root.
 
-## `run_config.yaml` Example
+## `config.yml` Example
 
-Below is an example structure of the `run_config.yaml` file:
+Below is an example structure of the `config.yml` file:
 
 ```yaml
-run_config:
-  hf_token: "your_huggingface_token_here" # Your Hugging Face API token
+open_ticket_ai:
+  # only one ticket-system adapter
+  system:
+    provider_key: "OTOBOAdapter"
+    params:
+      server_address: "http://18.193.56.84"
+      webservice_name: "OTAI"
+      search_operation_url: "ticket/search"
+      update_operation_url: "ticket"
+      get_operation_url: "ticket/get"
+      username: "root@locallhost"
+      password_env_var: "OTOBOPASS"
+  fetchers:
+    - id: "basic_ticket"
+      provider_key: "BasicTicketFetcher"
+      params:
+        filters:
+          - attribute: "queue"
+            value: "incoming_queue"
 
-  ticket_classifiers:
-    queue_classification:
-      tokenizer: "ticket_combined_email_tokenizer"
-      hf_model: "google/flan-t5-base" # Hugging Face model for queue classification
-      ticket_attribute: "queue_id" # Ticket attribute to store the queue
-      confidence_threshold: 0.5 # Minimum confidence to assign a queue
-      low_confidence_value: "misc" # Queue for low-confidence predictions
-      ticket_to_model_results_map: # Mapping from model output to your ticket system queues
-        - otobo_queue1:
+  data_preparers:
+    - id: "subject_body"
+      provider_key: "SubjectBodyPreparer"
+      params:
+        subject_field: "subject"
+        body_field: "body"
+        repeat_subject: 3
+
+  ai_inference_services:
+    - id: "queue_model"
+      provider_key: "HFAIInferenceService"
+      params:
+        hf_model: "open-ticket-ai/queue-classification-german-bert"
+        hf_token_env_var: "HUGGINGFACE_TOKEN"
+
+    - id: "priority_model"
+      provider_key: "HFAIInferenceService"
+      params:
+        hf_model: "open-ticket-ai/priority-classification-german-bert"
+        hf_token_env_var: "HUGGINGFACE_TOKEN"
+
+  modifiers:
+    - id: "queue_updater"
+      provider_key: "QueueModifier"
+      params:
+        confidence_threshold: 0.8
+        low_confidence_value: "unclassified"
+    - id: "priority_updater"
+      provider_key: "PriorityModifier"
+      params:
+        confidence_threshold: 0.6
+        low_confidence_value: 3
+
+  attribute_predictors:
+    - id: "queue_classification"
+      provider_key: "QueuePredictor"
+      fetcher_id: "basic_ticket"
+      preparer_id: "subject_body"
+      ai_inference_service_id: "queue_model"
+      modifier_id: "queue_updater"
+      schedule:
+        interval: 10
+        unit: "seconds"
+      params:
+        ticket_system_value2model_values:
+          otobo_queue1:
             - "IT & Technology/Security Operations"
-        - otobo_queue2:
+          otobo_queue2:
             - "IT & Technology/Software Development"
-        - research_development:
-            - "Science/*" # Wildcard matching
-        - misc:
-            - "*" # Default catch-all
+          research_development:
+            - "Science/*"
+          misc:
+            - "*"
 
-    priority_classification:
-      tokenizer: "ticket_combined_email_tokenizer"
-      hf_model: "google/flan-t5-base" # Hugging Face model for priority classification
-      ticket_attribute: "priority" # Ticket attribute to store the priority
-      ticket_to_model_results_map: # Mapping from model output to your priority levels
-        - 1: [1]
-        - 2: [2]
-        - 3: [3]
-        - 4: [4]
-        - 5: [5]
+    - id: "priority_classification"
+      provider_key: "PriorityPredictor"
+      fetcher_id: "basic_ticket"
+      preparer_id: "subject_body"
+      ai_inference_service_id: "priority_model"
+      modifier_id: "priority_updater"
+      schedule:
+        interval: 10
+        unit: "seconds"
+      params:
+        ticket_system_value2model_values:
+          1: [ 1 ]
+          2: [ 2 ]
+          3: [ 3 ]
+          4: [ 4 ]
+          5: [ 5 ]
 
-  ticket_system_adapter:
-    system_name: "otobo" # Name of your ticket system (e.g., otobo, zammad)
-    rest_settings:
-      base_url: "https://your-otobo-instance.com" # Base URL of your ticket system's API
-      username: "your_username"
-      password: "your_password"
-      search_url: "/api/v1/ticket/search" # API endpoint for searching tickets
-      get_url:    "/api/v1/ticket/get"    # API endpoint for fetching a ticket
-      update_url: "/api/v1/ticket/update"  # API endpoint for updating a ticket
-    incoming_queue: "otobo_queue1" # The queue from which to fetch new tickets
 ```
 
-### Key Configuration Sections:
+### Key Configuration Sections
 
-*   `hf_token`: Your personal Hugging Face access token, required for downloading models.
-*   `ticket_classifiers`: Defines the behavior for different classification tasks (e.g., queue, priority).
-    *   `tokenizer`: Specifies the tokenizer to be used.
-    *   `hf_model`: The Hugging Face model identifier.
-    *   `ticket_attribute`: The field in your ticket system where the prediction will be stored.
-    *   `confidence_threshold` (for queue_classification): If the model's confidence is below this threshold, the `low_confidence_value` is used.
-    *   `low_confidence_value` (for queue_classification): The queue assigned when confidence is low.
-    *   `ticket_to_model_results_map`: A crucial mapping that translates the raw output of the AI model to the specific queue names or priority levels used in your ticket system. Wildcards (`*`) can be used for broader matching.
-*   `ticket_system_adapter`: Configures how Open Ticket AI interacts with your specific ticket system.
-    *   `system_name`: Identifies the type of ticket system.
-    *   `rest_settings`: Contains the API endpoint details and credentials.
-    *   `incoming_queue`: The specific queue in your ticket system that Open Ticket AI will monitor for new tickets to process.
+*   **`system`**: Defines how Open Ticket AI connects to your ticket system.
+    * `provider_key` – Which adapter implementation to use.
+    * `params` – Connection details such as server address and credentials.
+*   **`fetchers`**: Describe how tickets are retrieved from the system.
+*   **`data_preparers`**: Specify how ticket text is combined or preprocessed before being sent to the model.
+*   **`ai_inference_services`**: Configure the AI models.
+    * `hf_model` – The Hugging Face model identifier.
+    * `hf_token_env_var` – Name of the environment variable that stores your Hugging Face token.
+*   **`modifiers`**: Update tickets with the prediction results.
+    * Typical parameters include `confidence_threshold` and `low_confidence_value`.
+*   **`attribute_predictors`**: Tie everything together. Each predictor references a fetcher, preparer, AI inference service and modifier and can define a schedule.
 
 ## Default Hugging Face Models
 
