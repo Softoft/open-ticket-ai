@@ -1,7 +1,7 @@
 from injector import inject
 from otobo import OTOBOClient, TicketSearchParams, TicketUpdateParams
 
-from open_ticket_ai.ce.core.config_models import SystemConfig
+from open_ticket_ai.ce.core.config.config_models import SystemConfig
 from open_ticket_ai.ce.core.mixins.description_mixin import DescriptionMixin
 from open_ticket_ai.ce.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 

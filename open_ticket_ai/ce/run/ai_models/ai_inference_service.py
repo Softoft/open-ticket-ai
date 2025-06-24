@@ -3,7 +3,7 @@ import logging
 
 from injector import inject
 
-from open_ticket_ai.ce.core.config_models import AIInferenceServiceConfig
+from open_ticket_ai.ce.core.config.config_models import AIInferenceServiceConfig
 from open_ticket_ai.ce.core.mixins.configurable_mixin import ConfigurableMixin
 from open_ticket_ai.ce.core.mixins.description_mixin import DescriptionMixin
 

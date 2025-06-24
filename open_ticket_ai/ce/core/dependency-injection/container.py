@@ -4,9 +4,9 @@ from injector import Injector, Module, Binder, singleton, provider
 from otobo import OTOBOClientConfig, OTOBOClient, AuthData, TicketOperation
 
 from open_ticket_ai.ce.core.abstract_container import AbstractContainer
-from open_ticket_ai.ce.core.config_models import OpenTicketAIConfig, load_config, AttributePredictorConfig, \
+from open_ticket_ai.ce.core.config.config_models import OpenTicketAIConfig, load_config, AttributePredictorConfig, \
     RegistryInstanceConfig
-from open_ticket_ai.ce.core.config_validator import OpenTicketAIConfigValidator
+from open_ticket_ai.ce.core.config.config_validator import OpenTicketAIConfigValidator
 from open_ticket_ai.ce.core.create_registry import create_registry
 from open_ticket_ai.ce.core.registry import Registry
 from open_ticket_ai.ce.core.util.path_util import find_project_root

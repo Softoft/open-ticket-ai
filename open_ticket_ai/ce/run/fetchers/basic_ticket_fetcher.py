@@ -1,4 +1,3 @@
-from open_ticket_ai.ce.core.config_models import FetcherConfig
 from open_ticket_ai.ce.run.fetchers.data_fetcher import DataFetcher
 
 

@@ -2,7 +2,7 @@ import json
 
 from pydantic import BaseModel
 
-from open_ticket_ai.ce.core.config_models import OpenTicketAIConfig
+from open_ticket_ai.ce.core.config.config_models import OpenTicketAIConfig
 from open_ticket_ai.ce.core.util.path_util import find_project_root
 
 
