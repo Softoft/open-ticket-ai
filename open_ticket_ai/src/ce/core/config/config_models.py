@@ -4,17 +4,11 @@ from typing import Any, Self
 
 from pydantic import BaseModel, Field, model_validator
 
-from open_ticket_ai.src.ce.core.mixins.registry_validation_mixin import Registerable
+from open_ticket_ai.src.ce.core.mixins.registry_instance_config import RegistryInstanceConfig
 
 
-class SystemConfig(Registerable):
+class SystemConfig(RegistryInstanceConfig):
     """Configuration for the ticket system adapter."""
-    params: dict[str, Any] = Field(default_factory=dict)
-
-
-class RegistryInstanceConfig(Registerable):
-    """Base configuration for registry instances."""
-    id: str = Field(..., min_length=1)
     params: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -51,6 +45,14 @@ class PipelineConfig(RegistryInstanceConfig):
         description="Ordered list of all pipe component IDs to execute, starting with a fetcher."
     )
 
+    def validate_pipe_ids_are_registered(self, all_pipe_ids: set[str]) -> None:
+        """Validate that all pipe IDs in this pipeline exist."""
+        for pipe_id in self.pipes:
+            if pipe_id not in all_pipe_ids:
+                raise ValueError(
+                    f"Pipeline '{self.id}' references unknown pipe component '{pipe_id}'"
+                )
+
 
 # UPDATED: The root configuration model
 class OpenTicketAIConfig(BaseModel):
@@ -66,19 +68,21 @@ class OpenTicketAIConfig(BaseModel):
     def cross_validate_references(self) -> Self:
         """Validate that all pipeline references to components exist."""
 
-        all_pipe_ids = {f.id for f in self.fetchers} | \
-                       {p.id for p in self.data_preparers} | \
-                       {m.id for m in self.ai_inference_services} | \
-                       {m.id for m in self.modifiers}
+        all_pipe_ids = {ric.id for ric in self.get_all_register_instance_configs()}
 
         for pipeline in self.pipelines:
-            # Validate each pipe ID in the pipeline's list
-            for pipe_id in pipeline.pipes:
-                if pipe_id not in all_pipe_ids:
-                    raise ValueError(
-                        f"Pipeline '{pipeline.id}' references unknown pipe component '{pipe_id}'"
-                    )
+            pipeline.validate_pipe_ids_are_registered(all_pipe_ids)
         return self
+
+    def get_all_register_instance_configs(self) -> list[RegistryInstanceConfig]:
+        """Return all registered instances in the configuration."""
+        return (
+            self.fetchers +
+            self.data_preparers +
+            self.ai_inference_services +
+            self.modifiers +
+            self.pipelines
+        )
 
 
 # load_config function remains the same

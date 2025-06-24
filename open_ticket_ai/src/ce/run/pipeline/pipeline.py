@@ -4,13 +4,15 @@ from typing import List
 
 from .context import PipelineContext
 from .pipe import Pipe
+from ...core.config.config_models import PipelineConfig
 
 
 class Pipeline(Pipe):
     """Composite pipe executing a sequence of pipes."""
 
-    def __init__(self, pipes: List[Pipe]):
-        self.pipes = list(pipes)
+    def __init__(self, config: PipelineConfig, pipes: List[Pipe]):
+        super().__init__(config)
+        self.pipes = pipes
 
     def execute(self, context: PipelineContext) -> PipelineContext:
         current = context

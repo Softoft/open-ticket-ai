@@ -3,11 +3,10 @@ from abc import ABC, abstractmethod
 from injector import inject
 
 from open_ticket_ai.src.ce.core.config.config_models import SystemConfig
-from open_ticket_ai.src.ce.core.mixins.configurable_mixin import ConfigurableMixin
-from open_ticket_ai.src.ce.core.mixins.description_mixin import DescriptionMixin
+from open_ticket_ai.src.ce.core.mixins.registry_instance_config import RegistryInstanceConfig
 
 
-class TicketSystemAdapter(ConfigurableMixin, DescriptionMixin, ABC):
+class TicketSystemAdapter(RegistryInstanceConfig, ABC):
     """
     An abstract base class for ticket system adapters.
     This class defines the

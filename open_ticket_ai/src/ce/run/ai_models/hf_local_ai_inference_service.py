@@ -1,7 +1,8 @@
-from open_ticket_ai.src.ce.run.ai_models.ai_inference_service import AIInferenceService
+from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
+from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 
 
-class HFAIInferenceService(AIInferenceService):
+class HFAIInferenceService(Pipe):
     """
     A class representing a Hugging Face AI model.
 
@@ -9,8 +10,7 @@ class HFAIInferenceService(AIInferenceService):
     Currently, it does not contain any methods or properties.
     """
 
-    def generate_response(self, prompt: str) -> str:
-        """Generate a response using a local Hugging Face model."""
+    def process(self, context: PipelineContext) -> PipelineContext:
         pass
 
     @staticmethod

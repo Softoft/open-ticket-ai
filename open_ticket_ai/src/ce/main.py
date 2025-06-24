@@ -4,7 +4,7 @@ import typer
 from pyfiglet import Figlet
 
 from open_ticket_ai.src.ce.app import App
-from open_ticket_ai.src.ce.core import DIContainer
+from open_ticket_ai.src.ce.core.dependency_injection.container import DIContainer
 
 cli = typer.Typer()
 

@@ -4,6 +4,7 @@ open_ticket_ai:
 
     # only one ticket‐system_id adapter
     system:
+        id: "otobo_ticket_system_adapter"
         provider_key: "OTOBOAdapter"
         params:
             server_address: "http://18.193.56.84"

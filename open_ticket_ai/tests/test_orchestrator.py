@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 from pydantic import BaseModel
 
 from open_ticket_ai.src.ce.run.orchestrator import Orchestrator
-from open_ticket_ai.src.ce.run.pipeline import Pipeline
+from open_ticket_ai.src.ce.run.pipeline.pipeline import Pipeline
 
 
 class DummyConfig(BaseModel):
