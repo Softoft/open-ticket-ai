@@ -15,9 +15,38 @@ dependencies = [
     "pluggy",
     "pygments",
     "iniconfig",
+    "pdoc3",
     "PyYAML~=6.0.2",
     "transformers~=4.52.4",
     "injector~=0.22.0",
     "schedule~=1.2.2",
+    "requests~=2.32.4",
+    "pyfiglet>=1.0.3",
     "otobo>=1.0.1",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.14",
+    "mkdocstrings[python]>=0.29.1",
+    "mkdocs-gen-files>=0.5.0",
+    "docstring-parser>=0.16",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+]
+
+[tool.setuptools.packages.find]
+include = ["open_ticket_ai*"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+# Add specific lint configurations here if needed in the future
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+ignore_missing_imports = true
