@@ -32,7 +32,7 @@ def test_find_project_root_returns_project_directory():
         - The current test file resides within the found directory
         - The expected config file exists in the root directory
     """
-    project_root = path_util.find_project_root()
+    project_root = path_util.find_python_code_root_path()
     assert project_root.name == "open_ticket_ai"
     # verify that this test file resides inside the found project root
     assert Path(__file__).resolve().is_relative_to(project_root)
@@ -42,7 +42,7 @@ def test_find_project_root_returns_project_directory():
 def test_find_project_root_invalid_name_raises():
     """Tests that find_project_root raises FileNotFoundError with invalid project name."""
     with pytest.raises(FileNotFoundError):
-        path_util.find_project_root("does_not_exist")
+        path_util.find_python_code_root_path("does_not_exist")
 
 
 # --- Tests for pretty_print_config.pretty_print_config ---

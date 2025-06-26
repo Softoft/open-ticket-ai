@@ -80,7 +80,7 @@ async def main() -> None:
     parser.add_argument("--out-dir", default="translated-docs", help="Base output directory for translations")
 
     args = parser.parse_args()
-    api_key = os.environ.get("OPENROUTER_API_KEY")
+    api_key = os.environ.get("OPEN_ROUTER_API_KEY")
     if not api_key:
         raise RuntimeError("OPENROUTER_API_KEY environment variable not set")
 
@@ -95,3 +95,4 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
+
