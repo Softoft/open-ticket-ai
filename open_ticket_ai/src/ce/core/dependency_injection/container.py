@@ -13,7 +13,7 @@ from open_ticket_ai.src.ce.core.dependency_injection.create_registry import crea
 from open_ticket_ai.src.ce.core.dependency_injection.registry import Registry
 from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import \
     RegistryProvidableInstance
-from open_ticket_ai.src.ce.core.util.path_util import find_project_root
+from open_ticket_ai.src.ce.core.util.path_util import find_python_code_root_path
 from open_ticket_ai.src.ce.run.orchestrator import Orchestrator
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 from open_ticket_ai.src.ce.run.pipeline.pipeline import Pipeline
@@ -22,7 +22,7 @@ from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter impor
     TicketSystemAdapter,
 )
 
-CONFIG_PATH = os.getenv('OPEN_TICKET_AI_CONFIG', find_project_root() / 'config.yml')
+CONFIG_PATH = os.getenv('OPEN_TICKET_AI_CONFIG', find_python_code_root_path() / 'config.yml')
 
 
 class AppModule(Module):

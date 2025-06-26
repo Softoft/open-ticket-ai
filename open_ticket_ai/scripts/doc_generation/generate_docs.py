@@ -15,11 +15,12 @@ Features:
 -   Fully configurable via command-line arguments.
 """
 import ast
-import argparse
 from pathlib import Path
 from typing import List, Optional, Union
 
 from docstring_parser import Docstring, parse
+
+from open_ticket_ai.src.ce.core.util.path_util import find_python_code_root_path
 
 
 # --- Helper Classes for Styling and Structure ---
@@ -38,7 +39,7 @@ class DocstringStyler:
             default_val = f" (default: `{param.default}`)" if param.default else ""
             description = f" - {param.description}" if param.description else ""
             parts.append(
-                f"- **`{param.arg_name}`** ({type_name}){default_val}{description}"
+                f"- **`{param.arg_name}`** ({type_name}){default_val}{description}",
             )
         return "\n".join(parts) + "\n"
 
@@ -112,7 +113,8 @@ class MarkdownVisitor(ast.NodeVisitor):
         """Processes a class definition."""
         self.current_class_name = node.name
         self.markdown_parts.append(
-            f"### <span style='color: #8E44AD;'>class</span> `{node.name}`\n")
+            f"### <span style='color: #8E44AD;'>class</span> `{node.name}`\n",
+        )
 
         class_doc_md = self._process_docstring(ast.get_docstring(node))
         if class_doc_md:
@@ -129,8 +131,10 @@ class MarkdownVisitor(ast.NodeVisitor):
         """Processes an async function or method definition."""
         self._process_function_node(node, is_async=True)
 
-    def _process_function_node(self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef],
-                               is_async: bool = False):
+    def _process_function_node(
+        self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef],
+        is_async: bool = False
+    ):
         """Shared logic for processing sync and async functions."""
         func_name = node.name
         if func_name.startswith("_") and not func_name.startswith("__"):
@@ -150,14 +154,16 @@ class MarkdownVisitor(ast.NodeVisitor):
 
         if self.current_class_name:  # Use collapsible sections for methods
             self.markdown_parts.append(
-                f"\n<details>\n<summary>{summary}</summary>\n\n{doc_md}\n</details>\n")
+                f"\n<details>\n<summary>{summary}</summary>\n\n{doc_md}\n</details>\n",
+            )
         else:  # Top-level functions are not collapsed
             self.markdown_parts.append(f"\n{summary}\n\n{doc_md}\n")
 
     def get_markdown(self) -> str:
         """Returns the accumulated Markdown content."""
         module_docstring = self._process_docstring(
-            ast.get_docstring(ast.parse(self.file_path.read_text(encoding="utf-8"))))
+            ast.get_docstring(ast.parse(self.file_path.read_text(encoding="utf-8"))),
+        )
         return module_docstring + "\n" + "\n".join(self.markdown_parts)
 
 
@@ -170,54 +176,36 @@ def parse_python_file(file_path: Path) -> str:
         visitor.visit(tree)
         return visitor.get_markdown()
     except Exception as e:
-        return f"### ⚠️ Error parsing `{file_path}`\n\n```\n{e}\n```\n"
+        print(f"Error parsing `{file_path}`\n\n```\n{e}\n```\n")
+        return ""
 
 
-# --- Main Generation Logic ---
+def generate_markdown_for_pattern(
+    src_path,
+    pattern: str,
+    excluded: list[str],
+    output_path: Path
+) -> None:
+    """
+    Generates Markdown documentation for all Python files matching a glob pattern.
 
-def main():
-    """Main function to run the documentation generator."""
-    parser = argparse.ArgumentParser(
-        description="Generate Markdown documentation from Python source code.",
-        formatter_class=argparse.RawTextHelpFormatter
-    )
-    parser.add_argument(
-        "src_dir",
-        type=str,
-        help="Source directory to scan for Python files."
-    )
-    parser.add_argument(
-        "--output", "-o",
-        type=str,
-        default="DOCUMENTATION.md",
-        help="Path to the output Markdown file. (default: DOCUMENTATION.md)"
-    )
-    parser.add_argument(
-        "--title", "-t",
-        type=str,
-        default="Project Documentation",
-        help="Main title for the documentation file. (default: Project Documentation)"
-    )
-    parser.add_argument(
-        "--exclude", "-e",
-        nargs='*',
-        default=["**/__init__.py", "**/tests/*", "**/.*"],
-        help="Glob patterns to exclude files/directories. (default: '**/__init__.py' '**/tests/*' '**/.*')"
-    )
-    args = parser.parse_args()
-
-    src_path = Path(args.src_dir)
+    Args:
+        excluded:
+        src_path (Path): The source directory to search for Python files.
+        pattern (str): The glob pattern to match Python files.
+        output_path (Path): The path where the generated Markdown file will be saved.
+    """
+    src_path = Path(src_path)
     if not src_path.is_dir():
-        print(f"❌ Error: Source directory '{src_path}' not found.")
-        return
+        raise ValueError(f"Source path `{src_path}` is not a directory.")
 
-    all_markdown_content = [f"# {args.title}\n"]
-    all_python_files = list(src_path.rglob("*.py"))
+    all_markdown_content = [f"# Documentation for `{pattern}`\n"]
+    all_python_files = list(src_path.rglob(pattern))
 
     # Filter out excluded files
-    filtered_files = []
+    filtered_files: list[Path] = []
     for py_file in all_python_files:
-        if any(py_file.match(pattern) for pattern in args.exclude):
+        if any(py_file.match(exclude) for exclude in excluded):
             continue
         filtered_files.append(py_file)
 
@@ -231,12 +219,57 @@ def main():
         all_markdown_content.append(file_markdown)
         all_markdown_content.append("\n---\n")
 
-    try:
-        Path(args.output).write_text("\n".join(all_markdown_content), encoding="utf-8")
-        print(f"\n✅ Documentation successfully generated at: {Path(args.output).resolve()}")
-    except IOError as e:
-        print(f"\n❌ Error writing to file '{args.output}': {e}")
+    # Ensure the output directory exists, create the directory if it doesn't
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text("\n".join(all_markdown_content), encoding="utf-8")
+    print(f"\n✅ Documentation successfully generated at: {output_path.resolve()}")
 
+
+def generate_markdown(
+    src_path: Path,
+    patterns_to_output: dict[str, Path],
+    excluded: list[str]
+) -> None:
+    """
+    Generates Markdown documentation for a project based on specified patterns.
+
+    Args:
+        project_name (str): The name of the project.
+        patterns_to_output (dict[str, Path]): A dictionary mapping glob patterns to output paths.
+        excluded (list[str]): List of glob patterns to exclude from processing.
+    """
+
+    project_root = find_python_code_root_path().parent
+    src_path = project_root / src_path
+    full_patterns_to_output = {
+        pattern: project_root / output_path
+        for pattern, output_path in patterns_to_output.items()
+    }
+    for pattern, output_path in full_patterns_to_output.items():
+        print(f"📂 Processing pattern: `{pattern}`")
+        generate_markdown_for_pattern(src_path, pattern, excluded, output_path)
+
+
+# --- Main Generation Logic ---
+
+def main():
+    """Main function to run the documentation generator."""
+    docs = Path("docs", "temp", "api")
+    generate_markdown(
+        Path("open_ticket_ai"),
+        {
+            "**/ce/core/config/**/*.py": docs / "core" / "ce_core_config.md",
+            "**/ce/core/dependency_injection/**/*.py": docs / "core" / "di.md",
+            "**/ce/core/mixins/**/*.py": docs / "core" / "mixins.md",
+            "**/ce/core/util/**/*.py": docs / "core" / "util.md",
+            "**/ce/run/pipe_implementations/*.py": docs / "run" / "pipes.md",
+            "**/ce/run/pipeline/*.py": docs / "run" / "pipeline.md",
+            "**/ce/run/managers/*.py": docs / "run" / "managers.md",
+            "**/ce/ticket_system_integration/*.py": docs / "run" / "ticket_system_integration.md",
+            "**/ce/*.py": docs / "main.md",
+        },
+        excluded=["**/tests/**", "**/migrations/**", "**/__init__.py"],
+    )
 
 if __name__ == "__main__":
     main()
