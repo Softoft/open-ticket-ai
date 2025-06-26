@@ -152,7 +152,17 @@ class TestOpenTicketAIConfig:
 
     def test_duplicate_ids_in_component_list_allowed_by_basemodel_but_picked_by_set_logic(self,
                                                                                           minimal_config_dict):
-        """Tests duplicate component ID behavior and cross-reference resolution."""
+        """Tests behavior when duplicate component IDs exist in a component list.
+
+        This test verifies that:
+        1. Pydantic allows duplicate IDs within component lists (e.g., two fetchers with same ID)
+        2. The configuration model correctly parses with duplicate IDs
+        3. Pipeline references to duplicate IDs still resolve correctly using set logic
+
+        The test ensures that while duplicate IDs are technically allowed by the model,
+        the cross-reference resolution uses set-based lookups which will match any component
+        with the referenced ID regardless of duplicates.
+        """
         # This test clarifies behavior rather than strictly enforcing a "fail" for duplicates,
         # as Pydantic itself doesn't prevent duplicate dicts in a list by default.
         # The cross-validation logic uses sets, so it will effectively use one of the definitions.

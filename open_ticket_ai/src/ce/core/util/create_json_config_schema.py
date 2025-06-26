@@ -7,7 +7,15 @@ from open_ticket_ai.src.ce.core.util.path_util import find_python_code_root_path
 
 
 class RootConfig(BaseModel):
-    """Wrapper model used for schema generation."""
+    """Wrapper model used for schema generation.
+
+    This class serves as a container for the main configuration model of the OpenTicketAI system.
+    It is designed to be used for generating JSON schema representations of the configuration.
+
+    Attributes:
+        open_ticket_ai (OpenTicketAIConfig): The main configuration object containing all
+            settings and parameters for the OpenTicketAI system.
+    """
 
     open_ticket_ai: OpenTicketAIConfig
 

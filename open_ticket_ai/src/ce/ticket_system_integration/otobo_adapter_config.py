@@ -1,3 +1,10 @@
+"""Configuration model for the OTOBO adapter.
+
+This module defines a Pydantic-based configuration model for interacting with an OTOBO server.
+It includes settings for server connection, web service operations, and authentication.
+The model validates configuration data and securely retrieves sensitive information from environment variables.
+"""
+
 import os
 
 from pydantic import BaseModel
@@ -40,6 +47,9 @@ class OTOBOAdapterConfig(BaseModel):
 
         Returns:
             str: The password for authentication.
+
+        Raises:
+            ValueError: If the specified environment variable is not set.
         """
         password = os.getenv(self.password_env_var)
         if not password:

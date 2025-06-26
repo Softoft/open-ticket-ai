@@ -71,11 +71,17 @@ def test_config_password_missing_env(monkeypatch):
 
 
 def test_find_tickets(adapter_and_client):
-    """Test find_tickets correctly processes search queries and returns results.
-    
-    Verifies:
-        1. Query parameters are correctly passed to OTOBO client
-        2. Results are properly converted to dictionaries
+    """Test the `find_tickets` method of OTOBOAdapter.
+
+    This test verifies:
+    1. Query parameters are correctly transformed and passed to the OTOBO client
+    2. Results from the client are properly converted to dictionaries
+
+    Steps:
+    - Mocks the OTOBO client's `search_and_get` method to return predefined tickets
+    - Calls `find_tickets` with a sample query
+    - Checks that the client received correctly formatted parameters
+    - Verifies the returned results match expected dictionary representations
     """
     adapter, client = adapter_and_client
     tickets = [
@@ -94,11 +100,16 @@ def test_find_tickets(adapter_and_client):
 
 
 def test_find_first_ticket(adapter_and_client):
-    """Test find_first_ticket returns first match or None when no tickets found.
-    
-    Verifies:
-        1. Returns first ticket when matches exist
-        2. Returns None when no tickets match the query
+    """Test the `find_first_ticket` method of OTOBOAdapter.
+
+    This test verifies:
+    1. Returns first ticket dictionary when matches exist
+    2. Returns None when no tickets match the query
+
+    Steps:
+    - Mocks client to return a ticket then verifies correct dictionary is returned
+    - Mocks client to return empty list then verifies None is returned
+    - Uses same query parameters for both test scenarios
     """
     adapter, client = adapter_and_client
     tickets = [
@@ -114,11 +125,17 @@ def test_find_first_ticket(adapter_and_client):
 
 
 def test_update_ticket(adapter_and_client):
-    """Test update_ticket correctly formats payload and processes response.
-    
-    Verifies:
-        1. Update parameters are correctly converted to OTOBO format
-        2. Response data is properly returned
+    """Test the `update_ticket` method of OTOBOAdapter.
+
+    This test verifies:
+    1. Update parameters are correctly converted to OTOBO format
+    2. Response data is properly returned after update
+
+    Steps:
+    - Mocks client's `update_ticket` method to return a success response
+    - Calls `update_ticket` with sample ticket ID and update data
+    - Verifies payload contains correctly formatted update parameters
+    - Checks returned result matches expected response structure
     """
     adapter, client = adapter_and_client
     update_response = type("Resp", (), {"model_dump": lambda self: {"ok": True}})()

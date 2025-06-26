@@ -39,4 +39,9 @@ class GenericTicketUpdater(Pipe):
 
     @staticmethod
     def get_description() -> str:
+        """Provides a description of the pipe's purpose.
+
+        Returns:
+            A string describing the pipe's functionality.
+        """
         return "Updates the ticket in the ticket system using data stored in the context."

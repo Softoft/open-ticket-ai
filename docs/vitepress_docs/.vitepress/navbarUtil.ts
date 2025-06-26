@@ -2,102 +2,63 @@
 import fs from 'fs';
 import path from 'path';
 
-// --- TypeScript Interfaces for Clarity ---
-
-// Represents a direct link in the navbar
-interface NavbarItem {
-    text: string;
-    link: string;
-}
-
-// Represents a dropdown menu in the navbar
-interface NavbarItemGroup {
-    text: string;
-    items: (NavbarItem | NavbarItemGroup)[]; // An item can be another link or a nested group
-}
-
-// A union type for convenience
+// --- Interfaces (no changes needed here) ---
+interface NavbarItem { text: string; link: string; }
+interface NavbarItemGroup { text: string; items: (NavbarItem | NavbarItemGroup)[]; }
 type NavItem = NavbarItem | NavbarItemGroup;
 
-
-/**
- * Formats a directory or file name into a human-readable title.
- */
+// --- formatTitle function (no changes needed here) ---
 function formatTitle(name: string): string {
-    // Removes .md extension and converts 'file-name' to 'File Name'
     const baseName = name.replace(/\.md$/, '');
-    return baseName
-        .replace(/[-_]/g, ' ')
-        .replace(/\b\w/g, (char) => char.toUpperCase());
+    return baseName.replace(/[-_]/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-/**
- * Recursively scans a directory to generate nested nav items.
- *
- * @param {string} currentPath - The full filesystem path of the directory to scan.
- * @param {string} docsRootPath - The absolute root path of the 'docs_src' directory.
- * @returns {NavItem[]} - An array of navbar items and groups.
- */
+// --- generateNavItemsRecursive function (no changes needed here) ---
 function generateNavItemsRecursive(currentPath: string, docsRootPath: string): NavItem[] {
     try {
         const entries = fs.readdirSync(currentPath, { withFileTypes: true });
-
-        const navItems: NavItem[] = entries
-            // Exclude common files/folders you don't want in the nav
+        return entries
             .filter(dirent => !dirent.name.startsWith('.') && dirent.name !== 'index.md')
             .map((dirent): NavItem | null => {
                 const fullPath = path.join(currentPath, dirent.name);
                 const title = formatTitle(dirent.name);
-
                 if (dirent.isDirectory()) {
-                    // --- This is a directory, so create a dropdown group ---
                     return {
                         text: title,
-                        // RECURSIVE CALL: Process the subdirectory to get its items
                         items: generateNavItemsRecursive(fullPath, docsRootPath),
                     };
                 } else if (dirent.isFile() && dirent.name.endsWith('.md')) {
-                    // --- This is a Markdown file, so create a direct link ---
-
-                    // Get the path relative to 'docs_src' (e.g., 'v0_1/en/guide/installation.md')
                     const relativePath = path.relative(docsRootPath, fullPath);
-
-                    // Convert to a web-friendly URL path
-                    const link = `/${relativePath.replace(/\\/g, '/')}`;
-
-                    return {
-                        text: title,
-                        link: link,
-                    };
+                    const link = `${relativePath.replace(/\\/g, '/')}`;
+                    return { text: title, link };
                 }
-                // Ignore other file types
                 return null;
             })
-            .filter((item): item is NavItem => item !== null); // Filter out any null values
-
-        return navItems;
-
+            .filter((item): item is NavItem => item !== null);
     } catch (error) {
-        console.error(`❌ Error during recursive scan of ${currentPath}:`, (error as Error).message);
+        console.error(`❌ Error scanning ${currentPath}:`, (error as Error).message);
         return [];
     }
 }
 
-
 /**
- * The main function to generate the entire navbar for a specific version and language.
- *
- * @param {string} basePath - The base path for navigation (e.g., 'v0_1/en').
- * @returns {NavItem[]} An array of NavItem objects for the VitePress config.
+ * The main function to generate the navbar.
+ * THIS FUNCTION IS NOW FIXED.
+ * @param {string} basePath - The base path for navigation (e.g., 'en/v0_1').
  */
 export function generateNavbar(basePath: string): NavItem[] {
-    const docsRootPath = path.resolve(process.cwd(), 'docs_src');
+    // FIX 1: Set the root path to the top-level 'docs_src' directory.
+    const docsRootPath = path.resolve(process.cwd(), 'docs_src', 'en', 'v0_1');
+
+    // FIX 2: Create the full path to scan by joining the root and the basePath argument.
     const directoryToScan = path.join(docsRootPath, basePath);
 
     console.log(`\n🔍 Recursively scanning navbar items in: ${directoryToScan}`);
 
+    // The recursive function is called with the correct, dynamic paths.
     const items = generateNavItemsRecursive(directoryToScan, docsRootPath);
 
-    console.log(`✅ Successfully generated nested navbar with ${items.length} top-level items.`);
+    console.log(`✅ Generated nested navbar with ${items.length} top-level items.`);
+    console.log(JSON.stringify(items))
     return items;
 }

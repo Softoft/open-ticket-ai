@@ -61,8 +61,8 @@ def update_license_in_files(directory):
     """Insert the license notice at the top of all ``.py`` files.
 
     Walks through all Python files in the specified directory and replaces
-    any existing license notice with the new license notice. Handles empty
-    files and files containing only comments appropriately.
+any existing license notice with the new license notice. Handles empty
+files and files containing only comments appropriately.
 
     Args:
         directory (str): Path to the directory containing files to update.

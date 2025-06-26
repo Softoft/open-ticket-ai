@@ -1,3 +1,15 @@
+"""Tests for the anonymize_text function.
+
+This module contains a suite of tests that verify the functionality of the `anonymize_text`
+function from the `open_ticket_ai.experimental.anonymize_data` module. The tests ensure
+that various types of personal identifiable information (PII) are properly anonymized,
+including names, addresses, email addresses, phone numbers, IBANs, BICs, credit card numbers,
+and other sensitive data.
+
+The tests are parameterized with a wide range of text examples containing different PII formats
+and contexts to ensure comprehensive coverage of anonymization scenarios.
+"""
+
 import pytest
 
 from open_ticket_ai.experimental.anonymize_data import anonymize_text

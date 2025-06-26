@@ -53,7 +53,20 @@ def example_config():
 
 
 def test_service_process_sets_result(example_config):
-    """Tests that DummyService correctly sets model_result in context."""
+    """Tests the process method of DummyService.
+
+    This test verifies that the DummyService correctly processes input context
+    and sets the 'model_result' field in the context data.
+
+    Steps:
+        1. Initialize DummyService with example configuration
+        2. Create PipelineContext with test data
+        3. Process context through service
+        4. Assert model_result matches expected format
+
+    Args:
+        example_config: Pytest fixture providing AI service configuration
+    """
     svc = DummyService(example_config)
     ctx = PipelineContext(ticket_id="1", data={"prepared_data": "hi"})
     out = svc.process(ctx)
@@ -61,12 +74,25 @@ def test_service_process_sets_result(example_config):
 
 
 def test_hf_service_description():
-    """Tests that Hugging Face service description contains expected text."""
+    """Tests the get_description method of HFAIInferenceService.
+
+    Verifies that the service description contains the expected "Hugging Face" identifier.
+    This ensures the correct service type is being used in the pipeline.
+    """
     assert "Hugging Face" in HFAIInferenceService.get_description()
 
 
 def test_hf_service_process_returns_context(example_config):
-    """Tests that Hugging Face service returns context with model result."""
+    """Tests the process method of HFAIInferenceService.
+
+    This test verifies that:
+        1. The service correctly processes input context
+        2. Returns a context containing model results
+        3. Sets the model_result field appropriately
+
+    Args:
+        example_config: Pytest fixture providing AI service configuration
+    """
     svc = HFAIInferenceService(example_config)
     ctx = PipelineContext(ticket_id="1", data={"prepared_data": "hi"})
     out = svc.process(ctx)

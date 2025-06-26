@@ -7,6 +7,7 @@ export const versionMap = {
     latest: 'v1_1',
     '1.1': 'v1_1',
     '1.0': 'v1_0',
+    'v0_2': 'v0_2',
     'v0_1': 'v0_1',
 } as const
 
@@ -14,15 +15,13 @@ export const versionMap = {
 const defaultVersion = versionMap.latest
 
 // Helper to create the version dropdown based on the selected language
-function createVersionDropdown(lang: string) {
-    const items = Object.entries(versionMap).map(([label, dir]) => ({
-        text: label,
-        link: `/${dir}/${lang}/`
-    }))
-    return {
-        text: 'Version',
-        items
-    }
+function versionDropdown(lang: 'en'|'de') {
+  return {
+    text: 'Version',
+    items: Object.entries(versionMap).map(
+      ([label, dir]) => ({ text: label, link: `/${lang}/${dir}/` })
+    )
+  }
 }
 
 export default defineConfig({
@@ -42,14 +41,16 @@ export default defineConfig({
     sitemap: {
         hostname: 'https://ai-ticket-classification.softoft.de'
     },
+    // Change docs dir structure to be /{lang}/{version} instead of /{version}/{lang}
     locales: {
         root: {
             label: 'English',
             lang: 'en',
+            link: '/en/',
             themeConfig: {
                 nav: [
-                    ...generateNavbar(`v0_1/en`),
-                    createVersionDropdown('en')
+                    ...generateNavbar(``),
+                    versionDropdown('en')
                 ]
             }
         },
@@ -59,8 +60,8 @@ export default defineConfig({
             link: '/de/',
             themeConfig: {
                 nav: [
-                    ...generateNavbar(`v0_1/de`),
-                    createVersionDropdown('de')
+                    ...generateNavbar(``),
+                    versionDropdown('de')
                 ]
             }
         }

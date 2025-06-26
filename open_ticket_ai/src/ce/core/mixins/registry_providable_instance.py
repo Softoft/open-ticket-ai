@@ -20,7 +20,16 @@ class RegistryProvidableInstance:
 
     @inject
     def __init__(self, config: RegistryInstanceConfig, console: Console | None = None):
-        """Store the configuration and pretty print it."""
+        """Initializes the instance with configuration and console.
+
+        Stores the provided configuration and initializes a Rich Console instance if not provided.
+        Logs the initialization event and pretty-prints the configuration.
+
+        Args:
+            config: Configuration object for this instance.
+            console: Optional Rich Console instance for output formatting. If not provided,
+                     a new Console instance will be created.
+        """
         self.console = console or Console()
         self.config = config
         logger = logging.getLogger(__name__)
@@ -28,7 +37,11 @@ class RegistryProvidableInstance:
         self._pretty_print()
 
     def _pretty_print(self):
-        """Pretty print the configuration of the class."""
+        """Prints the instance configuration in a human-readable format.
+
+        Uses the `pretty_print_config` utility to display the configuration
+        attributes in a structured and visually appealing way using the Rich library.
+        """
         pretty_print_config(self.config, self.console)
 
     @classmethod

@@ -1,3 +1,23 @@
+"""Tests for the `core.util` module.
+
+This module contains unit tests for the utility functions and configuration handling
+in the `core.util` module of the `open_ticket_ai` project.
+
+The tests are organized into three main sections:
+
+1. **Tests for `path_util.find_project_root`**:
+   - Verifies that the project root is correctly identified.
+   - Checks error handling when the project name is invalid.
+
+2. **Tests for `pretty_print_config.pretty_print_config`**:
+   - Ensures that the configuration is printed in the expected YAML format.
+
+3. **Tests for `create_json_config_schema`**:
+   - Validates the structure of the generated JSON schema.
+   - Checks that the schema file is correctly written to the filesystem.
+
+These tests use `pytest` and rely on fixtures for temporary directories and environment patching.
+"""
 import json
 import runpy
 from types import SimpleNamespace

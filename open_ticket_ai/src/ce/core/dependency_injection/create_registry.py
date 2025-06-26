@@ -8,7 +8,20 @@ from open_ticket_ai.src.ce.ticket_system_integration.otobo_adapter import OTOBOA
 
 
 def create_registry() -> Registry:
-    """Create the default class registry."""
+    """Creates and configures the default class registry.
+
+    This function initializes a `Registry` instance and registers essential classes
+    required for the application's dependency injection system. The registered classes
+    include integration adapters, data preparers, and AI inference services.
+
+    The following classes are registered:
+    - `OTOBOAdapter`: Handles integration with the OTOBO ticket system.
+    - `SubjectBodyPreparer`: Prepares subject and body content for ticket processing.
+    - `HFAIInferenceService`: Provides local AI inference using Hugging Face models.
+
+    Returns:
+        Registry: A configured registry instance with all necessary classes registered.
+    """
     registry = Registry()
     registry.register_all(
         [OTOBOAdapter, SubjectBodyPreparer,

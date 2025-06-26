@@ -15,7 +15,7 @@ TEST_DIR = "test_license_files_temp"
 def setup_test_directory(tmp_path):
     """Sets up a temporary directory with various files for testing."""
     test_dir = tmp_path / TEST_DIR
-    os.makedirs(test_dir, exist_ok=True)
+    os.maked(test_dir, exist_ok=True)
 
     # File content examples
     file_contents = {

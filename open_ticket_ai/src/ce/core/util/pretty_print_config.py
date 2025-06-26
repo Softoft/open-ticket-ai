@@ -1,3 +1,16 @@
+"""Module for pretty printing configuration objects.
+
+This module provides functionality to display Pydantic configuration models in a
+nicely formatted and syntax highlighted way using the `rich` library. It converts
+Pydantic models to YAML format and applies syntax highlighting for improved readability.
+
+Features:
+- Converts Pydantic BaseModel instances to dictionaries
+- Serializes configuration data to YAML format
+- Applies YAML syntax highlighting using rich
+- Prints highlighted output to console
+"""
+
 import logging
 
 import yaml

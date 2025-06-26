@@ -18,6 +18,16 @@ class DocstringGenerator:
         exclude_files: set[str],
         model: str = "deepseek/deepseek-r1-0528",
     ) -> None:
+        """Initialize the DocstringGenerator instance.
+
+        Args:
+            client (AsyncOpenAI): An asynchronous OpenAI client for API interactions.
+            base_path (Path): Root directory to search for Python files.
+            exclude_dirs (set[str]): Directory names to exclude from processing.
+            exclude_files (set[str]): Specific filenames to exclude from processing.
+            model (str, optional): AI model identifier for docstring generation. 
+                Defaults to "deepseek/deepseek-r1-0528".
+        """
         self.client = client
         self.base_path = base_path
         self.exclude_dirs = exclude_dirs
@@ -122,4 +132,3 @@ class DocstringGenerator:
         tasks = [self.process_file(file) for file in py_files]
         await asyncio.gather(*tasks)
         print("\nAll files processed. Docstring generation complete.")
-

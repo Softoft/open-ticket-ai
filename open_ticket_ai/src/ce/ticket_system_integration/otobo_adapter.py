@@ -1,3 +1,17 @@
+"""
+This module provides an adapter for integrating with the OTOBO ticket system.
+
+The `OTOBOAdapter` class implements the `TicketSystemAdapter` interface to enable
+seamless interaction with OTOBO's ticketing API. It handles operations such as:
+
+- Searching for tickets based on custom queries
+- Retrieving specific ticket details
+- Updating existing ticket records
+
+The adapter uses dependency injection for configuration and client management,
+ensuring flexibility and testability.
+"""
+
 from injector import inject
 from otobo import OTOBOClient, TicketSearchParams, TicketUpdateParams
 

@@ -5,7 +5,15 @@ from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import \
 
 
 class AbstractContainer(abc.ABC):
-    """Abstract interface for dependency containers."""
+    """Abstract interface for dependency containers.
+
+    This class defines the contract for dependency injection containers that manage
+    object instances. Implementations should provide mechanisms to register and
+    retrieve instances based on provider keys and type constraints.
+
+    The container acts as a central registry that decouples object creation and
+    dependencies from their usage, enabling more modular and testable code.
+    """
 
     @abc.abstractmethod
     def get_instance[T: RegistryProvidableInstance](self, provider_key: str,
@@ -21,5 +29,9 @@ class AbstractContainer(abc.ABC):
 
         Returns:
             An instance of the type specified by `subclass_of` (or a subclass).
+
+        Raises:
+            InstanceNotFoundError: If no instance matching the provider key is found.
+            TypeMismatchError: If the found instance is not a subclass of the specified type.
         """
         pass

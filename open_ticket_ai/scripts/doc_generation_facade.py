@@ -27,6 +27,19 @@ class DocGenerationFacade:
         exclude_files: set[str],
         model: str,
     ):
+        """
+        Generates docstrings for Python files in the specified directory tree.
+
+        This method walks through the directory structure starting at `base_path`,
+        processes all Python files (excluding specified directories and files), and
+        adds missing docstrings using an AI model.
+
+        Args:
+            base_path: Root directory to start searching for Python files.
+            exclude_dirs: Set of directory names to exclude from processing.
+            exclude_files: Set of file names to exclude from processing.
+            model: Identifier of the AI model to use for docstring generation.
+        """
         # --- Configuration ---
 
         docstring_generator = DocstringGenerator(
@@ -64,6 +77,19 @@ class DocGenerationFacade:
         model: str,
         out_dir: Path,
     ):
+        """
+        Translates documentation files to multiple target languages.
+
+        Processes all files in the source directory, translating them from the base language
+        to each specified target language using an AI model.
+
+        Args:
+            docs_dir: Directory containing source documentation files.
+            base_language: Language code of the source documentation (e.g., 'en').
+            languages: List of target language codes to translate to.
+            model: Identifier of the AI model to use for translation.
+            out_dir: Output directory for translated files.
+        """
         translator = Translator(self.client, base_language)
         await translator.translate_directory(docs_dir, languages, model, out_dir)
 
@@ -94,6 +120,16 @@ EXCLUDE_FILES = {"__init__.py"}
 
 
 async def generate_reference_api_markdown():
+    """
+    Generates API reference documentation in Markdown format.
+
+    This function:
+    1. Adds docstrings to Python files in the project
+    2. Converts the documented code into structured Markdown files
+    3. Organizes output by module/functionality categories
+
+    Output files are saved in a temporary directory for API documentation.
+    """
     await generator.generate_docstrings(
         find_python_code_root_path(),
         EXCLUDE_DIRS,
@@ -117,15 +153,22 @@ async def generate_reference_api_markdown():
 
 
 async def translate_to_multi_lang_docs():
+    """
+    Translates documentation files to multiple languages.
+
+    Processes documentation files in the source directory, translating them from
+    English to specified target languages. Outputs translated files to the Vitepress
+    documentation source directory.
+    """
     await generator.translate_docs(
-        root_project_path / "docs" / "original_source" / "v0_1",
+        root_project_path / "docs" / "original_source",
         "en",
         ["en", "de"],
         "deepseek/deepseek-r1-0528",
-        root_project_path / "docs" / "vitepress" / "docs_src" / "v0_1",
+        root_project_path / "docs" / "vitepress" / "docs_src",
     )
 
 
 if __name__ == '__main__':
-    # asyncio.run(generate_reference_api_markdown())
+    asyncio.run(generate_reference_api_markdown())
     asyncio.run(translate_to_multi_lang_docs())

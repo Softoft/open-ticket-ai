@@ -85,7 +85,6 @@ class OpenTicketAIConfig(BaseModel):
         )
 
 
-# load_config function remains the same
 def load_config(path: str) -> OpenTicketAIConfig:
     """Load a YAML configuration file from ``path``."""
     import yaml

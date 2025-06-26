@@ -12,7 +12,16 @@ from open_ticket_ai.src.ce.run.orchestrator import Orchestrator
 console = Console()
 
 class App:
-    """Main application entry point."""
+    """Main application entry point for the OpenTicketAI system.
+
+    This class initializes and runs the core application components including:
+    - Configuration management
+    - Configuration validation
+    - Job orchestration and scheduling
+
+    The application follows a scheduled execution model where jobs are run at
+    predefined intervals.
+    """
 
     @inject
     def __init__(
@@ -21,12 +30,15 @@ class App:
             validator: OpenTicketAIConfigValidator,
             orchestrator: Orchestrator
     ):
-        """Initialize the application.
+        """Initialize the application with dependencies.
 
         Args:
-            config: Loaded configuration for the application.
-            validator: Validator used to check the configuration.
-            orchestrator: Orchestrator used to run attribute predictors.
+            config: Loaded configuration for the application containing all
+                necessary parameters and settings.
+            validator: Validator instance used to check the integrity and
+                correctness of the configuration.
+            orchestrator: Orchestrator instance responsible for setting up and
+                managing scheduled jobs and attribute predictors.
         """
         self._logger = logging.getLogger(__name__)
         self.config = config
@@ -34,12 +46,21 @@ class App:
         self.orchestrator = orchestrator
 
     def run(self):
-        """Validate configuration and start the scheduler loop.
-        
-        This method:
+        """Main execution method for the application.
+
+        Performs the following operations:
         1. Validates the application configuration
         2. Sets up scheduled jobs using the orchestrator
-        3. Enters an infinite loop to run pending scheduled tasks
+        3. Enters an infinite loop to execute pending scheduled tasks
+
+        The method first validates the configuration registry. If validation fails,
+        an error is logged and the application proceeds to setup schedules without
+        valid configuration (which may cause runtime errors). On successful validation,
+        a success message is printed.
+
+        After setup, the method enters a continuous loop that:
+        - Checks for pending scheduled jobs every second
+        - Executes any pending jobs found
         """
         try:
             self.validator.validate_registry()

@@ -27,6 +27,9 @@ class HFAIInferenceService(Pipe):
         """
         Processes pipeline context by storing prepared data as model result.
 
+        This method acts as a placeholder for actual model inference logic. Currently,
+        it simply copies the 'prepared_data' from the context to 'model_result'.
+
         Args:
             context (PipelineContext): The pipeline context containing data to process.
 

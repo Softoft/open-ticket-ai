@@ -64,7 +64,18 @@ class MarkdownVisitor(ast.NodeVisitor):
         self.current_class_name: Optional[str] = None
 
     def _format_signature(self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef]) -> str:
-        """Formats a function/method signature, including type hints."""
+        """
+        Formats a function/method signature with type hints into a readable string.
+
+        Args:
+            node: The AST function node to format.
+
+        Returns:
+            A string representing the formatted function signature including:
+            - Parameter names with type annotations
+            - Positional-only, keyword-only, *args and **kwargs parameters
+            - Return type annotation if present
+        """
         args_list = []
         # Process positional and regular arguments
         for arg in node.args.posonlyargs + node.args.args:
@@ -94,7 +105,20 @@ class MarkdownVisitor(ast.NodeVisitor):
         return signature
 
     def _process_docstring(self, docstring_raw: Optional[str]):
-        """Parses a docstring and formats it into Markdown."""
+        """
+        Parses and converts a docstring into formatted Markdown.
+
+        Args:
+            docstring_raw: The raw docstring text to process.
+
+        Returns:
+            A Markdown-formatted string containing:
+            - Short description
+            - Long description
+            - Parameters section
+            - Raises section
+            - Returns section
+        """
         if not docstring_raw:
             return ""
 
@@ -135,7 +159,13 @@ class MarkdownVisitor(ast.NodeVisitor):
         self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef],
         is_async: bool = False
     ):
-        """Shared logic for processing sync and async functions."""
+        """
+        Processes function/method nodes into formatted Markdown documentation.
+
+        Args:
+            node: The AST function node to process.
+            is_async: Flag indicating whether the function is async.
+        """
         func_name = node.name
         if func_name.startswith("_") and not func_name.startswith("__"):
             return  # Skip private methods/functions
@@ -247,4 +277,3 @@ def generate_markdown(
     for pattern, output_path in patterns_to_output_map.items():
         print(f"📂 Processing pattern: `{pattern}`")
         generate_markdown_for_pattern(src_path, pattern, excluded, output_path)
-

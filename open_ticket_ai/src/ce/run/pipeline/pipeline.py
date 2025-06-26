@@ -8,7 +8,16 @@ from ...core.config.config_models import PipelineConfig
 
 
 class Pipeline(Pipe):
-    """Composite pipe executing a sequence of pipes."""
+    """Composite pipe executing a sequence of pipes.
+
+    The Pipeline class represents a composite pipe that executes a sequence of
+    individual pipes in a defined order. It implements the Pipe interface and
+    processes data by sequentially passing a context object through each
+    component pipe.
+
+    Attributes:
+        pipes: An ordered list of Pipe instances to execute sequentially.
+    """
 
     def __init__(self, config: PipelineConfig, pipes: List[Pipe]):
         """Initializes the Pipeline with configuration and component pipes.

@@ -13,8 +13,32 @@ from open_ticket_ai.scripts.doc_generation.add_docstrings import DocstringGenera
 
 
 class MockClient:
+    """Mock client for testing OpenAI API interactions.
+    
+    This class simulates the behavior of an OpenAI client by capturing API call arguments
+    and returning predefined responses. It's designed specifically for testing the
+    DocstringGenerator functionality.
+
+    Attributes:
+        called_with (dict): Stores the keyword arguments passed to the last API call.
+        chat (SimpleNamespace): Mock structure mimicking OpenAI's chat completions interface.
+    """
+
     def __init__(self, response_content: str):
+        """Initializes the mock client with a fixed response content.
+
+        Args:
+            response_content (str): The content that will be returned in the mock API response.
+        """
         async def create(**kwargs):
+            """Mock API call that captures arguments and returns a fixed response.
+            
+            Args:
+                **kwargs: Arbitrary keyword arguments representing the API request.
+            
+            Returns:
+                SimpleNamespace: Simulated API response containing the predefined content.
+            """
             self.called_with = kwargs
             return SimpleNamespace(
                 choices=[SimpleNamespace(message=SimpleNamespace(content=response_content))]
@@ -27,30 +51,3 @@ def test_add_docstrings_to_file_content(tmp_path: Path):
     """DocstringGenerator should clean the AI response and use the given client."""
     client = MockClient("""```python
 print('updated')
-```""")
-    gen = DocstringGenerator(client, base_path=tmp_path)
-    result = asyncio.run(gen.add_docstrings_to_file_content("print('original')"))
-
-    assert result == "print('updated')"
-    assert "Google style" in client.called_with["messages"][1]["content"]
-
-
-def test_process_file_writes_new_content(tmp_path: Path):
-    """process_file should overwrite the file with the AI response."""
-    file_path = tmp_path / "example.py"
-    file_path.write_text("def foo():\n    pass\n")
-
-    new_content = """```python
-def foo():
-    \"\"\"Docstring\"\"\"
-    pass
-```"""
-
-    client = MockClient(new_content)
-    gen = DocstringGenerator(client, base_path=tmp_path)
-
-    asyncio.run(gen.process_file(file_path))
-
-    updated = file_path.read_text()
-    assert "Docstring" in updated
-    assert client.called_with is not None

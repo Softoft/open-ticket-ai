@@ -8,11 +8,18 @@ from openai import AsyncOpenAI
 import tenacity
 from tenacity import stop_after_attempt, wait_exponential
 
+# TODO update, dir structure changed, other languages arent in direrct super dir but instead are in parent parent / version / lang
 
 class Translator:
     """Translate Markdown files using an injected OpenAI client."""
 
     def __init__(self, client: AsyncOpenAI, base_language: str) -> None:
+        """Initializes the Translator instance.
+
+        Args:
+            client: An asynchronous OpenAI client instance for API interactions.
+            base_language: Language code (e.g., 'en') representing the source language of documents.
+        """
         self.client = client
         self.base_language = base_language
 
