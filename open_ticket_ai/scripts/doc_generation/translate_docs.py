@@ -1,90 +1,79 @@
+from __future__ import annotations
+
 import argparse
+import asyncio
 import os
 from pathlib import Path
 from typing import List
 
-import requests
+from openai import AsyncOpenAI
 
-
-API_URL = "https://openrouter.ai/api/v1/chat/completions"
+API_URL = "https://openrouter.ai/api/v1"
 DEFAULT_MODEL = "meta-llama/llama-3-70b-instruct"
 DEFAULT_LANGUAGES = ["de", "en"]
 
 
-def translate_text(content: str, target_lang: str, model: str, api_key: str) -> str:
-    """Translate markdown *content* to *target_lang* using OpenRouter.
+class Translator:
+    """Translate Markdown files using an injected OpenAI client."""
 
-    Args:
-        content: The markdown content to translate.
-        target_lang: Target language code (e.g., 'de', 'en').
-        model: OpenRouter model identifier.
-        api_key: OpenRouter API key.
+    def __init__(self, client: AsyncOpenAI) -> None:
+        self.client = client
 
-    Returns:
-        Translated markdown content.
-    """
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json",
-    }
-    data = {
-        "model": model,
-        "messages": [
-            {
-                "role": "system",
-                "content": (
-                    "You are a helpful translator. Translate the user's markdown "
-                    "into the requested language while keeping markdown and YAML "
-                    "front matter intact."
-                ),
-            },
-            {
-                "role": "user",
-                "content": f"Translate the following markdown to {target_lang}:\n\n{content}",
-            },
-        ],
-        "temperature": 0.2,
-    }
-    response = requests.post(API_URL, headers=headers, json=data, timeout=60)
-    response.raise_for_status()
-    result = response.json()
-    return result["choices"][0]["message"]["content"]
+    async def translate_text(self, content: str, target_lang: str, model: str) -> str:
+        """Translate ``content`` to ``target_lang`` using ``model``."""
+        response = await self.client.chat.completions.create(
+            model=model,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a helpful translator. Translate the user's markdown "
+                        "into the requested language while keeping markdown and YAML "
+                        "front matter intact."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": f"Translate the following markdown to {target_lang}:\n\n{content}",
+                },
+            ],
+            temperature=0.2,
+        )
+        return response.choices[0].message.content
 
+    async def process_file(
+        self,
+        path: Path,
+        root: Path,
+        languages: List[str],
+        model: str,
+        out_dir: Path,
+    ) -> None:
+        """Translate a Markdown file into multiple languages."""
+        text = path.read_text(encoding="utf-8")
+        relative = path.relative_to(root)
+        for lang in languages:
+            translated = await self.translate_text(text, lang, model)
+            out_file = out_dir / lang / relative
+            out_file.parent.mkdir(parents=True, exist_ok=True)
+            out_file.write_text(translated, encoding="utf-8")
+            print(f"Wrote {out_file}")
 
-def process_file(path: Path, root: Path, languages: List[str], model: str, api_key: str, out_dir: Path) -> None:
-    """Translate a single Markdown *path* and write results under *out_dir*.
-
-    Args:
-        path: Path to the markdown file to translate.
-        root: Root directory of the documentation.
-        languages: List of target language codes.
-        model: OpenRouter model identifier.
-        api_key: OpenRouter API key.
-        out_dir: Base output directory for translations.
-    """
-    text = path.read_text(encoding="utf-8")
-    relative = path.relative_to(root)
-    for lang in languages:
-        translated = translate_text(text, lang, model, api_key)
-        out_file = out_dir / lang / relative
-        out_file.parent.mkdir(parents=True, exist_ok=True)
-        out_file.write_text(translated, encoding="utf-8")
-        print(f"Wrote {out_file}")
+    async def translate_directory(
+        self,
+        docs_dir: Path,
+        languages: List[str],
+        model: str,
+        out_dir: Path,
+    ) -> None:
+        """Translate all Markdown files in ``docs_dir``."""
+        for md_file in docs_dir.rglob("*.md"):
+            await self.process_file(md_file, docs_dir, languages, model, out_dir)
 
 
-def main() -> None:
-    """
-    Main entry point for translating Markdown documentation using OpenRouter.
-
-    Parses command-line arguments for the translation process, including the input
-    directory of Markdown documents, target languages, OpenRouter model, and output
-    directory. Then, iterates over the input directory, processing each Markdown file
-    using the provided arguments.
-
-    Returns:
-        None
-    """
-    parser = argparse.ArgumentParser(description="Translate Markdown documentation using OpenRouter")
+async def main() -> None:
+    """CLI entry point for translating a directory of Markdown files."""
+    parser = argparse.ArgumentParser(description="Translate Markdown documentation")
     parser.add_argument("--docs-dir", default="vitepress-atc-docs", help="Directory containing markdown docs")
     parser.add_argument("--languages", default=",".join(DEFAULT_LANGUAGES), help="Comma separated target languages")
     parser.add_argument("--model", default=DEFAULT_MODEL, help="OpenRouter model to use")
@@ -95,13 +84,15 @@ def main() -> None:
     if not api_key:
         raise RuntimeError("OPENROUTER_API_KEY environment variable not set")
 
+    client = AsyncOpenAI(base_url=API_URL, api_key=api_key)
+    translator = Translator(client)
+
     docs_dir = Path(args.docs_dir)
     out_dir = Path(args.out_dir)
     languages = [l.strip() for l in args.languages.split(",") if l.strip()]
-
-    for md_file in docs_dir.rglob("*.md"):
-        process_file(md_file, docs_dir, languages, args.model, api_key, out_dir)
+    await translator.translate_directory(docs_dir, languages, args.model, out_dir)
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
+
