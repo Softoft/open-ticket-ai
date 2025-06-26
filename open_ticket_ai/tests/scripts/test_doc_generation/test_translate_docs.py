@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
-from open_ticket_ai.scripts.doc_generation.translate_docs import Translator
+from open_ticket_ai.scripts.doc_generation.generate_multi_lang_docs import Translator
 
 
 @pytest.mark.asyncio
@@ -16,7 +16,6 @@ async def test_translate_text_calls_client():
         return_value=Mock(choices=[Mock(message=Mock(content="translated"))])
     )
 
-    translator = Translator(client)
     result = await translator.translate_text("hello", "de", "test-model")
 
     assert result == "translated"
@@ -32,7 +31,6 @@ async def test_process_file_writes_translated_content(tmp_path: Path):
 
     out_dir = tmp_path / "out"
 
-    translator = Translator(Mock())
     translator.translate_text = AsyncMock(return_value="---\ntitle: Test\n---\n\nübersetzt")
 
     await translator.process_file(md_file, src_dir, ["de"], "model", out_dir)

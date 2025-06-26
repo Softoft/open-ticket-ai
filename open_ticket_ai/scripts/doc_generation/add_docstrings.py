@@ -1,41 +1,36 @@
-import os
 import asyncio
-import re
 from pathlib import Path
+import re
+
 from openai import AsyncOpenAI
 
 """Automatically adds long Google style docstrings to Python files using AI."""
-
-# --- Configuration ---
-BASE_PATH = Path(__file__).parent.parent.parent
-EXCLUDE_DIRS = {
-    ".venv",
-    "__pycache__",
-    "build",
-    "dist",
-    "docs",
-    "vitepress-atc-docs",
-    ".idea",
-    ".github",
-    "node_modules",
-}
-EXCLUDE_FILES = {"__init__.py"}
 
 
 class DocstringGenerator:
     """Generate docstrings for Python files using an injected AsyncOpenAI client."""
 
-    def __init__(self, client: AsyncOpenAI, base_path: Path = BASE_PATH):
+    def __init__(
+        self,
+        client: AsyncOpenAI,
+        base_path: Path,
+        exclude_dirs: set[str],
+        exclude_files: set[str],
+        model: str = "deepseek/deepseek-r1-0528",
+    ) -> None:
         self.client = client
         self.base_path = base_path
+        self.exclude_dirs = exclude_dirs
+        self.exclude_files = exclude_files
+        self.model = model
 
     def find_python_files(self) -> list[Path]:
         """Return all Python files in ``base_path`` respecting exclusion rules."""
         py_files = []
         for item in self.base_path.rglob("*.py"):
             if (
-                not any(part in EXCLUDE_DIRS for part in item.parts)
-                and item.name not in EXCLUDE_FILES
+                not any(part in self.exclude_dirs for part in item.parts)
+                and item.name not in self.exclude_files
             ):
                 py_files.append(item)
         print(f"Found {len(py_files)} Python files to process.")
@@ -128,18 +123,3 @@ class DocstringGenerator:
         await asyncio.gather(*tasks)
         print("\nAll files processed. Docstring generation complete.")
 
-
-async def main() -> None:
-    api_key = os.getenv("OPEN_ROUTER_API_KEY")
-    if not api_key:
-        print("Error: The 'OPEN_ROUTER_API_KEY' environment variable is not set.")
-        print("Please set the variable and run the script again.")
-        return
-
-    client = AsyncOpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
-    generator = DocstringGenerator(client)
-    await generator.run()
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
