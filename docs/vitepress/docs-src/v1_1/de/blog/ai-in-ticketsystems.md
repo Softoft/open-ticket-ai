@@ -4,7 +4,7 @@ description: Discover how AI transforms ticket management by automating prioriti
 
 # AI in Ticket Systems: Revolutionizing Support and Workflow Automation
 
-![AI in Ticketsystems](../public/ai-in-ticket-system.png)
+![AI in Ticketsystems](/ai-in-ticket-system.png)
 
 Ticket management is evolving rapidly. As support systems become more complex and customer expectations continue to rise, artificial intelligence (AI) is emerging as a game-changer in the world of ticketing. In this article, we explore how AI is transforming ticket systems—from automating prioritization and categorization to enhancing overall customer service.
 

@@ -4,7 +4,7 @@ description: Explore how open source ticket systems, when combined with AI and a
 
 # Open Source Ticket Systems, AI, and Automation: Transforming Support Workflows
 
-![Open Source Ticketsystems](../public/open-source-ticket-system.png)
+![Open Source Ticketsystems](/open-source-ticket-system.png)
 
 Open source ticket systems have come a long way from simple issue trackers to fully integrated support platforms. Today, they not only allow organizations to manage and resolve support tickets efficiently but also serve as a foundation for advanced AI and automation features that revolutionize support workflows.
 
