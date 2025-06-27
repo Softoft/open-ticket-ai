@@ -18,6 +18,11 @@ class DocGenerationFacade:
     """
 
     def __init__(self, client: AsyncOpenAI) -> None:
+        """Initializes the DocGenerationFacade with an AsyncOpenAI client.
+
+        Args:
+            client (AsyncOpenAI): The asynchronous OpenAI client to use for API calls.
+        """
         self.client = client
 
     async def generate_docstrings(
@@ -56,11 +61,13 @@ class DocGenerationFacade:
         patterns_to_output_map: dict[str, Path],
         excluded: list[str],
     ):
-        """
-        Generate markdown files from Python code based on provided patterns.
+        """Generate markdown files from Python code based on provided patterns.
 
-        :param patterns: A dictionary where keys are glob patterns and values are output file paths.
-        :param excluded: A list of glob patterns to exclude from processing.
+        Args:
+            patterns_to_output_map: A dictionary mapping glob patterns to output file paths.
+                Each pattern will be used to find matching files, and the corresponding
+                output path specifies where the generated markdown should be saved.
+            excluded: A list of glob patterns to exclude from processing.
         """
 
         generate_markdown(
@@ -103,7 +110,7 @@ client = AsyncOpenAI(
 generator = DocGenerationFacade(client)
 root_project_path = find_python_code_root_path().parent
 
-docs_temp_api = root_project_path / "original_source" / "temp" / "api"
+docs_temp_api = root_project_path / "original_source" / "v0_1" / "api"
 
 EXCLUDE_DIRS = {
     ".venv",
@@ -165,7 +172,7 @@ async def translate_to_multi_lang_docs():
         "en",
         ["en", "de"],
         "deepseek/deepseek-r1-0528",
-        root_project_path / "docs" / "vitepress" / "docs_src",
+        root_project_path / "docs" / "vitepress_docs" / "docs_src",
     )
 
 

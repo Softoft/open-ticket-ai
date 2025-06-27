@@ -1,4 +1,21 @@
 # tests/core/config_test.py
+"""Tests for the configuration models and loading functionality.
+
+This module contains unit tests for the configuration models (`SchedulerConfig`,
+`OpenTicketAIConfig`) and the `load_config` function in the
+`open_ticket_ai.src.ce.core.config.config_models` module.
+
+The tests cover:
+  - Validation of the `SchedulerConfig` model.
+  - Validation of the `OpenTicketAIConfig` model, including:
+      * Required components (non-empty lists for core components).
+      * Correct parsing of a valid configuration.
+      * Cross-referencing of components in pipelines.
+      * Handling of duplicate component IDs.
+  - The `load_config` function's behavior when the configuration file is missing the root key.
+
+The tests use pytest fixtures and parametrization to cover various scenarios.
+"""
 
 import pytest
 from pydantic import ValidationError

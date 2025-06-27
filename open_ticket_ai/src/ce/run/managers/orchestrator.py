@@ -15,7 +15,19 @@ from open_ticket_ai.src.ce.run.pipeline.pipeline import Pipeline
 
 
 class Orchestrator:
-    """Execute ticket processing pipelines."""
+    """Orchestrates the execution of ticket processing pipelines.
+
+    This class manages the lifecycle of pipelines including:
+    - Pipeline instantiation via dependency injection
+    - Individual ticket processing
+    - Scheduled execution of pipelines
+
+    Attributes:
+        config: Configuration settings for the orchestrator
+        container: Dependency injection container providing pipeline instances
+        _logger: Logger instance for orchestration operations
+        _pipelines: Dictionary mapping pipeline IDs to pipeline instances
+    """
 
     def __init__(self, config: OpenTicketAIConfig, container: AbstractContainer):
         """Initialize the Orchestrator with configuration and DI container.
@@ -30,16 +42,43 @@ class Orchestrator:
         self._pipelines: dict[str, Pipeline] = {}
 
     def process_ticket(self, ticket_id: str, pipeline: Pipeline) -> PipelineContext:
-        """Fetch data and run ``pipeline`` for ``ticket_id``."""
+        """Executes a pipeline for a specific ticket.
+
+        Creates a processing context and runs the specified pipeline to process
+        the given ticket. This is the core method for individual ticket processing.
+
+        Args:
+            ticket_id: Unique identifier of the ticket to process
+            pipeline: Pipeline instance to execute
+
+        Returns:
+            PipelineContext: The execution context containing results and state
+                after pipeline execution
+        """
         return pipeline.execute(PipelineContext(ticket_id=ticket_id))
 
     def build_pipelines(self) -> None:
-        """Instantiate pipeline objects using the DI container."""
+        """Instantiates all configured pipeline objects.
+
+        Uses the dependency injection container to create pipeline instances
+        based on the configuration. Populates the internal pipeline registry
+        with pipeline ID to instance mappings.
+        """
         for pipeline_cfg in self.config.pipelines:
             self._pipelines[pipeline_cfg.id] = self.container.get_pipeline(pipeline_cfg.id)
 
     def set_schedules(self) -> None:
-        """Schedule pipeline execution according to configuration."""
+        """Configures scheduled execution for all pipelines.
+
+        Performs the following operations:
+        1. Builds pipelines if not already instantiated
+        2. Configures periodic execution for each pipeline according to its
+           schedule configuration using the `schedule` library
+
+        The scheduling uses the following configuration parameters:
+        - interval: Numeric interval value
+        - unit: Time unit (e.g., minutes, hours, days)
+        """
         self.build_pipelines()
         for pipeline_cfg in self.config.pipelines:
             pipeline = self._pipelines[pipeline_cfg.id]

@@ -24,11 +24,22 @@ def pretty_print_config(config: BaseModel, console: Console):
     """Pretty print a pydantic model using ``rich``.
 
     This function converts a Pydantic BaseModel to a dictionary, serializes it to YAML,
-    and prints it to the console using rich's syntax highlighting.
+    and prints it to the console using rich's syntax highlighting. The output is formatted
+    with YAML syntax highlighting for improved readability.
 
     Args:
         config (BaseModel): The Pydantic model configuration to display.
         console (Console): The rich console instance for output rendering.
+
+    Process:
+        1. Converts the Pydantic model to a dictionary using `model_dump()`
+        2. Serializes the dictionary to a YAML string
+        3. Creates a rich Syntax object with YAML highlighting
+        4. Prints the highlighted YAML to the console
+
+    Note:
+        This function bypasses standard logging and outputs directly to the console
+        using rich's printing capabilities for optimal formatting.
     """
 
     # turn your BaseModel into a dict

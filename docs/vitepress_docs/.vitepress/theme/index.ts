@@ -3,13 +3,16 @@ import type {Theme} from 'vitepress'
 // .vitepress/theme/index.ts
 import DefaultTheme from 'vitepress/theme'
 import './style.scss'
-import Redocs from '../components/Redocs.vue'
+import ProductCards from '../components/ProductCards.vue'
+import OTAIPredictionDemo from '../components/OTAIPredictionDemo.vue'
+
 
 export default {
     extends: DefaultTheme, Layout: () => {
         return h(DefaultTheme.Layout, null, {})
     }, enhanceApp({app, router, siteData}) {
-
-        app.component('Redocs', Redocs)
+        app.component('ProductCards', ProductCards)
+        app.component('OTAIPredictionDemo', OTAIPredictionDemo)
     }
+
 } satisfies Theme

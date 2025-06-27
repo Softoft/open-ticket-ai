@@ -70,10 +70,25 @@ class AppModule(Module):
 
 
 class DIContainer(Injector, AbstractContainer):
-    """Dependency injection container for Open Ticket AI."""
+    """Dependency injection container for Open Ticket AI.
+
+    This container manages the application's dependency graph using Injector.
+    It binds core components like configuration, registry, and orchestrator,
+    and provides methods to retrieve configured instances.
+
+    Attributes:
+        config: Validated application configuration
+        registry: Registry of available components
+    """
 
     def __init__(self):
-        """Initialize the container and bind common instances."""
+        """Initializes the dependency injection container.
+
+        Performs the following setup:
+        1. Initializes the Injector superclass with AppModule bindings
+        2. Binds core configuration and registry as instance attributes
+        3. Creates and binds the TicketSystemAdapter instance based on configuration
+        """
         super().__init__([AppModule()])
         self.config: OpenTicketAIConfig = self.get(OpenTicketAIConfig)
         self.registry = self.get(Registry)
@@ -104,15 +119,20 @@ class DIContainer(Injector, AbstractContainer):
         return instance_config
 
     def get_instance[T: RegistryProvidableInstance](self, id: str, subclass_of: type[T]) -> T:
-        """Return an instance from the registry.
+        """Retrieve a configured instance from the registry.
+
+        Looks up the configuration by ID, retrieves the corresponding class from the registry,
+        and creates an instance of that class.
 
         Args:
-            id: Identifier of the desired instance.
-            subclass_of: Expected base class of the instance.
-            config_list: List of configuration entries to search in.
+            id: Unique identifier of the instance configuration
+            subclass_of: Expected base class/interface of the instance
 
         Returns:
-            The created instance of ``subclass_of``.
+            Instantiated object of the requested type
+
+        Raises:
+            KeyError: If configuration or provider key isn't found
         """
         instance_config = self.get_instance_config(id)
         instance_class = self.registry.get(instance_config.provider_key, subclass_of)
@@ -121,7 +141,21 @@ class DIContainer(Injector, AbstractContainer):
         return self.create_object(instance_class, additional_kwargs={"config": instance_config})
 
     def get_pipeline(self, predictor_id: str) -> Pipe:
-        """Create an attribute predictor instance by its ID."""
+        """Construct a processing pipeline instance.
+
+        Retrieves pipeline configuration and constructs a pipeline consisting of:
+        1. Configuration for the entire pipeline
+        2. Instantiated Pipe objects for each step in the pipeline
+
+        Args:
+            predictor_id: ID of the pipeline configuration
+
+        Returns:
+            Configured pipeline instance
+
+        Raises:
+            KeyError: If configuration or provider key isn't found
+        """
         predictor_config: PipelineConfig | None = None
         try:
             predictor_config = self.get_instance_config(predictor_id)

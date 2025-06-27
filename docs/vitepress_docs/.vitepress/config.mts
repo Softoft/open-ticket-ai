@@ -1,28 +1,5 @@
-import {defineConfig} from 'vitepress'
 import {generateNavbar} from './navbarUtil.js'
-
-// Map visible version labels to their directory names
-export const versionMap = {
-    next: 'v1_2_alpha',
-    latest: 'v1_1',
-    '1.1': 'v1_1',
-    '1.0': 'v1_0',
-    'v0_2': 'v0_2',
-    'v0_1': 'v0_1',
-} as const
-
-// Resolve the directory of the currently selected version ("latest" by default)
-const defaultVersion = versionMap.latest
-
-// Helper to create the version dropdown based on the selected language
-function versionDropdown(lang: 'en'|'de') {
-  return {
-    text: 'Version',
-    items: Object.entries(versionMap).map(
-      ([label, dir]) => ({ text: label, link: `/${lang}/${dir}/` })
-    )
-  }
-}
+import {defineConfig} from "vitepress";
 
 export default defineConfig({
     srcDir: `docs-src`,
@@ -35,7 +12,23 @@ export default defineConfig({
                 rel: 'icon',
                 href: 'https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=300&q=100&lightness=100&colorlevel.white=100'
             }
-        ]
+        ],
+        [
+            'link',
+            {
+                rel: 'stylesheet',
+                href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
+                integrity: 'sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==',
+                crossorigin: 'anonymous'
+            }
+        ],
+        // https://unpkg.com/primevue/umd/primevue.min.js
+                [
+            'script',
+            {
+                src: 'https://unpkg.com/primevue/umd/primevue.min.js',
+            }
+        ],
     ],
     description: '',
     sitemap: {
@@ -49,8 +42,7 @@ export default defineConfig({
             link: '/en/',
             themeConfig: {
                 nav: [
-                    ...generateNavbar(``),
-                    versionDropdown('en')
+                    ...generateNavbar('en'),
                 ]
             }
         },
@@ -60,8 +52,7 @@ export default defineConfig({
             link: '/de/',
             themeConfig: {
                 nav: [
-                    ...generateNavbar(``),
-                    versionDropdown('de')
+                    ...generateNavbar('de'),
                 ]
             }
         }

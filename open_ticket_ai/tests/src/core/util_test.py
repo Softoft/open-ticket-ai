@@ -113,4 +113,4 @@ def test_schema_file_written(tmp_path, monkeypatch):
     out_file = tmp_path / "config.schema.json"
     assert out_file.exists()
     data = json.loads(out_file.read_text())
-    assert "open_ticket_ai" in data.get("properties", {})
+    assert "open_ticket_ai" in data.get("properties", {))

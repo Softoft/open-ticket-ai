@@ -50,10 +50,20 @@ class RegistryProvidableInstance:
         Return the provider key for the class.
 
         This key is used to register and retrieve instances from the registry.
+
+        Returns:
+            str: The class name used as the registry key.
         """
         return cls.__name__
 
     @staticmethod
     def get_description() -> str:
-        """Return a human readable description for the class."""
+        """Return a human readable description for the class.
+
+        This method should be overridden by subclasses to provide specific descriptions.
+        The base implementation returns a default placeholder message.
+
+        Returns:
+            str: Human-readable description of the class.
+        """
         return "No description provided."

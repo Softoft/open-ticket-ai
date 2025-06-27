@@ -48,6 +48,17 @@ class MockClient:
 
 
 def test_add_docstrings_to_file_content(tmp_path: Path):
-    """DocstringGenerator should clean the AI response and use the given client."""
+    """Tests DocstringGenerator's ability to process AI responses and integrate with OpenAI client.
+
+    This test verifies that:
+    - The DocstringGenerator correctly cleans and processes AI-generated responses
+    - The generator properly utilizes the provided OpenAI client
+    - File content is updated as expected with generated docstrings
+
+    Args:
+        tmp_path (Path): Temporary directory path provided by pytest fixture for test isolation.
+    """
     client = MockClient("""```python
 print('updated')
+        ```
+        """)

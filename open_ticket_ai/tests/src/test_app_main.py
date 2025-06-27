@@ -1,3 +1,9 @@
+"""Tests for the application and main module of the Open Ticket AI command-line tool.
+
+This module contains unit tests for the `App` class and the `main` module, focusing on
+the application's core functionality, including validation, scheduling, logging, and
+the main execution flow.
+"""
 import logging
 from unittest.mock import MagicMock
 

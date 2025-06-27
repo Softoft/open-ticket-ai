@@ -4,7 +4,15 @@ from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 
 
 class SubjectBodyPreparer(Pipe):
-    """Extract and concatenate the ticket subject and body."""
+    """A pipeline component that prepares ticket subject and body content for processing.
+
+    This pipe extracts the subject and body fields from ticket data, repeats the subject
+    a configurable number of times, and concatenates it with the body content. The prepared
+    data is stored in the pipeline context for downstream processing.
+
+    Attributes:
+        preparer_config (RegistryInstanceConfig): Configuration parameters for the preparer.
+    """
 
     def __init__(self, config: RegistryInstanceConfig):
         """Initializes the SubjectBodyPreparer with configuration.

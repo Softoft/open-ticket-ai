@@ -1,0 +1,58 @@
+{
+  "hash": "df16fe2b",
+  "configHash": "c3c983a9",
+  "lockfileHash": "c4b4b2c1",
+  "browserHash": "bae12543",
+  "optimized": {
+    "vue": {
+      "src": "../../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "file": "vue.js",
+      "fileHash": "3eaa144a",
+      "needsInterop": false
+    },
+    "vitepress > @vue/devtools-api": {
+      "src": "../../../node_modules/@vue/devtools-api/dist/index.js",
+      "file": "vitepress___@vue_devtools-api.js",
+      "fileHash": "e3710c60",
+      "needsInterop": false
+    },
+    "vitepress > @vueuse/core": {
+      "src": "../../../node_modules/@vueuse/core/index.mjs",
+      "file": "vitepress___@vueuse_core.js",
+      "fileHash": "fcf9f3f9",
+      "needsInterop": false
+    },
+    "primevue/config": {
+      "src": "../../../node_modules/primevue/config/index.mjs",
+      "file": "primevue_config.js",
+      "fileHash": "915adc7b",
+      "needsInterop": false
+    },
+    "primevue/card": {
+      "src": "../../../node_modules/primevue/card/index.mjs",
+      "file": "primevue_card.js",
+      "fileHash": "f9f54ebf",
+      "needsInterop": false
+    },
+    "primevue/button": {
+      "src": "../../../node_modules/primevue/button/index.mjs",
+      "file": "primevue_button.js",
+      "fileHash": "5f769ddb",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-YJEHBURP": {
+      "file": "chunk-YJEHBURP.js"
+    },
+    "chunk-KE26TYK4": {
+      "file": "chunk-KE26TYK4.js"
+    },
+    "chunk-5PV4S3G3": {
+      "file": "chunk-5PV4S3G3.js"
+    },
+    "chunk-VJWGEPT5": {
+      "file": "chunk-VJWGEPT5.js"
+    }
+  }
+}

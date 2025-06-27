@@ -3,30 +3,24 @@ base = "docs/vitepress"
 command = "npm run docs:build"
 publish = ".vitepress/dist"
 
-# Set cache headers for assets
-[[headers]]
-for = "/_assets/*"
-[headers.values]
-Cache-Control = "public, max-age=31536000, immutable"
-
-# Handle SPA routing
 [[redirects]]
-from = "/de/*"
-to = "/de/index.html"
-status = 200
+  from = "/"
+  to = "/de"
+  status = 302
+  force = true
+  conditions = {Language = ["de"]}
 
+# Redirect English language users to the /en subdirectory
 [[redirects]]
-from = "/v1_0/*"
-to = "/v1_0/index.html"
-status = 200
+  from = "/"
+  to = "/en"
+  status = 302
+  force = true
+  conditions = {Language = ["en"]}
 
+# Fallback redirect for all other languages to the /en subdirectory
 [[redirects]]
-from = "/v1_1/*"
-to = "/v1_1/index.html"
-status = 200
-
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
-
+  from = "/"
+  to = "/en"
+  status = 302
+  force = true

@@ -7,14 +7,24 @@ from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter impor
 
 
 class GenericTicketUpdater(Pipe):
-    """Update a ticket in the ticket system using data from the context."""
+    """Update a ticket in the ticket system using data from the context.
+
+    This pipe component is responsible for updating tickets in an external ticket tracking
+    system (like Jira, ServiceNow, etc.) using data generated during the pipeline execution.
+    It checks the pipeline context for update instructions and delegates the actual update
+    operation to the configured ticket system adapter.
+
+    Attributes:
+        modifier_config: Configuration settings for the ticket updater.
+        ticket_system: Adapter instance for interacting with the external ticket system.
+    """
 
     def __init__(self, config: RegistryInstanceConfig, ticket_system: TicketSystemAdapter):
         """Initializes the GenericTicketUpdater with configuration and ticket system adapter.
 
         Args:
-            config: Configuration instance for the pipeline component.
-            ticket_system: Adapter for interacting with the ticket system.
+            config: Configuration instance containing settings for the pipeline component.
+            ticket_system: Adapter object that handles communication with the external ticket system.
         """
         super().__init__(config)
         self.modifier_config = config
@@ -30,7 +40,7 @@ class GenericTicketUpdater(Pipe):
             context: The pipeline context containing data and ticket information.
 
         Returns:
-            The original pipeline context after processing.
+            The original pipeline context after processing (unchanged).
         """
         update_data = context.data.get("update_data")
         if update_data:

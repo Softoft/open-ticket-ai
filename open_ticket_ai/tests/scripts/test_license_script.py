@@ -1,3 +1,14 @@
+"""Tests for the license_script module.
+
+This module contains unit tests for the functions in `open_ticket_ai.scripts.license_script`.
+It tests the functionality of:
+- Finding the start of code in a file
+- Updating license notices in files within a directory
+- Handling various file types and content scenarios
+
+The tests use pytest fixtures to create temporary directories with test files
+and parametrized tests to cover multiple input cases.
+"""
 import pytest
 import os
 import shutil
@@ -13,9 +24,27 @@ TEST_DIR = "test_license_files_temp"
 
 @pytest.fixture
 def setup_test_directory(tmp_path):
-    """Sets up a temporary directory with various files for testing."""
+    """Sets up a temporary directory with various files for testing.
+
+    This fixture creates a temporary directory structure with multiple test files
+    representing different scenarios:
+    - Python files with only code
+    - Python files with only comments
+    - Python files with mixed comments and code
+    - Empty Python files
+    - Non-Python text files
+    - Python files that already have the new license notice
+
+    After the test runs, the temporary directory is automatically cleaned up.
+
+    Args:
+        tmp_path: Pytest fixture providing a temporary directory path.
+
+    Yields:
+        str: The path to the temporary test directory.
+    """
     test_dir = tmp_path / TEST_DIR
-    os.maked(test_dir, exist_ok=True)
+    os.makedirs(test_dir, exist_ok=True)
 
     # File content examples
     file_contents = {
@@ -58,6 +87,9 @@ def setup_test_directory(tmp_path):
 def test_find_start_of_code(lines, expected_index):
     """Tests the find_start_of_code function with various line inputs.
 
+    This test uses parametrized inputs to verify the function correctly identifies
+    the starting index of non-comment, non-whitespace code in different scenarios.
+
     Args:
         lines: List of strings representing lines of a file.
         expected_index: The expected index where the code starts.
@@ -67,10 +99,12 @@ def test_find_start_of_code(lines, expected_index):
 def test_update_license_in_files(setup_test_directory):
     """Tests the update_license_in_files function by updating files in a test directory.
 
-    It checks that:
-      - Python files get the new license notice at the top and retain their original content.
-      - Already licensed files are updated without duplicating the license.
-      - Non-Python files are not modified.
+    This test verifies that:
+      - Python files get the new license notice at the top while retaining their original content
+      - Already licensed files are updated without duplicating the license
+      - Non-Python files remain unmodified
+      - Files in subdirectories are processed correctly
+      - Empty files are handled appropriately
 
     Args:
         setup_test_directory: Pytest fixture that sets up a temporary test directory.

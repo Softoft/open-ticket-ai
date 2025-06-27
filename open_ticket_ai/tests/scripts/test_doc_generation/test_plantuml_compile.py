@@ -1,3 +1,10 @@
+"""Test cases for the doc_generation functionality.
+
+This module contains tests for the `compile_plantuml_diagrams` function in the
+`open_ticket_ai.scripts.doc_generation.generate_api_reference` module. It specifically
+validates the function's behavior when handling edge cases such as non-existent directories.
+"""
+
 from pathlib import Path
 
 from open_ticket_ai.scripts.doc_generation.generate_api_reference import compile_plantuml_diagrams

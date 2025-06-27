@@ -59,6 +59,11 @@ class MarkdownVisitor(ast.NodeVisitor):
     """
 
     def __init__(self, file_path: Path):
+        """Initializes the MarkdownVisitor instance.
+
+        Args:
+            file_path: Path to the Python source file being processed.
+        """
         self.file_path = file_path
         self.markdown_parts: List[str] = []
         self.current_class_name: Optional[str] = None
@@ -159,8 +164,11 @@ class MarkdownVisitor(ast.NodeVisitor):
         self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef],
         is_async: bool = False
     ):
-        """
-        Processes function/method nodes into formatted Markdown documentation.
+        """Processes function/method nodes into formatted Markdown documentation.
+
+        This method handles both synchronous and asynchronous functions. It formats the function
+        signature, generates a badge for methods (if inside a class), and processes the docstring.
+        The output is appended to the visitor's markdown_parts.
 
         Args:
             node: The AST function node to process.

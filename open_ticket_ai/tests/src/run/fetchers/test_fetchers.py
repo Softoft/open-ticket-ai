@@ -36,16 +36,42 @@ class DummyFetcher(Pipe):
 
 
 def test_dummy_fetcher_process_populates_context():
-    """Tests that the DummyFetcher process method populates the context with a dummy flag."""
+    """Tests the `DummyFetcher.process` method.
+
+    This test verifies that the `DummyFetcher` correctly sets a dummy flag in the pipeline context.
+
+    Steps:
+    1. Initialize a `DummyFetcher` with mock configuration and ticket system
+    2. Create a pipeline context with a dummy ticket ID
+    3. Process the context through the fetcher
+    4. Verify the context contains the expected 'dummy' flag with True value
+
+    This ensures the dummy fetcher behaves as expected for testing purposes.
+    """
     cfg = FetcherConfig(id="d1", provider_key="dummy")
     fetcher = DummyFetcher(cfg, MagicMock())
     ctx = PipelineContext(ticket_id="42")
-    result = fetcher.process(ctx)
+    result result = fetcher.process(ctx)
     assert result.data["dummy"] is True
 
 
 def test_basic_ticket_fetcher_fetches_ticket():
-    """Tests that the BasicTicketFetcher fetches a ticket and populates the context."""
+    """Tests the `BasicTicketFetcher.process` method.
+
+    This test verifies that the `BasicTicketFetcher` correctly:
+    - Retrieves ticket data using the adapter
+    - Populates the pipeline context with ticket information
+
+    Steps:
+    1. Create a mock adapter that returns predefined ticket data
+    2. Initialize the fetcher with configuration and mock adapter
+    3. Create pipeline context with a ticket ID
+    4. Process context through the fetcher
+    5. Verify adapter was called with correct parameters
+    6. Verify context contains expected ticket data
+
+    This ensures the basic ticket fetcher properly integrates with the ticket system adapter.
+    """
     adapter = MagicMock()
     adapter.find_first_ticket.return_value = {"TicketID": "42", "subject": "Hello"}
     cfg = FetcherConfig(id="b1", provider_key="basic")
@@ -57,7 +83,17 @@ def test_basic_ticket_fetcher_fetches_ticket():
 
 
 def test_basic_ticket_fetcher_description():
-    """Tests the description of the BasicTicketFetcher."""
+    """Tests the `BasicTicketFetcher.get_description` method.
+
+    This test verifies that the fetcher provides an appropriate description string.
+
+    Steps:
+    1. Initialize the fetcher with mock configuration and adapter
+    2. Retrieve the description string
+    3. Verify the description contains expected keywords
+
+    This ensures the fetcher correctly identifies itself in pipeline documentation.
+    """
     cfg = FetcherConfig(id="b1", provider_key="basic")
     fetcher = BasicTicketFetcher(cfg, MagicMock())
     assert "Basic ticket fetcher" in fetcher.get_description()
