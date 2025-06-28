@@ -1,0 +1,29 @@
+{
+  "name": "vitepress-atc-docs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^24.0.4",
+    "vitepress": "^1.6.3",
+    "vue": "^3.4.27"
+  },
+  "dependencies": {
+    "@primeuix/themes": "^1.1.2",
+    "bootstrap": "^5.3.7",
+    "primeflex": "^4.0.0",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.3.5",
+    "redoc": "2.4.0",
+    "sass": "^1.89.2",
+    "vue-i18n": "^11.1.7"
+  }
+}

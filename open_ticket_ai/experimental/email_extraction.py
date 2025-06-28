@@ -12,17 +12,23 @@ nltk.download('stopwords')
 
 
 def clean_text(text):
-"""
-    
-    Cleans a given German text by converting it to lowercase and removing stop words.
-    
+    """Cleans German text by converting to lowercase and removing stop words.
+
+    This function processes input text through the following steps:
+    1. Converts all text to lowercase
+    2. Tokenizes the text into individual words
+    3. Removes German stop words using NLTK's predefined list
+    4. Rejoins the remaining words into a cleaned string
+
     Args:
-        text (str): The input text to be cleaned.
-    
+        text (str): The input text to be cleaned
+
     Returns:
-        str: The cleaned text with all stop words removed.
-    
-"""
+        str: The cleaned text with stop words removed and in lowercase
+
+    Note:
+        Requires NLTK German stopwords to be downloaded (handled automatically)
+    """
     text = text.lower()
     stop_words = set(stopwords.words('german'))
     word_tokens = word_tokenize(text, language="german")
@@ -31,20 +37,27 @@ def clean_text(text):
 
 
 def remove_signature(email):
-"""
-    Removes the signature from an email body.
-    
+    """Removes signature blocks from email bodies using pattern matching and NLP.
+
+    Processes email content by:
+    1. Splitting at common signature separators (e.g., '---', '***')
+    2. Removing signature elements through:
+        - Common German/English closing phrases
+        - Contact information patterns (phone, email, etc.)
+        - Company/organization details
+        - Named entity recognition for persons and organizations
+    3. Reconstructing the email body with cleaned content
+
     Args:
-        email (str): The email body to process.
-    
+        email (str): The full email content including potential signature
+
     Returns:
-        str: The email body with the signature removed.
-    
-    Note: This function uses regular expressions and spaCy's natural language processing
-    library to identify and remove common signature patterns, including greetings,
-    contact information, and entity mentions. The remaining text is then appended to
-    the main body of the email.
-"""
+        str: The processed email body with signature elements removed
+
+    Note:
+        Uses spaCy's German NLP model (de_core_news_sm) for entity recognition.
+        Designed primarily for German emails but handles common English closings.
+    """
     parts = re.split(r'-{2,}|\*{2,}', email)
     main_body = parts[0]
 

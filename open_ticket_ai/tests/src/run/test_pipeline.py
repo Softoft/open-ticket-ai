@@ -1,3 +1,15 @@
+"""Module providing dummy implementations for pipeline components testing.
+
+This module defines several classes that mimic the behavior of real pipeline components
+(like data preparer, AI model, and result modifier) for the purpose of testing the pipeline
+without the need for actual external services or complex setups.
+
+The classes included are:
+
+- `DummyPreparer`: Simulates data preparation by wrapping input values in a string.
+- `DummyAI`: Simulates an AI model by returning formatted prompts as responses.
+- `DummyModifier`: Simulates result modification and tracks call arguments.
+"""
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 

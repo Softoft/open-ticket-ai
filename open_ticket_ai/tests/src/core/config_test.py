@@ -1,4 +1,21 @@
 # tests/core/config_test.py
+"""Tests for the configuration models and loading functionality.
+
+This module contains unit tests for the configuration models (`SchedulerConfig`,
+`OpenTicketAIConfig`) and the `load_config` function in the
+`open_ticket_ai.src.ce.core.config.config_models` module.
+
+The tests cover:
+  - Validation of the `SchedulerConfig` model.
+  - Validation of the `OpenTicketAIConfig` model, including:
+      * Required components (non-empty lists for core components).
+      * Correct parsing of a valid configuration.
+      * Cross-referencing of components in pipelines.
+      * Handling of duplicate component IDs.
+  - The `load_config` function's behavior when the configuration file is missing the root key.
+
+The tests use pytest fixtures and parametrization to cover various scenarios.
+"""
 
 import pytest
 from pydantic import ValidationError
@@ -152,7 +169,17 @@ class TestOpenTicketAIConfig:
 
     def test_duplicate_ids_in_component_list_allowed_by_basemodel_but_picked_by_set_logic(self,
                                                                                           minimal_config_dict):
-        """Tests duplicate component ID behavior and cross-reference resolution."""
+        """Tests behavior when duplicate component IDs exist in a component list.
+
+        This test verifies that:
+        1. Pydantic allows duplicate IDs within component lists (e.g., two fetchers with same ID)
+        2. The configuration model correctly parses with duplicate IDs
+        3. Pipeline references to duplicate IDs still resolve correctly using set logic
+
+        The test ensures that while duplicate IDs are technically allowed by the model,
+        the cross-reference resolution uses set-based lookups which will match any component
+        with the referenced ID regardless of duplicates.
+        """
         # This test clarifies behavior rather than strictly enforcing a "fail" for duplicates,
         # as Pydantic itself doesn't prevent duplicate dicts in a list by default.
         # The cross-validation logic uses sets, so it will effectively use one of the definitions.

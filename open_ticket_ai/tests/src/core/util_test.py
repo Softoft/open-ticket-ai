@@ -1,3 +1,23 @@
+"""Tests for the `core.util` module.
+
+This module contains unit tests for the utility functions and configuration handling
+in the `core.util` module of the `open_ticket_ai` project.
+
+The tests are organized into three main sections:
+
+1. **Tests for `path_util.find_project_root`**:
+   - Verifies that the project root is correctly identified.
+   - Checks error handling when the project name is invalid.
+
+2. **Tests for `pretty_print_config.pretty_print_config`**:
+   - Ensures that the configuration is printed in the expected YAML format.
+
+3. **Tests for `create_json_config_schema`**:
+   - Validates the structure of the generated JSON schema.
+   - Checks that the schema file is correctly written to the filesystem.
+
+These tests use `pytest` and rely on fixtures for temporary directories and environment patching.
+"""
 import json
 import runpy
 from types import SimpleNamespace
@@ -32,7 +52,7 @@ def test_find_project_root_returns_project_directory():
         - The current test file resides within the found directory
         - The expected config file exists in the root directory
     """
-    project_root = path_util.find_project_root()
+    project_root = path_util.find_python_code_root_path()
     assert project_root.name == "open_ticket_ai"
     # verify that this test file resides inside the found project root
     assert Path(__file__).resolve().is_relative_to(project_root)
@@ -42,7 +62,7 @@ def test_find_project_root_returns_project_directory():
 def test_find_project_root_invalid_name_raises():
     """Tests that find_project_root raises FileNotFoundError with invalid project name."""
     with pytest.raises(FileNotFoundError):
-        path_util.find_project_root("does_not_exist")
+        path_util.find_python_code_root_path("does_not_exist")
 
 
 # --- Tests for pretty_print_config.pretty_print_config ---
@@ -93,4 +113,4 @@ def test_schema_file_written(tmp_path, monkeypatch):
     out_file = tmp_path / "config.schema.json"
     assert out_file.exists()
     data = json.loads(out_file.read_text())
-    assert "open_ticket_ai" in data.get("properties", {})
+    assert "open_ticket_ai" in data.get("properties", {))

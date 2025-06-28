@@ -1,0 +1,108 @@
+/*
+ * ===================================================================
+ * 1. DEFINE VITEPRESS THEME VARIABLES (your original style.scss)
+ * ===================================================================
+ */
+:root {
+    // Brand Colors (based on Indigo)
+    --vp-c-brand-1: #646cff;
+    --vp-c-brand-2: #747bff;
+    --vp-c-brand-3: #535bf2;
+    --vp-c-brand-soft: rgba(100, 108, 255, 0.14);
+
+    // Other VitePress variables...
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #bd34fe 30%, #41d1ff);
+    --vp-home-hero-image-background-image: linear-gradient(-45deg, #bd34fe 50%, #47caff 50%);
+    --vp-home-hero-image-filter: blur(44px);
+}
+
+/*
+ * ===================================================================
+ * 2. BRIDGE: Make Bootstrap use VitePress variables
+ * ===================================================================
+ */
+
+/* Light Mode (default) */
+:root {
+    /* General */
+    --bs-body-bg: var(--vp-c-bg);
+    --bs-body-color: var(--vp-c-text-1);
+    --bs-border-color: var(--vp-c-divider);
+    --bs-border-radius: 0.75rem;
+
+    /* Buttons */
+    --bs-btn-padding-x: 16px;
+    --bs-btn-padding-y: 8px;
+    --bs-btn-font-size: 14px;
+
+    --bs-primary: var(--vp-c-brand-1);
+    --bs-primary-rgb: 100, 108, 255; // Manually provide RGB for Bootstrap's functions
+
+    --bs-btn-bg: var(--vp-c-brand-1);
+    --bs-btn-border-color: var(--vp-c-brand-1);
+    --bs-btn-hover-bg: var(--vp-c-brand-2);
+    --bs-btn-hover-border-color: var(--vp-c-brand-2);
+    --bs-btn-active-bg: var(--vp-c-brand-3);
+    --bs-btn-active-border-color: var(--vp-c-brand-3);
+    --bs-btn-color: #fff;
+
+    /* Cards */
+    --bs-card-bg: var(--vp-c-bg-soft);
+    --bs-card-color: var(--vp-c-text-1);
+    --bs-card-border-color: var(--vp-c-divider);
+    --bs-card-cap-bg: var(--vp-c-bg-mute);
+
+    /* Forms */
+    --bs-form-control-bg: var(--vp-c-bg);
+    --bs-form-control-color: var(--vp-c-text-1);
+    --bs-form-select-bg: var(--vp-c-bg);
+    --bs-form-select-color: var(--vp-c-text-1);
+    --bs-input-border: var(--vp-c-divider);
+    --bs-input-focus-border-color: var(--vp-c-brand-1);
+}
+
+/* Dark Mode */
+.dark {
+    /* General */
+    --bs-body-bg: var(--vp-c-bg);
+    --bs-body-color: var(--vp-c-text-1);
+    --bs-border-color: var(--vp-c-divider);
+
+    /* Buttons */
+    // The button variables are already linked to --vp-c-brand which changes
+    // in dark mode, so we might not need to redefine them unless we want a different style.
+
+    /* Cards */
+    --bs-card-bg: var(--vp-c-bg-soft);
+    --bs-card-color: var(--vp-c-text-1);
+    --bs-card-border-color: var(--vp-c-divider);
+    --bs-card-cap-bg: var(--vp-c-bg-mute);
+
+    /* Forms */
+    --bs-form-control-bg: var(--vp-c-bg);
+    --bs-form-control-color: var(--vp-c-text-1);
+    --bs-form-select-bg: var(--vp-c-bg);
+    --bs-form-select-color: var(--vp-c-text-1);
+    --bs-input-border: var(--vp-c-divider);
+}
+
+/*
+ * ===================================================================
+ * 3. Your custom component styles (e.g., VPHomeHero)
+ * ===================================================================
+ */
+
+.VPHomeHero .VPImage {
+    padding: 3rem !important;
+}
+
+.VPFeature .VPImage {
+    margin: 1rem auto;
+}
+
+a {
+    text-decoration: none !important;
+    font-weight: 500; /* Optional: Make links slightly bolder to stand out */
+    transition: color 0.25s; /* Optional: Smooth color transition on hover */
+}

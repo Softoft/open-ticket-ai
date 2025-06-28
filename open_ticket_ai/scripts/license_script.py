@@ -1,3 +1,4 @@
+import datetime
 import os
 
 """Script to update license notices in Python files within a specified directory.
@@ -11,10 +12,10 @@ Non-comment code and empty/whitespace-only files are handled appropriately.
 directory_path = 'src'
 
 # The new license notice text to insert at the top of files
-new_license_notice = """# Copyright (c) 2024 by Softoft, Tobias Bueck Einzelunternehmen
-# This code is part of the "OTOBO - AI Ticket Classification - Basic" and is governed 
-# by its license agreement. Full license in LICENSE_DE.md / LICENSE_EN.md. This code cannot be copied and/or distributed
-# without the express permission of Softoft, Tobias Bueck Einzelunternehmen.
+current_year = datetime.datetime.now().year
+new_license_notice = f"""# Copyright (c) {current_year} by Softoft, Tobias Bueck Einzelunternehmen
+# This code is part of the Open Ticket AI and is governed
+# by its license agreement. Full license in LICENSE_DE.md / LICENSE_EN.md.
 """
 
 
@@ -58,14 +59,22 @@ def write_file(filepath, lines):
 
 
 def update_license_in_files(directory):
-    """Insert the license notice at the top of all ``.py`` files.
+    """Inserts the license notice at the top of all `.py` files.
 
-    Walks through all Python files in the specified directory and replaces
-    any existing license notice with the new license notice. Handles empty
-    files and files containing only comments appropriately.
+    Walks through all Python files in the specified directory and inserts the new license notice.
+    The function removes any leading comments and blank lines (which typically include the old license)
+    and replaces them with the new license notice, except in the case where the file consists entirely
+    of comments and blank lines (and is not empty or entirely whitespace). In that case, the new license
+    is inserted at the top and the existing comments and blank lines are preserved below.
+
+    For empty files or files containing only whitespace, the license notice is inserted and the rest of
+    the file remains empty.
 
     Args:
         directory (str): Path to the directory containing files to update.
+
+    Note:
+        This function modifies the files in-place. It is recommended to have backups before running.
     """
     for subdir, dirs, files in os.walk(directory):
         for filename in files:
