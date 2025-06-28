@@ -74,7 +74,7 @@ class DummyModifier:
 
         Args:
             ticket_id (str): Identifier for the ticket being processed.
-            model_result: The result from the model that would be modified.
+            model_result (object): The result from the model that would be modified.
 
         Returns:
             str: A fixed string indicating completion.

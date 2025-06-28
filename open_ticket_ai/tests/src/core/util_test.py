@@ -60,7 +60,11 @@ def test_find_project_root_returns_project_directory():
 
 
 def test_find_project_root_invalid_name_raises():
-    """Tests that find_project_root raises FileNotFoundError with invalid project name."""
+    """Tests that find_project_root raises FileNotFoundError with invalid project name.
+
+    Verifies:
+        - FileNotFoundError is raised when an invalid project name is provided.
+    """
     with pytest.raises(FileNotFoundError):
         path_util.find_python_code_root_path("does_not_exist")
 
@@ -91,7 +95,11 @@ def test_pretty_print_config_outputs_yaml():
 # --- Tests for create_json_config_schema ---
 
 def test_root_config_schema_contains_open_ticket_ai():
-    """Tests that the generated JSON schema contains the expected 'open_ticket_ai' property."""
+    """Tests that the generated JSON schema contains the expected 'open_ticket_ai' property.
+
+    Verifies:
+        - The 'open_ticket_ai' property exists in the schema's properties.
+    """
     schema = create_json_config_schema.RootConfig.model_json_schema()
     assert "open_ticket_ai" in schema.get("properties", {})
 

@@ -1,3 +1,9 @@
+"""This module contains unit tests for the Translator class used in generating multi-language documentation.
+
+The tests cover:
+- The translation of text using an external API client.
+- The processing of Markdown files to generate translated versions.
+"""
 import asyncio
 from pathlib import Path
 from unittest.mock import AsyncMock, Mock
@@ -14,8 +20,7 @@ async def test_translate_text_calls_client():
     This test verifies:
     1. The method properly calls the OpenAI chat completions API
     2. The API response is correctly processed to extract translated content
-    3. The returned value matches the expected translation
-    4. The API client is called exactly once with proper arguments
+    3. The returned value matches the expected translation4. The API client is called exactly once with proper arguments
 
     Mocks:
     - Creates a mock OpenAI client with chained attributes

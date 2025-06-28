@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+var __VUE_PROD_DEVTOOLS__ = false
+
 import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 import ProductCards from './ProductCards.vue' // Assuming ProductCards component is in the same directory
@@ -52,7 +54,6 @@ const supportPlans = computed(() => [
         :buttonText="t('supportPlans.buttonText')"
         :products="supportPlans"
         :title="t('supportPlans.title')"
-        ctaLink="mailto:sales@softoft.de"
     />
 </template>
 

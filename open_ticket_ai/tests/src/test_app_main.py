@@ -19,11 +19,16 @@ class TestAppRun:
 
     def test_run_validation_passes(self, monkeypatch):
         """Tests that App.run() executes validation and scheduling when validation passes.
-        
+
+        This test mocks the scheduler and console to simulate a KeyboardInterrupt to break the loop.
+
         Ensures:
-            - Validator is called exactly once
-            - Orchestrator sets schedules exactly once
-            - Console output occurs as expected
+            - Validator is called exactly once.
+            - Orchestrator sets schedules exactly once.
+            - Console output occurs as expected.
+
+        Args:
+            monkeypatch: pytest fixture for monkeypatching.
         """
         validator = MagicMock()
         orchestrator = MagicMock()
@@ -46,10 +51,16 @@ class TestAppRun:
 
     def test_run_validation_error_logs(self, monkeypatch, caplog):
         """Tests that App.run() logs validation errors appropriately.
-        
+
+        This test mocks the validator to raise an exception and checks the logs.
+
         Ensures:
-            - Validation errors are logged at ERROR level
-            - Orchestrator still attempts to set schedules after validation failure
+            - Validation errors are logged at ERROR level.
+            - Orchestrator still attempts to set schedules after validation failure.
+
+        Args:
+            monkeypatch: pytest fixture for monkeypatching.
+            caplog: pytest fixture for capturing logs.
         """
         validator = MagicMock()
         validator.validate_registry.side_effect = ValueError("bad config")
@@ -74,9 +85,12 @@ class TestMainModule:
 
     def test_main_sets_logging_level(self, monkeypatch):
         """Tests that main() correctly sets logging verbosity levels.
-        
+
         Verifies:
-            - Logging level is set to INFO when verbose=True
+            - Logging level is set to INFO when verbose=True.
+
+        Args:
+            monkeypatch: pytest fixture for monkeypatching.
         """
         basic_cfg = MagicMock()
         monkeypatch.setattr(main_module.logging, "basicConfig", basic_cfg)
@@ -87,11 +101,15 @@ class TestMainModule:
 
     def test_start_creates_container_and_runs_app(self, monkeypatch, capsys):
         """Tests the full application startup sequence.
-        
+
         Ensures:
-            - Dependency container is initialized
-            - App instance is retrieved and executed
-            - Expected console output (figlet art) is present
+            - Dependency container is initialized.
+            - App instance is retrieved and executed.
+            - Expected console output (figlet art) is present.
+
+        Args:
+            monkeypatch: pytest fixture for monkeypatching.
+            capsys: pytest fixture for capturing stdout and stderr.
         """
         app_mock = MagicMock()
         container_mock = MagicMock(get=MagicMock(return_value=app_mock))

@@ -20,7 +20,7 @@ class GenericTicketUpdater(Pipe):
     """
 
     def __init__(self, config: RegistryInstanceConfig, ticket_system: TicketSystemAdapter):
-        """Initializes the GenericTicketUpdater with configuration and ticket system adapter.
+        """Initializes the `GenericTicketUpdater` with configuration and ticket system adapter.
 
         Args:
             config: Configuration instance containing settings for the pipeline component.
@@ -33,8 +33,9 @@ class GenericTicketUpdater(Pipe):
     def process(self, context: PipelineContext) -> PipelineContext:
         """Processes the pipeline context to update the ticket if update data exists.
 
-        Retrieves update data from the context and updates the ticket in the ticket system
-        if update data is present. Returns the context unchanged.
+        Retrieves update data from the context (specifically from the key `"update_data"` in
+        `context.data`) and updates the ticket in the ticket system if update data is present.
+        Returns the context unchanged.
 
         Args:
             context: The pipeline context containing data and ticket information.

@@ -9,8 +9,14 @@ from open_ticket_ai.src.ce.core.mixins.registry_instance_config import RegistryI
 class TicketSystemAdapter(RegistryInstanceConfig, ABC):
     """
     An abstract base class for ticket system adapters.
-    This class defines the
-    interface that all ticket system adapters must implement.
+
+    This class defines the interface that all concrete ticket system adapters must
+    implement to interact with different ticketing systems. It provides common
+    configuration handling through dependency injection and requires subclasses
+    to implement core ticket operations.
+
+    Attributes:
+        config (SystemConfig): System configuration object containing adapter settings.
     """
 
     @inject

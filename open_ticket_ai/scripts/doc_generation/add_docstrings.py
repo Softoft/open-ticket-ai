@@ -1,3 +1,5 @@
+"""Automatically adds long Google style docstrings to Python files using AI."""
+
 import asyncio
 from pathlib import Path
 import re
@@ -25,7 +27,7 @@ class DocstringGenerator:
             base_path (Path): Root directory to search for Python files.
             exclude_dirs (set[str]): Directory names to exclude from processing.
             exclude_files (set[str]): Specific filenames to exclude from processing.
-            model (str, optional): AI model identifier for docstring generation. 
+            model (str, optional): AI model identifier for docstring generation.
                 Defaults to "deepseek/deepseek-r1-0528".
         """
         self.client = client
@@ -48,7 +50,14 @@ class DocstringGenerator:
 
     @staticmethod
     def clean_ai_response(response_text: str) -> str:
-        """Extract Python code from a response that may contain Markdown fences."""
+        """Extract Python code from a response that may contain Markdown fences.
+
+        Args:
+            response_text (str): Raw response text from the AI model.
+
+        Returns:
+            str: Cleaned Python code with Markdown fences removed.
+        """
         code_block_pattern = re.compile(r"```python\n(.*?)\n```", re.DOTALL)
         match = code_block_pattern.search(response_text)
         if match:
@@ -56,23 +65,42 @@ class DocstringGenerator:
         return response_text.strip()
 
     async def add_docstrings_to_file_content(self, file_content: str) -> str | None:
-        """Send file content to the AI model and return the updated version."""
-        prompt = f"""
-        You are an expert Python programmer tasked with improving code documentation.
-        The following is a complete Python file. Add long, descriptive docstrings
-        to all classes and functions that are missing them. Use **Google style** docstrings
-        and format the docstring content using Markdown.
+        """Send file content to the AI model and return the updated version.
 
-        IMPORTANT INSTRUCTIONS:
-        1.  Return the ENTIRE, complete file content with your additions.
-        2.  Do NOT change any existing code logic. Only add docstrings where they are needed.
-        3.  Your response must ONLY be the raw Python code for the modified file. Do not add
-            any commentary, explanations or markdown fences around it.
+        Args:
+            file_content (str): Original Python file content to process.
+
+        Returns:
+            str | None: Updated file content with docstrings added, or None on error.
+        """
+        prompt = f"""
+        You are an expert Python developer specializing in writing high-quality,
+         human-readable documentation.
+        Your task is to analyze the following Python file and add comprehensive docstrings to all
+         public classes, methods, and functions that are missing them.
+
+        **Docstring Requirements:**
+        1.  **Style:** All docstrings MUST strictly follow the **Google Python Style Guide**.
+        2.  **Formatting:** Use **Markdown** for rich text formatting within the docstrings
+        (e.g., for `Args`, `Returns`, `Raises` sections). Do **not** use HTML tags.
+        3.  **Detail Level:** The length and detail of your descriptions should be proportional to
+        the complexity of the code.
+            -   A simple, self-explanatory attribute may only need a brief phrase.
+            -   A complex class or function with intricate logic requires a thorough explanation of
+             its purpose, behavior, arguments, and return values.
+
+        **CRITICAL Output Rules:**
+        -   **Return the ENTIRE file content.** Your output must be the complete Python script,
+         including all original code and your new docstrings.
+        -   **DO NOT change any existing code.** You must not refactor, alter,
+         or remove any part of the Python logic. Your only job is to add documentation.
+        -   **RAW PYTHON CODE ONLY.** Your response MUST be only the raw Python code.
+         Do not include any surrounding text, explanations, notes, or commentary. Most importantly,
+          **DO NOT wrap the code in Markdown code fences** (i.e., no ```python or ```).
+           The output must be immediately ready to be saved as a `.py` file.
 
         Here is the file content:
-        ```python
         {file_content}
-        ```
         """
         try:
             response = await self.client.chat.completions.create(
@@ -95,7 +123,17 @@ class DocstringGenerator:
             return None
 
     async def process_file(self, file_path: Path) -> None:
-        """Process a single Python file in place."""
+        """Process a single Python file by adding docstrings and saving changes.
+
+        Args:
+            file_path (Path): Path to the Python file to process.
+
+        Steps:
+            1. Reads original file content
+            2. Skips empty files
+            3. Sends content to AI for docstring generation
+            4. Writes updated content back if changes exist
+        """
         print(f"-> Processing: {file_path}")
         try:
             with open(file_path, "r", encoding="utf-8") as f:
@@ -121,7 +159,13 @@ class DocstringGenerator:
             print(f"   - Could not process file {file_path}: {exc}")
 
     async def run(self) -> None:
-        """Run the docstring generation over all discovered Python files."""
+        """Run the docstring generation over all discovered Python files.
+
+        Steps:
+            1. Discovers Python files respecting exclusion rules
+            2. Processes files concurrently using asyncio
+            3. Prints summary upon completion
+        """
         print("Starting docstring generation using whole-file processing...")
         py_files = self.find_python_files()
 

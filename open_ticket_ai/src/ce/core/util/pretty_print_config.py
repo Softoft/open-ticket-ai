@@ -5,9 +5,9 @@ nicely formatted and syntax highlighted way using the `rich` library. It convert
 Pydantic models to YAML format and applies syntax highlighting for improved readability.
 
 Features:
-- Converts Pydantic BaseModel instances to dictionaries
+- Converts Pydantic `BaseModel` instances to dictionaries
 - Serializes configuration data to YAML format
-- Applies YAML syntax highlighting using rich
+- Applies YAML syntax highlighting using `rich`
 - Prints highlighted output to console
 """
 
@@ -21,25 +21,24 @@ from rich.syntax import Syntax
 logger = logging.getLogger(__name__)
 
 def pretty_print_config(config: BaseModel, console: Console):
-    """Pretty print a pydantic model using ``rich``.
+    """Pretty print a pydantic model using `rich`.
 
-    This function converts a Pydantic BaseModel to a dictionary, serializes it to YAML,
-    and prints it to the console using rich's syntax highlighting. The output is formatted
+    This function converts a Pydantic `BaseModel` to a dictionary, serializes it to YAML,
+    and prints it to the console using `rich`'s syntax highlighting. The output is formatted
     with YAML syntax highlighting for improved readability.
 
+    The process involves:
+        1. Converting the Pydantic model to a dictionary using `model_dump()`
+        2. Serializing the dictionary to a YAML string
+        3. Creating a rich `Syntax` object with YAML highlighting
+        4. Printing the highlighted YAML to the console
+
+    Note that this function bypasses standard logging and outputs directly to the console
+    using `rich`'s printing capabilities for optimal formatting.
+
     Args:
-        config (BaseModel): The Pydantic model configuration to display.
-        console (Console): The rich console instance for output rendering.
-
-    Process:
-        1. Converts the Pydantic model to a dictionary using `model_dump()`
-        2. Serializes the dictionary to a YAML string
-        3. Creates a rich Syntax object with YAML highlighting
-        4. Prints the highlighted YAML to the console
-
-    Note:
-        This function bypasses standard logging and outputs directly to the console
-        using rich's printing capabilities for optimal formatting.
+        config (`BaseModel`): The Pydantic model configuration to display.
+        console (`Console`): The rich console instance for output rendering.
     """
 
     # turn your BaseModel into a dict

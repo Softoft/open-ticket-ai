@@ -1,87 +1,70 @@
 ---
-title: ATC Community Edition Überblick
-description: Eine umfassende Übersicht über die Funktionen und Einsatzmöglichkeiten der ATC Community Edition.
+title: ATC Community Edition Overview
+description: A comprehensive overview of the features and use cases of the ATC Community Edition.
 ---
-:::warning
-Die ATC CE ist noch nicht veröffentlicht.
-:::
 
-# ATC Community Edition Überblick
+# ATC Community Edition Overview
 
-## Einführung
+## Introduction
 
-Die ATC (Automated Ticket Classification) Community Edition ist eine fortschrittliche Lösung zur automatisierten
-Klassifizierung von Support-Tickets. Sie ist kostenlos, On-Premise und kann auf jedem Betriebssystem installiert werden,
-das Docker unterstützt. Diese Dokumentation bietet eine umfassende Übersicht über die Funktionen und
-Einsatzmöglichkeiten von ATC.
+The ATC (Automated Ticket Classification) Community Edition is an advanced solution for automated classification of support tickets. It is free, on-premise, and can be installed on any operating system that supports Docker. This documentation provides a comprehensive overview of ATC’s features and use cases.
 
-## Hauptfunktionen
+## Main Features
 
-### Einfache Installation
+### Simple Installation
 
-ATC lässt sich schnell und einfach auf Ihrem Server mit Docker installieren. Durch die Nutzung von Docker-Containern
-wird die Bereitstellung und Verwaltung der Anwendung vereinfacht, was eine schnelle Inbetriebnahme ermöglicht.
+ATC can be quickly and easily installed on your server using Docker containers. By leveraging Docker, deployment and management of the application are simplified, enabling rapid startup.
 
-### Leistungsstarke API
+### Powerful API
 
-ATC bietet eine robuste HTTP REST API, über die Benutzer Daten zur Verarbeitung senden, das Training des Modells starten
-und Klassifizierungsergebnisse abrufen können. Die API ist darauf ausgelegt, eine hohe Flexibilität und Integration in
-bestehende Systeme zu ermöglichen.
+ATC offers a robust HTTP REST API through which users can send data for processing, initiate model training, and retrieve classification results. The API is designed to provide high flexibility and seamless integration into existing systems.
 
-### Datenübertragung und Training
+### Data Transfer and Training
 
-Benutzer können Trainingsdaten oder CSV-Dateien über die REST API an ATC senden. Das Training des Modells kann ebenfalls
-über die API gestartet werden, wodurch der gesamte Prozess der Datenverarbeitung und Modelloptimierung automatisiert
-wird.
+Users can send training data or CSV files to ATC via the REST API. Model training can also be triggered through the API, automating the entire workflow of data processing and model optimization.
 
-### Automatisierte Klassifizierung
+### Automated Classification
 
-Nach dem Training kann ATC automatisch eingehende Support-Tickets klassifizieren. Die Klassifizierung erfolgt anhand der
-im Training gelernten Muster, wodurch eine konsistente und genaue Zuordnung von Tickets gewährleistet wird.
+Once trained, ATC can automatically classify incoming support tickets. Classification is based on the patterns learned during training, ensuring consistent and accurate ticket assignment.
 
 ### OTOBO Integration
 
-ATC bietet ein spezielles Add-On für das OTOBO Ticketsystem, das eine nahtlose Integration ermöglicht. Dieses Add-On
-sammelt Daten aus dem OTOBO System und nutzt ATC zur automatisierten Klassifizierung von Tickets. Dies verbessert die
-Effizienz und Genauigkeit der Ticketbearbeitung erheblich.
+ATC provides a dedicated add-on for the OTOBO ticketing system, enabling seamless integration. This add-on collects data from OTOBO and uses ATC for automated ticket classification, significantly improving efficiency and accuracy in ticket handling.
 
-### Hohe Sicherheit
+### High Security
 
-Die Sicherheit und der Schutz von Kundendaten haben höchste Priorität. Alle Datenverarbeitungsprozesse finden lokal auf
-dem Server statt, ohne dass Daten extern gespeichert oder verarbeitet werden. Dies stellt sicher, dass alle
-Datenschutzanforderungen erfüllt werden.
+Data security and customer privacy are top priorities. All data processing occurs locally on the server, with no external storage or processing. This ensures full compliance with data protection requirements.
 
-### Flexibilität und Anpassungsfähigkeit
+### Flexibility and Customizability
 
-ATC bietet eine hohe Flexibilität durch anpassbare Konfigurationen. Benutzer können die Einstellungen an ihre
-spezifischen Bedürfnisse anpassen, um optimale Ergebnisse zu erzielen.
+ATC offers high flexibility through customizable configurations. Users can tailor the settings to their specific needs to achieve optimal results.
 
-## Installation und Nutzung
+## Installation and Usage
 
-### Docker-Installation
+### Docker Installation
 
-ATC kann einfach auf Ihrem Server mit Docker installiert werden. Folgen Sie den untenstehenden Schritten, um die
-Installation durchzuführen:
+ATC can be easily installed on your server using Docker. Follow these steps to install:
 
-1. **Docker installieren**:
-    ```bash
-    sudo apt-get update
-    sudo apt-get install docker-ce docker-ce-cli containerd.io
-    ```
+1. **Install Docker**:
 
-2. **ATC Container ausführen**:
-    ```bash
-    docker run -d -p 8080:80 
-    ```
+   ```bash
+   sudo apt-get update
+   sudo apt-get install docker-ce docker-ce-cli containerd.io
+   ```
 
-### API-Nutzung
+2. **Run the ATC Container**:
 
-Nach der Installation haben Sie über HTTP REST Zugriff auf die ATC API. Sie können Daten zur API senden, um das Training
-zu starten und die Klassifizierungsergebnisse abzurufen.
+   ```bash
+   docker run -d -p 8080:80
+   ```
 
-#### Trainingsdaten senden
+### API Usage
 
-Senden Sie Ihre Trainingsdaten oder eine CSV-Datei zur ATC REST API:
+After installation, you have HTTP REST access to the ATC API. You can send data to the API to start training and retrieve classification results.
+
+#### Sending Training Data
+
+Send your training data or a CSV file to the ATC REST API:
 
 ```bash
 curl -X POST http://your-server:8080/api/train \
@@ -89,35 +72,30 @@ curl -X POST http://your-server:8080/api/train \
      --data-binary @yourfile.csv
 ```
 
-#### Training starten
+#### Starting Training
 
-Starten Sie das Training des Modells:
+Trigger model training:
 
 ```bash
 curl -X POST http://your-server:8080/api/start-training
 ```
 
-#### Klassifizierung von Tickets
+#### Classifying Tickets
 
-Nach dem Training können Sie Tickets zur Klassifizierung an die API senden und erhalten die entsprechenden Labels
-zurück:
+After training, send tickets to the API for classification and receive the corresponding labels:
 
 ```bash
 curl -X POST http://your-server:8080/api/classify \
      -H "Content-Type: application/json" \
-     -d '{"ticket_data": "Ihr Ticketinhalt"}'
+     -d '{"ticket_data": "Your ticket content"}'
 ```
 
-## Zukünftige Erweiterungen
+## Future Extensions
 
-Wir planen, in Zukunft weitere Integrations-Add-Ons für verschiedene Systeme bereitzustellen. Bleiben Sie auf dem
-Laufenden, um die neuesten Updates zu erhalten.
+We plan to provide additional integration add-ons for various systems in the future. Stay tuned for the latest updates.
 
-## Zusammenfassung
+## Summary
 
-ATC Community Edition ist eine leistungsstarke, kostenlose Lösung zur automatisierten Klassifizierung von
-Support-Tickets. Mit einer benutzerfreundlichen API, einfacher Docker-Installation und nahtloser OTOBO-Integration
-bietet ATC eine flexible und skalierbare Möglichkeit, Ihre Support-Prozesse zu optimieren und die Effizienz Ihres Teams
-zu steigern.
+The ATC Community Edition is a powerful, free solution for automated support ticket classification. With a user-friendly API, simple Docker installation, and seamless OTOBO integration, ATC offers a flexible and scalable way to optimize your support processes and boost your team’s efficiency.
 
-Weitere Informationen finden Sie auf unserer Webseite: [SoftOft](https://softoft.de/otobo/docs)
+For more information, visit our website: [SoftOft](https://softoft.de/otobo/docs)

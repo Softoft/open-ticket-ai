@@ -1,5 +1,5 @@
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
-from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
+from open_ticket_ai.src.ce.run.pipe import Pipe
 from open_ticket_ai.src.ce.core.mixins.registry_instance_config import (
     RegistryInstanceConfig,
 )

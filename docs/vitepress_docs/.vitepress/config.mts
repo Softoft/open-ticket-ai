@@ -1,6 +1,7 @@
 import {generateNavbar} from './navbarUtil.js'
 import {defineConfig} from "vitepress";
-
+var __VUE_PROD_DEVTOOLS__ = false
+console.log(__VUE_PROD_DEVTOOLS__)
 export default defineConfig({
     srcDir: `docs-src`,
     title: 'AI Ticket Classification',
@@ -52,7 +53,12 @@ export default defineConfig({
     themeConfig: {
         footer: {
             message: '<b>OTAI</b> - Open Ticket AI',
-            copyright: "by <a href='https://www.softoft.de' target='_blank'>Softoft</a>"
+            copyright: "by <a href='https://www.softoft.de' target='_blank'>Softoft, Tobias Bück Einzelunternehmen</a>"
         }
+    },
+    vite: {
+        define: {
+            __VUE_PROD_DEVTOOLS__: false,
+        },
     }
 })

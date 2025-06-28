@@ -1,41 +1,39 @@
 ---
-title: Installation und Nutzung von ATC
-description: Installieren Sie ATC auf Ihrem Server und nutzen Sie die API zur automatisierten Klassifizierung von Support-Tickets.
----
-:::warning
-Die ATC CE ist noch nicht veröffentlicht.
-:::
 
-# Installation von ATC
+title: Installation and Usage of ATC
+description: Install ATC on your server and use the API for automated classification of support tickets.
+--------------------------------------------------------------------------------------------------------
 
-ATC kann einfach auf Ihrem Server mit Docker installiert werden. Folgen Sie den untenstehenden Schritten, um die Installation durchzuführen:
+# Installation of ATC
 
-## Schritt 1: Docker installieren
+ATC can be easily installed on your server using Docker. Follow the steps below to perform the installation:
 
-Zuerst müssen Sie Docker auf Ihrem Server installieren. Führen Sie die folgenden Befehle aus, um Docker zu installieren:
+## Step 1: Install Docker
+
+First, you need to install Docker on your server. Run the following commands to install Docker:
 
 ```bash
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
 
-## Schritt 2: ATC Container ausführen
+## Step 2: Run the ATC Container
 
-Nachdem Docker installiert ist, können Sie den ATC Container ausführen. Nutzen Sie den folgenden Befehl, um den Container zu starten:
+After Docker is installed, you can run the ATC container. Use the following command to start the container:
 
 ```bash
 docker run -d -p 8080:80 your-docker-repo/atc:latest
 ```
 
-Dieser Befehl lädt das neueste ATC Docker-Image aus Ihrem Repository und startet es auf Port 8080.
+This command pulls the latest ATC Docker image from your repository and starts it on port 8080.
 
-# Nutzung der ATC API
+# Using the ATC API
 
-Nach der Installation haben Sie über HTTP REST Zugriff auf die ATC API. Hier sind einige grundlegende Befehle zur Nutzung der API:
+After installation, you have HTTP REST access to the ATC API. Here are some basic commands to use the API:
 
-## Trainingsdaten senden
+## Sending Training Data
 
-Um Trainingsdaten oder eine CSV-Datei zur ATC REST API zu senden, verwenden Sie den folgenden Befehl:
+To send training data or a CSV file to the ATC REST API, use the following command:
 
 ```bash
 curl -X POST http://your-server:8080/api/train \
@@ -43,32 +41,32 @@ curl -X POST http://your-server:8080/api/train \
      --data-binary @yourfile.csv
 ```
 
-Dieser Befehl sendet die Datei `yourfile.csv` an die API, um sie für das Training zu verwenden.
+This command sends the file `yourfile.csv` to the API for use in training.
 
-## Training starten
+## Starting Training
 
-Um das Training des Modells zu starten, verwenden Sie diesen Befehl:
+To start the model training, use this command:
 
 ```bash
 curl -X POST http://your-server:8080/api/start-training
 ```
 
-Dieser Befehl startet den Trainingsprozess basierend auf den zuvor gesendeten Daten.
+This command initiates the training process based on the previously sent data.
 
-## Klassifizierung von Tickets
+## Classifying Tickets
 
-Nach dem erfolgreichen Training können Sie Ticketdaten zur Klassifizierung an die API senden und die entsprechenden Labels zurückerhalten:
+After successful training, you can send ticket data to the API for classification and receive the corresponding labels:
 
 ```bash
 curl -X POST http://your-server:8080/api/classify \
      -H "Content-Type: application/json" \
-     -d '{"ticket_data": "Ihr Ticketinhalt"}'
+     -d '{"ticket_data": "Your ticket content"}'
 ```
 
-Dieser Befehl sendet den Ticketinhalt zur Klassifizierung an die API und gibt die Klassifizierungslabels zurück.
+This command sends the ticket content for classification and returns the classification labels.
 
-# Zusammenfassung
+# Summary
 
-Mit diesen Schritten können Sie ATC auf Ihrem Server installieren und die grundlegenden Funktionen der API nutzen. ATC bietet eine leistungsstarke, flexible Lösung zur automatisierten Klassifizierung von Support-Tickets, die einfach zu installieren und zu verwenden ist.
+With these steps, you can install ATC on your server and use the basic API functions. ATC offers a powerful, flexible solution for automated support ticket classification that is easy to install and use.
 
-Dieser Abschnitt beschreibt die Installation von ATC und die grundlegenden Befehle zur Nutzung der API detailliert. Du kannst ihn anpassen und erweitern, um zusätzliche Informationen oder spezifische Anweisungen hinzuzufügen.
+This section describes the installation of ATC and the basic API commands in detail. You can adapt and extend it to include additional information or specific instructions.

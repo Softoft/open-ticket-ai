@@ -1,3 +1,14 @@
+"""
+This module provides a facade for generating and translating documentation.
+
+It includes functionality to:
+- Generate docstrings for Python source code using AI models
+- Convert documented code into structured Markdown API references
+- Translate documentation files into multiple languages
+
+The module can be executed as a script to run the full documentation generation
+and translation workflow.
+"""
 import asyncio
 import os
 from pathlib import Path
@@ -110,7 +121,7 @@ client = AsyncOpenAI(
 generator = DocGenerationFacade(client)
 root_project_path = find_python_code_root_path().parent
 
-docs_temp_api = root_project_path / "original_source" / "v0_1" / "api"
+docs_temp_api = root_project_path / "docs" / "original_source" / "api"
 
 EXCLUDE_DIRS = {
     ".venv",
@@ -141,7 +152,7 @@ async def generate_reference_api_markdown():
         find_python_code_root_path(),
         EXCLUDE_DIRS,
         EXCLUDE_FILES,
-        model="deepseek/deepseek-r1-0528",
+        model="google/gemini-2.5-pro",
     )
     generator.generate_markdown(
         {
@@ -171,7 +182,7 @@ async def translate_to_multi_lang_docs():
         root_project_path / "docs" / "original_source",
         "en",
         ["en", "de"],
-        "deepseek/deepseek-r1-0528",
+        "google/gemini-2.5-pro",
         root_project_path / "docs" / "vitepress_docs" / "docs_src",
     )
 

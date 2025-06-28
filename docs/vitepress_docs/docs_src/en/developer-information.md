@@ -1,57 +1,38 @@
 ---
-title: Entwicklerinformationen
-description: Entwicklerinformationen für die ATC Community Edition
+title: Developer Information
+description: Developer information for the ATC Community Edition
 ---
-:::warning
-Die ATC CE ist noch nicht veröffentlicht.
-:::
+# Developer Information for the ATC Community Edition
 
-# Entwicklerinformationen für die ATC Community Edition
+## Overview
 
-## Überblick
+The ATC Community Edition is an on-premise solution for automated classification of support tickets. The current MVP version is controlled via a YAML configuration file and started via CLI. There is no REST API for uploading training data or triggering a training run.
 
-Die ATC Community Edition ist eine On-Premise-Lösung zur automatisierten
-Klassifizierung von Support-Tickets. Die aktuelle MVP-Version wird über eine
-YAML-Konfigurationsdatei gesteuert und per CLI gestartet. Es existiert keine
-REST API für das Hochladen von Trainingsdaten oder das Anstoßen eines
-Trainingslaufes.
+## Software Architecture
 
-## Softwarearchitektur
+The application essentially consists of the following packages:
 
-Die Anwendung besteht im Wesentlichen aus folgenden Paketen:
+* **core** – base classes, configuration models, and helper functions.
+* **run** – contains the pipeline for ticket classification.
+* **ticket\_system\_integration** – adapters for different ticket systems.
+* **main.py** – CLI entry point that starts the scheduler and the orchestrator.
 
-- **core** – Basisklassen, Konfigurationsmodelle und Hilfsfunktionen.
-- **run** – enthält die Pipeline zur Klassifizierung von Tickets.
-- **ticket_system_integration** – Adapter für unterschiedliche Ticketsysteme.
-- **main.py** – CLI-Einstiegspunkt, der den Scheduler und den Orchestrator startet.
+The orchestrator executes configurable `AttributePredictors`, which are composed of `DataFetcher`, `DataPreparer`, `AIInferenceService`, and `Modifier`. All components are defined in `config.yml` and validated at program startup.
 
-Der Orchestrator führt konfigurierbare `AttributePredictors` aus. Diese setzen
-sich aus `DataFetcher`, `DataPreparer`, `AIInferenceService` und `Modifier`
-zusammen. Alle Komponenten werden in `config.yml` definiert und beim
-Programmstart validiert.
-
-Ein Beispielaufruf zum Starten der Applikation:
+An example command to start the application:
 
 ```bash
 python -m open_ticket_ai.src.ce.main start
 ```
 
-## Training eigener Modelle
+## Training Custom Models
 
-Ein direktes Training über die Anwendung ist im MVP nicht vorgesehen.
-Bereits trainierte Modelle können in der Konfiguration eingetragen und
-verwendet werden. Soll ein Modell angepasst oder neu erstellt werden,
-muss dies außerhalb der Applikation erfolgen.
+Direct training through the application is not provided in the MVP. Pre-trained models can be specified and used in the configuration. If a model needs to be adjusted or newly created, this must be done outside the application.
 
-## Erweiterung
+## Extension
 
-Eigene Fetcher, Preparer, AI-Services oder Modifier können als Python-Klassen
-implementiert und über die Konfiguration registriert werden. Dank Dependency
-Injection lassen sich neue Komponenten einfach integrieren.
+Custom fetchers, preparers, AI services, or modifiers can be implemented as Python classes and registered via the configuration. Thanks to dependency injection, new components can be easily integrated.
 
-## Zusammenfassung
+## Summary
 
-Die ATC Community Edition bietet in der MVP-Version einen lokal ausgeführten
-Workflow zur automatischen Ticketklassifizierung. Alle Einstellungen erfolgen
-über YAML-Dateien; eine REST API steht nicht zur Verfügung. Für das Training
-müssen externe Prozesse oder Skripte verwendet werden.
+The ATC Community Edition offers a locally executed workflow for automatic ticket classification in its MVP version. All settings are managed via YAML files; no REST API is available. External processes or scripts must be used for training.

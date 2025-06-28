@@ -25,6 +25,8 @@ class Translator:
         Args:
             client: An asynchronous OpenAI client instance for API interactions.
             base_language: Language code (e.g., 'en') representing the source language of documents.
+            translation_file_path: Path to a file containing the translation instruction for the system prompt.
+                If not provided, defaults to "translation_instruction.txt" in the same directory as this module.
         """
         if translation_file_path is None:
             translation_file_path = Path(__file__).parent / "translation_instruction.txt"

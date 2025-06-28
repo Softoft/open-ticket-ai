@@ -11,8 +11,10 @@ from pydantic import BaseModel
 
 
 class OTOBOAdapterConfig(BaseModel):
-    """
-    Configuration model for OTOBO adapter.
+    """Configuration model for OTOBO adapter.
+
+    This model defines the necessary configuration parameters to connect and interact with an OTOBO server.
+    It includes server details, web service endpoints, and authentication credentials.
 
     Attributes:
         server_address (str): The base URL of the OTOBO server.
@@ -32,7 +34,11 @@ class OTOBOAdapterConfig(BaseModel):
     password_env_var: str
 
     def __str__(self):
-        """Return a string representation of the configuration."""
+        """Return a string representation of the configuration.
+
+        Returns:
+            str: A formatted string containing the configuration details (excluding password).
+        """
         return f"OTOBOServerConfig(server_address={self.server_address}, " \
                f"webservice_name={self.webservice_name}, " \
                f"search_operation_url={self.search_operation_url}, " \
@@ -42,8 +48,7 @@ class OTOBOAdapterConfig(BaseModel):
 
     @property
     def password(self) -> str:
-        """
-        Retrieves the password from the environment variable specified in the configuration.
+        """Retrieves the password from the environment variable specified in the configuration.
 
         Returns:
             str: The password for authentication.

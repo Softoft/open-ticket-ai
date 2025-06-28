@@ -1,87 +1,70 @@
 ---
-title: ATC Community Edition Überblick
-description: Eine umfassende Übersicht über die Funktionen und Einsatzmöglichkeiten der ATC Community Edition.
+title: ATC Community Edition Übersicht
+description: Eine umfassende Übersicht über die Funktionen und Anwendungsfälle der ATC Community Edition.
 ---
-:::warning
-Die ATC CE ist noch nicht veröffentlicht.
-:::
 
-# ATC Community Edition Überblick
+# ATC Community Edition Übersicht
 
-## Einführung
+## Einleitung
 
-Die ATC (Automated Ticket Classification) Community Edition ist eine fortschrittliche Lösung zur automatisierten
-Klassifizierung von Support-Tickets. Sie ist kostenlos, On-Premise und kann auf jedem Betriebssystem installiert werden,
-das Docker unterstützt. Diese Dokumentation bietet eine umfassende Übersicht über die Funktionen und
-Einsatzmöglichkeiten von ATC.
+Die ATC (Automated Ticket Classification) Community Edition ist eine fortschrittliche Lösung zur automatisierten Klassifizierung von Support-Tickets. Sie ist kostenlos, on-premise und kann auf jedem Betriebssystem installiert werden, das Docker unterstützt. Diese Dokumentation bietet eine umfassende Übersicht über die Funktionen und Anwendungsfälle von ATC.
 
-## Hauptfunktionen
+## Hauptmerkmale
 
 ### Einfache Installation
 
-ATC lässt sich schnell und einfach auf Ihrem Server mit Docker installieren. Durch die Nutzung von Docker-Containern
-wird die Bereitstellung und Verwaltung der Anwendung vereinfacht, was eine schnelle Inbetriebnahme ermöglicht.
+ATC kann schnell und einfach auf Ihrem Server mithilfe von Docker-Containern installiert werden. Durch die Nutzung von Docker werden die Bereitstellung und Verwaltung der Anwendung vereinfacht, was eine schnelle Inbetriebnahme ermöglicht.
 
 ### Leistungsstarke API
 
-ATC bietet eine robuste HTTP REST API, über die Benutzer Daten zur Verarbeitung senden, das Training des Modells starten
-und Klassifizierungsergebnisse abrufen können. Die API ist darauf ausgelegt, eine hohe Flexibilität und Integration in
-bestehende Systeme zu ermöglichen.
+ATC bietet eine robuste HTTP REST API, über die Benutzer Daten zur Verarbeitung senden, das Training von Modellen initiieren und Klassifizierungsergebnisse abrufen können. Die API ist darauf ausgelegt, hohe Flexibilität und eine nahtlose Integration in bestehende Systeme zu ermöglichen.
 
-### Datenübertragung und Training
+### Datentransfer und Training
 
-Benutzer können Trainingsdaten oder CSV-Dateien über die REST API an ATC senden. Das Training des Modells kann ebenfalls
-über die API gestartet werden, wodurch der gesamte Prozess der Datenverarbeitung und Modelloptimierung automatisiert
-wird.
+Benutzer können Trainingsdaten oder CSV-Dateien über die REST API an ATC senden. Das Training des Modells kann ebenfalls über die API ausgelöst werden, wodurch der gesamte Workflow der Datenverarbeitung und Modelloptimierung automatisiert wird.
 
 ### Automatisierte Klassifizierung
 
-Nach dem Training kann ATC automatisch eingehende Support-Tickets klassifizieren. Die Klassifizierung erfolgt anhand der
-im Training gelernten Muster, wodurch eine konsistente und genaue Zuordnung von Tickets gewährleistet wird.
+Einmal trainiert, kann ATC eingehende Support-Tickets automatisch klassifizieren. Die Klassifizierung basiert auf den Mustern, die während des Trainings gelernt wurden, und gewährleistet so eine konsistente und genaue Zuweisung der Tickets.
 
-### OTOBO Integration
+### OTOBO-Integration
 
-ATC bietet ein spezielles Add-On für das OTOBO Ticketsystem, das eine nahtlose Integration ermöglicht. Dieses Add-On
-sammelt Daten aus dem OTOBO System und nutzt ATC zur automatisierten Klassifizierung von Tickets. Dies verbessert die
-Effizienz und Genauigkeit der Ticketbearbeitung erheblich.
+ATC bietet ein dediziertes Add-on für das OTOBO-Ticketsystem, das eine nahtlose Integration ermöglicht. Dieses Add-on sammelt Daten aus OTOBO und nutzt ATC zur automatisierten Ticket-Klassifizierung, was die Effizienz und Genauigkeit bei der Ticketbearbeitung erheblich verbessert.
 
 ### Hohe Sicherheit
 
-Die Sicherheit und der Schutz von Kundendaten haben höchste Priorität. Alle Datenverarbeitungsprozesse finden lokal auf
-dem Server statt, ohne dass Daten extern gespeichert oder verarbeitet werden. Dies stellt sicher, dass alle
-Datenschutzanforderungen erfüllt werden.
+Datensicherheit und der Schutz der Kundendaten haben oberste Priorität. Die gesamte Datenverarbeitung erfolgt lokal auf dem Server, ohne externe Speicherung oder Verarbeitung. Dies gewährleistet die vollständige Einhaltung der Datenschutzanforderungen.
 
-### Flexibilität und Anpassungsfähigkeit
+### Flexibilität und Anpassbarkeit
 
-ATC bietet eine hohe Flexibilität durch anpassbare Konfigurationen. Benutzer können die Einstellungen an ihre
-spezifischen Bedürfnisse anpassen, um optimale Ergebnisse zu erzielen.
+ATC bietet hohe Flexibilität durch anpassbare Konfigurationen. Benutzer können die Einstellungen an ihre spezifischen Bedürfnisse anpassen, um optimale Ergebnisse zu erzielen.
 
 ## Installation und Nutzung
 
 ### Docker-Installation
 
-ATC kann einfach auf Ihrem Server mit Docker installiert werden. Folgen Sie den untenstehenden Schritten, um die
-Installation durchzuführen:
+ATC kann einfach mit Docker auf Ihrem Server installiert werden. Führen Sie die folgenden Schritte zur Installation aus:
 
-1. **Docker installieren**:
+1.  **Docker installieren**:
+
     ```bash
     sudo apt-get update
     sudo apt-get install docker-ce docker-ce-cli containerd.io
     ```
 
-2. **ATC Container ausführen**:
+2.  **ATC-Container ausführen**:
+
     ```bash
-    docker run -d -p 8080:80 
+    docker run -d -p 8080:80
     ```
 
 ### API-Nutzung
 
-Nach der Installation haben Sie über HTTP REST Zugriff auf die ATC API. Sie können Daten zur API senden, um das Training
-zu starten und die Klassifizierungsergebnisse abzurufen.
+Nach der Installation haben Sie HTTP-REST-Zugriff auf die ATC-API. Sie können Daten an die API senden, um das Training zu starten und Klassifizierungsergebnisse abzurufen.
 
-#### Trainingsdaten senden
+#### Senden von Trainingsdaten
 
-Senden Sie Ihre Trainingsdaten oder eine CSV-Datei zur ATC REST API:
+Senden Sie Ihre Trainingsdaten oder eine CSV-Datei an die ATC REST API:
 
 ```bash
 curl -X POST http://your-server:8080/api/train \
@@ -91,33 +74,28 @@ curl -X POST http://your-server:8080/api/train \
 
 #### Training starten
 
-Starten Sie das Training des Modells:
+Das Training des Modells auslösen:
 
 ```bash
 curl -X POST http://your-server:8080/api/start-training
 ```
 
-#### Klassifizierung von Tickets
+#### Tickets klassifizieren
 
-Nach dem Training können Sie Tickets zur Klassifizierung an die API senden und erhalten die entsprechenden Labels
-zurück:
+Senden Sie nach dem Training Tickets zur Klassifizierung an die API und erhalten Sie die entsprechenden Labels:
 
 ```bash
 curl -X POST http://your-server:8080/api/classify \
      -H "Content-Type: application/json" \
-     -d '{"ticket_data": "Ihr Ticketinhalt"}'
+     -d '{"ticket_data": "Your ticket content"}'
 ```
 
 ## Zukünftige Erweiterungen
 
-Wir planen, in Zukunft weitere Integrations-Add-Ons für verschiedene Systeme bereitzustellen. Bleiben Sie auf dem
-Laufenden, um die neuesten Updates zu erhalten.
+Wir planen, in Zukunft zusätzliche Integrations-Add-ons für verschiedene Systeme bereitzustellen. Bleiben Sie auf dem Laufenden für die neuesten Updates.
 
 ## Zusammenfassung
 
-ATC Community Edition ist eine leistungsstarke, kostenlose Lösung zur automatisierten Klassifizierung von
-Support-Tickets. Mit einer benutzerfreundlichen API, einfacher Docker-Installation und nahtloser OTOBO-Integration
-bietet ATC eine flexible und skalierbare Möglichkeit, Ihre Support-Prozesse zu optimieren und die Effizienz Ihres Teams
-zu steigern.
+Die ATC Community Edition ist eine leistungsstarke, kostenlose Lösung zur automatisierten Klassifizierung von Support-Tickets. Mit einer benutzerfreundlichen API, einer einfachen Docker-Installation und einer nahtlosen OTOBO-Integration bietet ATC eine flexible und skalierbare Möglichkeit, Ihre Support-Prozesse zu optimieren und die Effizienz Ihres Teams zu steigern.
 
-Weitere Informationen finden Sie auf unserer Webseite: [SoftOft](https://softoft.de/otobo/docs)
+Für weitere Informationen besuchen Sie unsere Website: [SoftOft](https://softoft.de/otobo/docs)

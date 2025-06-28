@@ -22,6 +22,12 @@ from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter impor
     TicketSystemAdapter,
 )
 
+"""Path to the configuration file.
+
+Determined by:
+1. `OPEN_TICKET_AI_CONFIG` environment variable if set
+2. Defaults to `config.yml` in the project's root directory
+"""
 CONFIG_PATH = os.getenv('OPEN_TICKET_AI_CONFIG', find_python_code_root_path() / 'config.yml')
 
 
@@ -29,7 +35,11 @@ class AppModule(Module):
     """Injector module that binds the validated configuration."""
 
     def configure(self, binder: Binder):
-        """Bind core configuration objects."""
+        """Bind core configuration objects.
+
+        Args:
+            binder: The Injector binder used to configure bindings.
+        """
         open_ticket_ai_config = load_config(CONFIG_PATH)
         registry = create_registry()
         binder.bind(OpenTicketAIConfig, to=open_ticket_ai_config, scope=singleton)
@@ -43,13 +53,28 @@ class AppModule(Module):
         config: OpenTicketAIConfig,
         registry: Registry
     ) -> OpenTicketAIConfigValidator:
-        """Provide a configuration validator instance."""
+        """Provide a configuration validator instance.
+
+        Args:
+            config: The application configuration to validate.
+            registry: The registry of available components.
+
+        Returns:
+            OpenTicketAIConfigValidator: The validator instance.
+        """
         return OpenTicketAIConfigValidator(config, registry)
 
     @provider
     @singleton
     def provide_otobo_client(self, config: OpenTicketAIConfig) -> OTOBOClient:
-        """Create an :class:`OTOBOClient` using the system configuration."""
+        """Create an `OTOBOClient` using the system configuration.
+
+        Args:
+            config: The application configuration containing system parameters.
+
+        Returns:
+            OTOBOClient: Configured OTOBO client.
+        """
         otobo_config = OTOBOAdapterConfig.model_validate(config.system.params)
         # noinspection PyArgumentList
         return OTOBOClient(

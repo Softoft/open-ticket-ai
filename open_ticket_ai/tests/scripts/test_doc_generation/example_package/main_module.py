@@ -9,14 +9,14 @@ class Greeter:
     A class that greets you.
 
     Attributes:
-        name (str): The name of the person to greet.
+        `name` (str): The name of the person to greet.
     """
     def __init__(self, name: str):
         """
         Initializes the Greeter.
 
         Args:
-            name: The name to use in greetings.
+            `name`: The name to use in greetings.
         """
         self.name = name
 
@@ -25,8 +25,8 @@ class Greeter:
         Generates a greeting message.
 
         Args:
-            loud: If True, the greeting will be in uppercase.
-                  Defaults to False.
+            `loud`: If `True`, the greeting will be in uppercase.
+                Defaults to `False`.
 
         Returns:
             The greeting message.
@@ -39,16 +39,16 @@ def simple_math_operation(x: int, y: int, operation: str = "add") -> float:
     Performs a simple math operation.
 
     Args:
-        x: The first number.
-        y: The second number.
-        operation: The operation to perform. Can be "add", "subtract",
-                   "multiply", or "divide". Defaults to "add".
+        `x`: The first number.
+        `y`: The second number.
+        `operation`: The operation to perform. Can be `"add"`, `"subtract"`,
+            `"multiply"`, or `"divide"`. Defaults to `"add"`.
 
     Returns:
         The result of the operation.
 
     Raises:
-        ValueError: If the operation is invalid or division by zero occurs.
+        `ValueError`: If the operation is invalid or division by zero occurs.
     """
     if operation == "add":
         return float(x + y)

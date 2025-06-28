@@ -61,7 +61,8 @@
                           class="spinner-border spinner-border-sm me-1"></span>
                     <span v-if="loading"
                           role="status">{{ t('otai_prediction_demo_component.loadingText') }}</span>
-                    <span class="text-white" v-else>{{ t('otai_prediction_demo_component.submitButtonText') }}</span>
+                    <span v-else
+                          class="text-white">{{ t('otai_prediction_demo_component.submitButtonText') }}</span>
                 </button>
 
                 <div v-if="errorMessage" class="alert alert-danger" role="alert">
@@ -122,6 +123,7 @@
 </template>
 
 <script lang="ts" setup>
+
 import {ref} from 'vue'
 import {examples} from "./demoExamples";
 import {useI18n} from 'vue-i18n'
