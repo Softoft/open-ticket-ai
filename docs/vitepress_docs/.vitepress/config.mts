@@ -1,5 +1,6 @@
 import {generateNavbar} from './navbarUtil.js'
 import {defineConfig} from "vitepress";
+
 var __VUE_PROD_DEVTOOLS__ = false
 console.log(__VUE_PROD_DEVTOOLS__)
 export default defineConfig({
@@ -58,7 +59,14 @@ export default defineConfig({
     },
     vite: {
         define: {
-            __VUE_PROD_DEVTOOLS__: false,
+            __VUE_PROD_DEVTOOLS__: 'false',
+        },
+        ssr: {
+            noExternal: [
+                'vue-i18n',
+                '@intlify/message-compiler',
+                '@intlify/shared'
+            ]
         },
     }
 })
