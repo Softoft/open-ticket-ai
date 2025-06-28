@@ -48,8 +48,7 @@ class OTOBOAdapterConfig(BaseModel):
 
     @property
     def password(self) -> str:
-        """
-        Retrieves the password from the environment variable specified in the configuration.
+        """Retrieves the password from the environment variable specified in the configuration.
 
         Returns:
             str: The password for authentication.

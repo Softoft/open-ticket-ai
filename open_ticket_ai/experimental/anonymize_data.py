@@ -1,4 +1,17 @@
 # Installationen und Modelldownload (falls noch nicht geschehen)
+"""Module for anonymizing personally identifiable information (PII) in text.
+
+This module provides functionality to detect and replace various types of sensitive
+information in German text using named entity recognition, regular expressions, and
+the Faker library for generating replacement data.
+
+Example:
+    To anonymize a text string:
+        anonymized = anonymize_text("Original text with PII")
+
+Note:
+    Uses German locale for generating fake data and models optimized for German text.
+"""
 import re
 
 import phonenumbers

@@ -1,3 +1,5 @@
+var __VUE_PROD_DEVTOOLS__ = false
+console.log(__VUE_PROD_DEVTOOLS__)
 import {h, nextTick, onMounted, watch} from 'vue'
 import type {Theme} from 'vitepress'
 import {useData} from 'vitepress'

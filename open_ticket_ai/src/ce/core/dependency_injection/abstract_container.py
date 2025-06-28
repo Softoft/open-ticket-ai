@@ -28,7 +28,7 @@ class AbstractContainer(abc.ABC):
                 `RegistryProvidableInstance`.
 
         Returns:
-            An instance of the type specified by `subclass_of` (or a subclass).
+            An instance of the type specified by `subclass_of` ( subclass).
 
         Raises:
             InstanceNotFoundError: If no instance matching the provider key is found.

@@ -1,36 +1,30 @@
 ---
-title: Open Ticket AI-Architektur
+title: Open Ticket AI Architektur
 description: Erfahren Sie mehr über die Architektur von Open Ticket AI.
 ---
 
 # Architektur
 
-## Pipeline & Wertobjekte
+## Pipeline & Value Objects
 
 Der Kern von Open Ticket AI ist seine Verarbeitungspipeline:
 
 ```
-[ Incoming Ticket ]
+[ Eingehendes Ticket ]
        ↓
-[ Preprocessor ] — cleans & merges subject+body
+[ Preprocessor ] — bereinigt & führt Betreff+Text zusammen
        ↓
 [ Transformer Tokenizer ]
        ↓
-[ Queue Classifier ] → Queue ID + confidence
+[ Queue Classifier ] → Queue-ID + Konfidenz
        ↓
-[ Priority Classifier ] → Priority score + confidence
+[ Priority Classifier ] → Prioritäts-Score + Konfidenz
        ↓
-[ Postprocessor ] — applies thresholds, routes or flags
+[ Postprocessor ] — wendet Schwellenwerte an, leitet weiter oder markiert
        ↓
-[ Ticket System Adapter ] — updates ticket via REST API
+[ Ticket System Adapter ] — aktualisiert Ticket über REST API
 ```
 
-Jede Stufe dieser Pipeline verarbeitet und erzeugt **Wertobjekte** (z. B. `subject`, `body`, `queue_id`, `priority`). Dieser Entwurf macht die Pipeline modular und einfach um benutzerdefinierte Verarbeitungsschritte oder neue Wertobjekte erweiterbar.
+Jede Stufe in dieser Pipeline konsumiert und produziert **Value Objects** (z. B. `subject`, `body`, `queue_id`, `priority`). Dieses Design macht die Pipeline modular und einfach durch benutzerdefinierte Verarbeitungsschritte oder neue Value Objects erweiterbar.
 
 ## Systemdiagramme
-
-### Anwendungsklassendiagramm
-![Application Class Diagram](/images/application_class_diagram.png)
-
-### Übersichtsdiagramm
-![Overview Diagram](/images/overview.png)

@@ -2,16 +2,25 @@
 
 ## Modul: `open_ticket_ai\src\ce\run\managers\orchestrator.py`
 
-Höchste Ebene der Orchestrierungs-Hilfsprogramme.
+Dienstprogramme für die Top-Level-Orchestrierung.
 
-### <span style='color: #8E44AD;'>Klasse</span> `Orchestrator`
+### <span style='text-info'>class</span> `Orchestrator`
 
-Führt Ticket-Verarbeitungspipelines aus.
+Orchestriert die Ausführung von Ticketverarbeitungs-Pipelines.
+Diese `class` verwaltet den Lebenszyklus von Pipelines, einschließlich:
+- Instanziierung von Pipelines mittels Dependency Injection
+- Individuelle Ticketverarbeitung
+- Geplante Ausführung von Pipelines
+
+**Parameter:**
+
+- **`config`** () - Konfigurationseinstellungen für den Orchestrator
+- **`container`** () - Dependency-Injection-Container, der Pipeline-Instanzen bereitstellt
+- **`_logger`** () - Logger-Instanz für Orchestrierungsoperationen
+- **`_pipelines`** () - Dictionary, das Pipeline-IDs auf Pipeline-Instanzen abbildet
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>Methode</span> <span style='color: #2980B9;'>def</span> `__init__(self, config: OpenTicketAIConfig, container: AbstractContainer)`</summary>
-
+::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `__init__(self, config: OpenTicketAIConfig, container: AbstractContainer)`
 Initialisiert den Orchestrator mit Konfiguration und DI-Container.
 
 **Parameter:**
@@ -19,31 +28,45 @@ Initialisiert den Orchestrator mit Konfiguration und DI-Container.
 - **`config`** () - Konfigurationseinstellungen für den Orchestrator.
 - **`container`** () - Dependency-Injection-Container, der Pipeline-Instanzen bereitstellt.
 
-</details>
+:::
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>Methode</span> <span style='color: #2980B9;'>def</span> `process_ticket(self, ticket_id: str, pipeline: Pipeline) -> PipelineContext`</summary>
+::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `process_ticket(self, ticket_id: str, pipeline: Pipeline) -> PipelineContext`
+Führt eine Pipeline für ein bestimmtes Ticket aus.
+Erstellt einen Verarbeitungskontext und führt die angegebene Pipeline aus, um
+das gegebene Ticket zu verarbeiten. Dies ist die Kernmethode für die individuelle Ticketverarbeitung.
 
-Ruft Daten ab und führt ``pipeline`` für ``ticket_id`` aus.
+**Parameter:**
 
-</details>
+- **`ticket_id`** () - Eindeutiger Bezeichner des zu verarbeitenden Tickets
+- **`pipeline`** () - Auszuführende Pipeline-Instanz
 
+**Rückgabe:** (`PipelineContext`) - Der Ausführungskontext, der Ergebnisse und den Zustand nach der Pipeline-Ausführung enthält
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>Methode</span> <span style='color: #2980B9;'>def</span> `build_pipelines(self) -> None`</summary>
-
-Instanziiert Pipeline-Objekte mittels DI-Container.
-
-</details>
+:::
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>Methode</span> <span style='color: #2980B9;'>def</span> `set_schedules(self) -> None`</summary>
+::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `build_pipelines(self) -> None`
+Instanziiert alle konfigurierten Pipeline-Objekte.
+Verwendet den Dependency-Injection-Container, um Pipeline-Instanzen
+basierend auf der Konfiguration zu erstellen. Füllt die interne Pipeline-Registry
+mit Zuordnungen von Pipeline-IDs zu Instanzen.
 
-Plant die Pipeline-Ausführung gemäß Konfiguration.
+:::
 
-</details>
+
+::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `set_schedules(self) -> None`
+Konfiguriert die geplante Ausführung für alle Pipelines.
+Führt die folgenden Operationen aus:
+1. Erstellt Pipelines, falls diese noch nicht instanziiert wurden
+2. Konfiguriert die periodische Ausführung für jede Pipeline gemäß ihrer
+   Zeitplankonfiguration unter Verwendung der `schedule`-Bibliothek
+
+Die Zeitplanung verwendet die folgenden Konfigurationsparameter:
+- interval: Numerischer Intervallwert
+- unit: Zeiteinheit (z. B. `minutes`, `hours`, `days`)
+
+:::
 
 
 ---

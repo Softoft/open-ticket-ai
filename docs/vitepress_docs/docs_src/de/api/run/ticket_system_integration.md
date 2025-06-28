@@ -3,114 +3,11 @@
 ## Modul: `open_ticket_ai\src\ce\ticket_system_integration\otobo_adapter.py`
 
 
-### <span style='color: #8E44AD;'>class</span> `OTOBOAdapter`
-
-Adapter für die OTOBO-Ticketsystem-Integration.
-Diese Klasse stellt Methoden zur Interaktion mit der OTOBO-API bereit.
-
-
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `get_description() -> str`</summary>
-
-Gibt eine Beschreibung der Funktionalität des Adapters zurück.
-
-**Returns:** (`str`) - Eine Beschreibung des OTOBO-Adapters.
-
-</details>
-
-
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `__init__(self, config: SystemConfig, otobo_client: OTOBOClient)`</summary>
-
-Initialisiert den OTOBO-Adapter mit Konfiguration und Client.
-
-**Parameters:**
-
-- **`config`** (`SystemConfig`) - Systemkonfigurationsobjekt.
-- **`otobo_client`** (`OTOBOClient`) - Client zur Interaktion mit der OTOBO-API.
-
-</details>
-
-
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>async def</span> `find_tickets(self, query: dict) -> list[dict]`</summary>
-
-Gibt alle Tickets zurück, die mit ``query`` übereinstimmen.
-
-**Parameters:**
-
-- **`query`** (`dict`) - Suchparameter für Tickets.
-
-**Returns:** (`list[dict]`) - Liste der passenden Tickets.
-
-</details>
-
-
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>async def</span> `find_first_ticket(self, query: dict) -> dict | None`</summary>
-
-Gibt das erste gefundene Ticket für ``query`` zurück, falls verfügbar.
-
-**Parameters:**
-
-- **`query`** (`dict`) - Suchparameter für Tickets.
-
-**Returns:** () - dict | None: Erstes passendes Ticket-Dictionary oder None, falls keins gefunden wurde.
-
-</details>
-
-
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>async def</span> `update_ticket(self, ticket_id: str, data: dict) -> dict`</summary>
-
-Aktualisiert ``ticket_id`` mit ``data`` und gibt den aktualisierten Datensatz zurück.
-
-**Parameters:**
-
-- **`ticket_id`** (`str`) - ID des zu aktualisierenden Tickets.
-- **`data`** (`dict`) - Aktualisierungsparameter für das Ticket.
-
-**Returns:** (`dict`) - Aktualisierter Ticket-Datensatz.
-
-</details>
-
 
 ---
 
 ## Modul: `open_ticket_ai\src\ce\ticket_system_integration\otobo_adapter_config.py`
 
-
-### <span style='color: #8E44AD;'>class</span> `OTOBOAdapterConfig`
-
-Konfigurationsmodell für den OTOBO-Adapter.
-
-**Parameters:**
-
-- **`server_address`** (`str`) - Die Basis-URL des OTOBO-Servers.
-- **`webservice_name`** (`str`) - Der Name des zu verwendenden Webdienstes.
-- **`search_operation_url`** (`str`) - Die URL für die Suchoperation.
-- **`update_operation_url`** (`str`) - Die URL für die Aktualisierungsoperation.
-- **`get_operation_url`** (`str`) - Die URL für die Abfrageoperation.
-- **`username`** (`str`) - Der Benutzername zur Authentifizierung.
-- **`password_env_var`** (`str`) - Die Umgebungsvariable, die das Passwort enthält.
-
-
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `__str__(self)`</summary>
-
-Gibt eine String-Darstellung der Konfiguration zurück.
-
-</details>
-
-
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `password(self) -> str`</summary>
-
-Ruft das Passwort aus der in der Konfiguration angegebenen Umgebungsvariable ab.
-
-**Returns:** (`str`) - Das Passwort zur Authentifizierung.
-
-</details>
 
 
 ---
@@ -118,61 +15,82 @@ Ruft das Passwort aus der in der Konfiguration angegebenen Umgebungsvariable ab.
 ## Modul: `open_ticket_ai\src\ce\ticket_system_integration\ticket_system_adapter.py`
 
 
-### <span style='color: #8E44AD;'>class</span> `TicketSystemAdapter`
+### <span style='text-info'>class</span> `TicketSystemAdapter`
 
-Eine abstrakte Basisklasse für Ticketsystem-Adapter.
-Diese Klasse definiert die Schnittstelle, die alle Ticketsystem-Adapter implementieren müssen.
+Eine abstrakte Basisklasse für Ticket-System-Adapter.
+Diese Klasse definiert die Schnittstelle, die alle konkreten Ticket-System-Adapter
+implementieren müssen, um mit verschiedenen Ticket-Systemen zu interagieren. Sie bietet eine gemeinsame
+Konfigurationsbehandlung durch Dependency Injection und erfordert, dass Unterklassen
+die Kernoperationen für Tickets implementieren.
+
+**Parameter:**
+
+- **`config`** (`SystemConfig`) - Systemkonfigurationsobjekt, das die Adapter-Einstellungen enthält.
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `__init__(self, config: SystemConfig)`</summary>
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `__init__(self, config: SystemConfig)`
+Initialisiert den Adapter mit der Systemkonfiguration.
+Diesem Konstruktor wird die Systemkonfiguration automatisch über das
+Dependency-Injection-Framework injiziert. Er initialisiert den Adapter
+mit der bereitgestellten Konfiguration und stellt die ordnungsgemäße Einrichtung der geerbten
+Komponenten sicher.
 
-Initialisiert den Adapter mit Systemkonfiguration.
+**Parameter:**
 
-</details>
+- **`config`** (`SystemConfig`) - Das Systemkonfigurationsobjekt, das
+alle notwendigen Einstellungen und Parameter für den Adapter enthält.
+
+:::
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>async def</span> `update_ticket(self, ticket_id: str, data: dict) -> dict | None`</summary>
-
+::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `update_ticket(self, ticket_id: str, data: dict) -> dict | None`
 Aktualisiert ein Ticket im System.
+Diese Methode muss von konkreten Adaptern implementiert werden, um die Aktualisierung
+von Ticket-Attributen im Ziel-Ticket-System zu handhaben. Sie sollte Teilaktualisierungen
+unterstützen und die aktualisierte Ticket-Darstellung zurückgeben.
 
-**Parameters:**
+**Parameter:**
 
-- **`ticket_id`** () - Ticketkennung.
-- **`data`** () - Zu aktualisierende Attribute.
+- **`ticket_id`** () - Eindeutiger Bezeichner des zu aktualisierenden Tickets.
+- **`data`** () - Dictionary mit Attributen, die am Ticket aktualisiert werden sollen.
 
-**Returns:** (`Optional[dict]`) - Aktualisierte Ticketinformationen.
+**Rückgabe:** (`Optional[dict]`) - Das aktualisierte Ticket-Objekt als Dictionary bei Erfolg, 
+oder None, wenn die Aktualisierung fehlschlug oder das Ticket nicht gefunden wurde.
 
-</details>
-
-
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>async def</span> `find_tickets(self, query: dict) -> list[dict]`</summary>
-
-Sucht nach Tickets, die mit ``query`` übereinstimmen.
-
-**Parameters:**
-
-- **`query`** () - Suchparameter für das Ticketsystem.
-
-**Returns:** (`list[dict]`) - Passende Tickets.
-
-</details>
+:::
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>async def</span> `find_first_ticket(self, query: dict) -> dict | None`</summary>
+::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `find_tickets(self, query: dict) -> list[dict]`
+Sucht nach Tickets, die auf ``query`` passen.
+Diese Methode muss von konkreten Adaptern implementiert werden, um komplexe
+Suchen im Ziel-Ticket-System durchzuführen. Die Abfragestruktur
+ist adapterspezifisch, sollte aber gängige Filter-
+und Suchoperationen unterstützen.
 
-Gibt das erste Ticket zurück, das mit ``query`` übereinstimmt, falls vorhanden.
+**Parameter:**
 
-**Parameters:**
+- **`query`** () - Dictionary, das die Suchparameter und Filter repräsentiert.
 
-- **`query`** () - Suchparameter für das Ticketsystem.
+**Rückgabe:** (`list[dict]`) - Eine Liste von Ticket-Objekten (als Dictionaries), die der Abfrage entsprechen.
+Gibt eine leere Liste zurück, wenn keine Übereinstimmungen gefunden werden.
 
-**Returns:** (`Optional[dict]`) - Das erste passende Ticket oder None, falls kein Ticket gefunden wurde.
+:::
 
-</details>
+
+::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `find_first_ticket(self, query: dict) -> dict | None`
+Gibt das erste Ticket zurück, das auf ``query`` passt, falls vorhanden.
+Dies ist eine Hilfsmethode, die das erste passende
+Ticket aus einer Suchoperation zurückgeben sollte. Sie sollte die Leistung
+optimieren, indem sie die Ergebnisse intern begrenzt.
+
+**Parameter:**
+
+- **`query`** () - Dictionary, das die Suchparameter und Filter repräsentiert.
+
+**Rückgabe:** (`Optional[dict]`) - Das erste passende Ticket-Objekt als Dictionary, 
+oder None, wenn keine Tickets der Abfrage entsprechen.
+
+:::
 
 
 ---

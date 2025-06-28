@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+var __VUE_PROD_DEVTOOLS__ = false
+
 import {ref} from 'vue'
 
 const selectedPlan = ref<string | null>(null)

@@ -5,28 +5,28 @@ description: Entdecken Sie die Fähigkeiten von Open Ticket AI.
 
 # Funktionen
 
-Open Ticket AI automatisiert die Ticket-Klassifizierung bei voller Datenkontrolle. Die folgenden Abschnitte geben einen Überblick über Kernfunktionen zur Optimierung von Kundenservice-Workflows.
+Open Ticket AI ist darauf ausgelegt, die Ticket-Klassifizierung zu automatisieren, während Sie die volle Kontrolle über Ihre Daten behalten. Die folgenden Abschnitte geben einen Überblick über die Kernfunktionen, die dabei helfen, Arbeitsabläufe im Kundenservice zu optimieren.
 
-## Warteschlangen-Klassifizierung
-Ermittelt automatisch die passende Warteschlange für eingehende Tickets. Abteilungen wie IT, Buchhaltung oder Vertrieb erhalten relevante Anfragen ohne manuelle Vorauswahl, was Reaktionszeiten verkürzt.
+## Queue-Klassifizierung
+Sagt automatisch die passende Queue für jedes eingehende Ticket voraus. Abteilungen wie IT, Buchhaltung oder Vertrieb erhalten die für sie relevanten Anfragen ohne manuelle Triage, was die Antwortzeiten beschleunigt.
 
 ## Prioritätsvorhersage
-Bewertet die Dringlichkeit von Tickets und weist Prioritätswerte zu. Open Ticket AI kann diskrete Stufen (1–5) oder kontinuierliche Scores (0–100) ausgeben, um die Klassifizierung an bestehende Prozesse anzupassen.
+Bewertet die Dringlichkeit von Tickets und weist einen Prioritätswert zu. Open Ticket AI kann diskrete Stufen von 1–5 oder einen kontinuierlichen Wert zwischen 0–100 ausgeben, sodass Sie die Klassifizierung an Ihre bestehenden Prozesse anpassen können.
 
-## Behandlung von Fällen mit geringer Konfidenz
-Tickets mit unklarer Klassifizierung werden einer speziellen Prüfwarteschlange zugewiesen. Dieser Mechanismus vermeidet Fehlzuweisungen und ermöglicht die Überprüfung von Grenzfällen durch Mitarbeiter.
+## Umgang mit geringer Konfidenz
+Tickets, die nicht mit hoher Sicherheit klassifiziert werden können, werden an eine dedizierte Überprüfungs-Queue weitergeleitet. Dieser Mechanismus vermeidet Fehlzuweisungen und gibt menschlichen Bearbeitern die Möglichkeit, Grenzfälle zu überprüfen.
 
-## Mehrsprachenunterstützung
-Unterstützt Deutsch und Englisch ohne Konfiguration und ist auf weitere Sprachen erweiterbar. Teams in verschiedenen Regionen profitieren von konsistenter Klassifizierung unabhängig von der Sprache.
+## Mehrsprachige Unterstützung
+Unterstützt standardmäßig Deutsch und Englisch und kann auf zusätzliche Sprachen erweitert werden. Teams, die in verschiedenen Regionen tätig sind, profitieren von einer konsistenten Klassifizierung unabhängig von der Sprache.
 
 ## On-Premise-Bereitstellung
-Läuft vollständig auf eigener Infrastruktur via Docker-Container. Ohne externe Dienste bleiben sensible Daten in Ihrer Umgebung, was Compliance mit Datenschutzvorschriften vereinfacht.
+Läuft vollständig auf Ihrer eigenen Infrastruktur mittels `Docker`-Containern. Es sind keine externen Dienste erforderlich, wodurch sichergestellt wird, dass sensible Daten Ihre Umgebung niemals verlassen und die Einhaltung von Datenschutzbestimmungen vereinfacht wird.
 
 ## Erweiterbare Pipelines
-Benutzerdefinierte Wertobjekte wie Tags oder Service-Level Agreements lassen sich in die Klassifizierungspipeline integrieren. Diese Flexibilität ermöglicht die Anpassung an individuelle Geschäftsregeln.
+Benutzerdefinierte Wertobjekte wie Tags oder Service-Level-Agreements können zur Klassifizierungs-Pipeline hinzugefügt werden. Diese Erweiterbarkeit bedeutet, dass die Software mit Ihren Anforderungen wachsen und einzigartige Geschäftsregeln berücksichtigen kann.
 
 ## API-Zugriff
-Eine umfassende HTTP-REST-API bietet alle Kernfunktionen für Training, Modellverwaltung und Label-Vorhersage. Die API ermöglicht nahtlose Integration in bestehende Ticketsysteme oder Anwendungen.
+Eine umfassende HTTP-`REST`-`API` stellt alle Schlüsselfunktionen für das Training, die Verwaltung von `model`s und die Vorhersage von Labels zur Verfügung. Die `API` macht es einfach, Open Ticket AI in bestehende Ticketsysteme oder andere Anwendungen zu integrieren.
 
 ## OTOBO-Integration
-Für Nutzer des OTOBO-Ticketsystems steht ein Add-on für nahtlosen Datenaustausch zur Verfügung. Tickets in OTOBO werden automatisch mit KI-Vorhersagen angereichert, um Supportmitarbeiter zu unterstützen.
+Für Organisationen, die das OTOBO-Ticketsystem verwenden, ist ein Add-on verfügbar, das einen nahtlosen Datenaustausch ermöglicht. In OTOBO erstellte Tickets können automatisch mit KI-Vorhersagen angereichert werden, um Ihre Support-Mitarbeiter zu unterstützen.

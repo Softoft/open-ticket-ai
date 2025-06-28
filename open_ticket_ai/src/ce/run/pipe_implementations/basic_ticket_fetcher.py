@@ -14,16 +14,16 @@ class BasicTicketFetcher(Pipe):
     implementations.
 
     Attributes:
-        fetcher_config (RegistryInstanceConfig): Configuration instance for the fetcher.
-        ticket_system (TicketSystemAdapter): Adapter for interacting with the ticket system.
+        fetcher_config (`RegistryInstanceConfig`): Configuration instance for the fetcher.
+        ticket_system (`TicketSystemAdapter`): Adapter for interacting with the ticket system.
     """
 
     def __init__(self, config: RegistryInstanceConfig, ticket_system: TicketSystemAdapter):
         """Initializes the BasicTicketFetcher with configuration and ticket system adapter.
 
         Args:
-            config: The configuration instance for the fetcher.
-            ticket_system: The adapter for interacting with the ticket system.
+            config (`RegistryInstanceConfig`): The configuration instance for the fetcher.
+            ticket_system (`TicketSystemAdapter`): The adapter for interacting with the ticket system.
         """
         super().__init__(config)
         self.fetcher_config = config
@@ -37,10 +37,10 @@ class BasicTicketFetcher(Pipe):
         the context remains unchanged.
 
         Args:
-            context: The pipeline context containing the ticket ID.
+            context (`PipelineContext`): The pipeline context containing the `ticket_id`.
 
         Returns:
-            PipelineContext: The context object. If a ticket was found, its data dictionary
+            `PipelineContext`: The context object. If a ticket was found, its `data` dictionary
                 contains the ticket information. Otherwise, returns the original context.
         """
         ticket = self.ticket_system.find_first_ticket({"TicketID": context.ticket_id})
@@ -50,10 +50,10 @@ class BasicTicketFetcher(Pipe):
 
     @staticmethod
     def get_description() -> str:
-        """Provides a description of this pipe's functionality.
+        """Provides a static description of this pipe's functionality.
 
         Returns:
-            str: A description of the pipe.
+            str: A static description of the pipe's purpose and behavior.
         """
         return (
             "Basic ticket fetcher that retrieves ticket data from a source. "

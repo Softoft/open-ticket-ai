@@ -1,3 +1,5 @@
+"""Automatically adds long Google style docstrings to Python files using AI."""
+
 import asyncio
 from pathlib import Path
 import re

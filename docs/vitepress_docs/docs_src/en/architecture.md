@@ -43,10 +43,10 @@ All components are registered in a central dependency injection container and co
 ## Diagrams
 
 ### Application Class Diagram
-![Application Class Diagram](/images/application_class_diagram.png)
+![Anwendungs-Klassendiagramm](../../public/images/application_class_diagram.png)
 
 ### Overview Diagram
-![Overview Diagram](/images/overview.png)
+![Übersichtsdiagramm](../../public/images/overview.png)
 
 These diagrams illustrate how the pipeline is orchestrated and how each component interacts with the others.
 

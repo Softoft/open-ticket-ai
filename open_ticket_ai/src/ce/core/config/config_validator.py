@@ -42,7 +42,7 @@ class OpenTicketAIConfigValidator:
         """Create a new validator.
 
         Args:
-            config: Loaded ``OpenTicketAIConfig`` instance.
+            config: Loaded `OpenTicketAIConfig` instance.
             registry: Registry containing available classes.
         """
         self.config = config

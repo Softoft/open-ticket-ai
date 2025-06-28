@@ -2,53 +2,91 @@
 
 ## Modul: `open_ticket_ai\src\ce\app.py`
 
-### <span style='color: #8E44AD;'>class</span> `App`
+Hauptanwendungsmodul für OpenTicketAI.
+Dieses Modul enthält die `App`-Klasse, die als primärer Einstiegspunkt für das OpenTicketAI-System dient. Es orchestriert die Konfigurationsvalidierung, die Job-Planung und die kontinuierliche Ausführung geplanter Aufgaben.
 
-Haupteinstiegspunkt der Anwendung.
+### <span style='text-info'>class</span> `App`
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `__init__(self, config: OpenTicketAIConfig, validator: OpenTicketAIConfigValidator, orchestrator: Orchestrator)`</summary>
+Haupt-Einstiegspunkt der Anwendung für das OpenTicketAI-System.
+Diese Klasse initialisiert und führt die Kernkomponenten der Anwendung aus, einschließlich:
+- Konfigurationsmanagement
+- Konfigurationsvalidierung
+- Job-Orchestrierung und -Planung
 
-Initialisiert die Anwendung.
+Die Anwendung folgt einem geplanten Ausführungsmodell, bei dem Jobs in vordefinierten Intervallen ausgeführt werden.
 
 **Parameter:**
 
-- **`config`** () - Geladene Konfiguration für die Anwendung.
-- **`validator`** () - Validator zur Überprüfung der Konfiguration.
-- **`orchestrator`** () - Orchestrator zum Ausführen von Attribut-Vorhersagen.
+- **`config`** () - Geladene Anwendungskonfiguration.
+- **`validator`** () - Instanz des Konfigurationsvalidators.
+- **`orchestrator`** () - Manager für die Job-Orchestrierung.
 
-</details>
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `run(self)`</summary>
+::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `__init__(self, config: OpenTicketAIConfig, validator: OpenTicketAIConfigValidator, orchestrator: Orchestrator)`
+Initialisiert die Anwendung mit ihren Abhängigkeiten.
 
-Validiert die Konfiguration und startet die Scheduler-Schleife.
-Diese Methode:
+**Parameter:**
+
+- **`config`** () - Geladene Konfiguration für die Anwendung, die alle notwendigen Parameter und Einstellungen enthält.
+- **`validator`** () - Validator-Instanz, die zur Überprüfung der Integrität und Korrektheit der Konfiguration verwendet wird.
+- **`orchestrator`** () - Orchestrator-Instanz, die für die Einrichtung und Verwaltung geplanter Jobs und Attribut-Prädiktoren verantwortlich ist.
+
+:::
+
+
+::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `run(self)`
+Hauptausführungsmethode für die Anwendung.
+Führt die folgenden Operationen aus:
 1. Validiert die Anwendungskonfiguration
-2. Richtet geplante Jobs mittels des Orchestrators ein
-3. Tritt in eine Endlosschleife ein, um anstehende geplante Aufgaben auszuführen
+2. Richtet geplante Jobs mit dem Orchestrator ein
+3. Tritt in eine Endlosschleife ein, um ausstehende geplante Aufgaben auszuführen
 
-</details>
+Die Methode validiert zuerst die Konfigurationsregistrierung. Wenn die Validierung fehlschlägt, wird ein Fehler protokolliert und die Anwendung fährt mit der Einrichtung der Zeitpläne ohne gültige Konfiguration fort (was zu Laufzeitfehlern führen kann). Bei erfolgreicher Validierung wird eine Erfolgsmeldung ausgegeben.
+
+Nach der Einrichtung tritt die Methode in eine kontinuierliche Schleife ein, die:
+- Jede Sekunde auf ausstehende geplante Jobs prüft
+- Alle gefundenen ausstehenden Jobs ausführt
+
+:::
+
 
 ---
 
 ## Modul: `open_ticket_ai\src\ce\main.py`
 
-Einstiegspunkt für die Open Ticket AI CLI.
-Dieses Modul stellt die Kommandozeilenschnittstelle für die Open Ticket AI-Anwendung bereit.
-Es konfiguriert die Protokollierungsstufen und startet die Hauptanwendung.
+CLI-Einstiegspunkt für Open Ticket AI.
+Dieses Modul stellt die Kommandozeilenschnittstelle (CLI) für die Open Ticket AI-Anwendung bereit.
+Es konfiguriert die Logging-Stufen und startet die Hauptanwendung.
 
-### <span style='color: #2980B9;'>def</span> `main(verbose: bool, debug: bool)`
 
-Konfiguriert die Protokollierung basierend auf CLI-Optionen.
+### <span class='text-warning'>def</span> `main(verbose: bool, debug: bool)`
+
+Konfiguriert das Logging basierend auf den CLI-Optionen.
+Diese Funktion legt die Logging-Stufe für die Anwendung basierend auf den übergebenen Kommandozeilen-Flags fest.
+Sie unterstützt zwei Stufen der Ausführlichkeit:
+- `--verbose` für Logging auf INFO-Ebene
+- `--debug` für Logging auf DEBUG-Ebene
+
+Wenn keine Flags angegeben werden, ist die Standard-Logging-Stufe WARNING. Die Funktion konfiguriert auch die Log-Formatierung und unterdrückt laute Bibliotheken (z. B. `urllib3`).
 
 **Parameter:**
 
-- **`verbose`** (`bool`) - Aktiviert INFO-Level-Protokollierung bei True.
-- **`debug`** (`bool`) - Aktiviert DEBUG-Level-Protokollierung bei True.
+- **`verbose`** (`bool`) - Aktiviert Logging auf INFO-Ebene, wenn True.
+- **`debug`** (`bool`) - Aktiviert Logging auf DEBUG-Ebene, wenn True.
 
-### <span style='color: #2980B9;'>def</span> `start()`
+
+
+### <span class='text-warning'>def</span> `start()`
 
 Initialisiert den Container und startet die Anwendung.
+Dieser Befehl führt die folgenden Aktionen aus:
+1. Konfiguriert den Dependency-Injection-Container
+2. Ruft die Hauptanwendungsinstanz aus dem Container ab
+3. Führt die Anwendung aus
+4. Zeigt ein stilisiertes Startbanner mit `pyfiglet` an
+
+Die Anwendung folgt einem Dependency-Injection-Muster, bei dem alle erforderlichen Abhängigkeiten über den `DIContainer` aufgelöst werden.
+
+
 
 ---

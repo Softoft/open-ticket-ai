@@ -1,51 +1,49 @@
-```markdown
 # Dokumentation für `**/ce/run/pipe_implementations/*.py`
 
 ## Modul: `open_ticket_ai\src\ce\run\pipe_implementations\basic_ticket_fetcher.py`
 
 
-### <span style='color: #8E44AD;'>class</span> `BasicTicketFetcher`
+### <span style='text-info'>class</span> `BasicTicketFetcher`
 
-Einfacher Fetcher, der Ticketdaten über das Ticket-System-Adapter lädt.
+Einfacher Fetcher, der Ticketdaten mithilfe des Ticket-System-Adapters lädt.
+Diese Pipe ruft Ticketinformationen aus einem externen Ticketsystem mithilfe des bereitgestellten Adapters ab. Sie dient als Platzhalter für komplexere Fetching-Implementierungen.
+
+**Parameter:**
+
+- **`fetcher_config`** (``RegistryInstanceConfig``) - Konfigurationsinstanz für den Fetcher.
+- **`ticket_system`** (``TicketSystemAdapter``) - Adapter zur Interaktion mit dem Ticketsystem.
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `__init__(self, config: RegistryInstanceConfig, ticket_system: TicketSystemAdapter)`</summary>
-
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `__init__(self, config: RegistryInstanceConfig, ticket_system: TicketSystemAdapter)`
 Initialisiert den BasicTicketFetcher mit Konfiguration und Ticket-System-Adapter.
 
 **Parameter:**
 
-- **`config`** () - Die Konfigurationsinstanz für den Fetcher.
-- **`ticket_system`** () - Der Adapter zur Interaktion mit dem Ticket-System.
+- **`config`** (``RegistryInstanceConfig``) - Die Konfigurationsinstanz für den Fetcher.
+- **`ticket_system`** (``TicketSystemAdapter``) - Der Adapter zur Interaktion mit dem Ticketsystem.
 
-</details>
+:::
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `process(self, context: PipelineContext) -> PipelineContext`</summary>
-
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `process(self, context: PipelineContext) -> PipelineContext`
 Ruft Ticketdaten ab und aktualisiert den Pipeline-Kontext.
-Holt das Ticket über die Ticket-ID aus dem Kontext und aktualisiert
-das Datenwörterbuch des Kontexts mit den Ticketinformationen.
+Ruft das Ticket mithilfe der Ticket-ID aus dem Kontext ab. Wenn es gefunden wird, wird das Daten-Dictionary des Kontexts mit den Ticketinformationen aktualisiert. Wenn kein Ticket gefunden wird, bleibt der Kontext unverändert.
 
 **Parameter:**
 
-- **`context`** () - Der Pipeline-Kontext mit der Ticket-ID.
+- **`context`** (``PipelineContext``) - Der Pipeline-Kontext, der die `ticket_id` enthält.
 
-**Rückgabe:** (`PipelineContext`) - Der aktualisierte Pipeline-Kontext mit Ticketdaten.
+**Rückgabe:** (``PipelineContext``) - Das Kontextobjekt. Wenn ein Ticket gefunden wurde, enthält sein `data`-Dictionary die Ticketinformationen. Andernfalls wird der ursprüngliche Kontext zurückgegeben.
 
-</details>
+:::
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `get_description() -> str`</summary>
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `get_description() -> str`
+Liefert eine statische Beschreibung der Funktionalität dieser Pipe.
 
-Liefert eine Beschreibung der Funktionalität dieser Pipe.
+**Rückgabe:** (`str`) - Eine statische Beschreibung des Zwecks und Verhaltens der Pipe.
 
-**Rückgabe:** (`str`) - Eine Beschreibung der Pipe.
-
-</details>
+:::
 
 
 ---
@@ -53,45 +51,47 @@ Liefert eine Beschreibung der Funktionalität dieser Pipe.
 ## Modul: `open_ticket_ai\src\ce\run\pipe_implementations\generic_ticket_updater.py`
 
 
-### <span style='color: #8E44AD;'>class</span> `GenericTicketUpdater`
+### <span style='text-info'>class</span> `GenericTicketUpdater`
 
-Aktualisiert ein Ticket im Ticket-System mit Daten aus dem Kontext.
-
-
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `__init__(self, config: RegistryInstanceConfig, ticket_system: TicketSystemAdapter)`</summary>
-
-Initialisiert den GenericTicketUpdater mit Konfiguration und Ticket-System-Adapter.
+Aktualisiert ein Ticket im Ticketsystem unter Verwendung von Daten aus dem Kontext.
+Diese Pipe-Komponente ist für die Aktualisierung von Tickets in einem externen Ticket-Tracking-System (wie Jira, ServiceNow usw.) verantwortlich, wobei Daten verwendet werden, die während der Pipeline-Ausführung generiert wurden. Sie prüft den Pipeline-Kontext auf Aktualisierungsanweisungen und delegiert den eigentlichen Aktualisierungsvorgang an den konfigurierten Ticket-System-Adapter.
 
 **Parameter:**
 
-- **`config`** () - Konfigurationsinstanz für die Pipeline-Komponente.
-- **`ticket_system`** () - Adapter zur Interaktion mit dem Ticket-System.
-
-</details>
+- **`modifier_config`** () - Konfigurationseinstellungen für den Ticket-Updater.
+- **`ticket_system`** () - Adapter-Instanz zur Interaktion mit dem externen Ticketsystem.
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `process(self, context: PipelineContext) -> PipelineContext`</summary>
-
-Verarbeitet den Pipeline-Kontext, um das Ticket bei vorhandenen Aktualisierungsdaten zu aktualisieren.
-Holt Aktualisierungsdaten aus dem Kontext und aktualisiert das Ticket im Ticket-System,
-sofern Aktualisierungsdaten vorhanden sind. Gibt den unveränderten Kontext zurück.
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `__init__(self, config: RegistryInstanceConfig, ticket_system: TicketSystemAdapter)`
+Initialisiert den `GenericTicketUpdater` mit Konfiguration und Ticket-System-Adapter.
 
 **Parameter:**
 
-- **`context`** () - Der Pipeline-Kontext mit Daten und Ticketinformationen.
+- **`config`** () - Konfigurationsinstanz, die Einstellungen für die Pipeline-Komponente enthält.
+- **`ticket_system`** () - Adapter-Objekt, das die Kommunikation mit dem externen Ticketsystem abwickelt.
 
-**Rückgabe:** () - Der ursprüngliche Pipeline-Kontext nach der Verarbeitung.
-
-</details>
-
-
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `get_description() -> str`</summary>
+:::
 
 
-</details>
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `process(self, context: PipelineContext) -> PipelineContext`
+Verarbeitet den Pipeline-Kontext, um das Ticket zu aktualisieren, falls Aktualisierungsdaten vorhanden sind.
+Ruft Aktualisierungsdaten aus dem Kontext ab (insbesondere aus dem Schlüssel `"update_data"` in `context.data`) und aktualisiert das Ticket im Ticketsystem, wenn Aktualisierungsdaten vorhanden sind. Gibt den Kontext unverändert zurück.
+
+**Parameter:**
+
+- **`context`** () - Der Pipeline-Kontext, der Daten und Ticketinformationen enthält.
+
+**Rückgabe:** () - Der ursprüngliche Pipeline-Kontext nach der Verarbeitung (unverändert).
+
+:::
+
+
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `get_description() -> str`
+Liefert eine Beschreibung des Zwecks der Pipe.
+
+**Rückgabe:** () - Ein String, der die Funktionalität der Pipe beschreibt.
+
+:::
 
 
 ---
@@ -99,47 +99,41 @@ sofern Aktualisierungsdaten vorhanden sind. Gibt den unveränderten Kontext zur�
 ## Modul: `open_ticket_ai\src\ce\run\pipe_implementations\hf_local_ai_inference_service.py`
 
 
-### <span style='color: #8E44AD;'>class</span> `HFAIInferenceService`
+### <span style='text-info'>class</span> `HFAIInferenceService`
 
-Eine Klasse, die ein Hugging Face KI-Modell repräsentiert.
-Diese Klasse dient als Platzhalter für die zukünftige Implementierung von Hugging Face KI-Modellfunktionen.
-Derzeit enthält sie keine Methoden oder Eigenschaften.
+Eine Klasse, die ein Hugging Face AI-Modell repräsentiert.
+Diese Klasse ist ein Platzhalter für die zukünftige Implementierung von Funktionalitäten des Hugging Face AI-Modells. Derzeit enthält sie keine Methoden oder Eigenschaften.
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `__init__(self, config: RegistryInstanceConfig)`</summary>
-
-Initialisiert den HFAIInferenceService mit Konfiguration.
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `__init__(self, config: RegistryInstanceConfig)`
+Initialisiert den HFAIInferenceService mit der Konfiguration.
 
 **Parameter:**
 
-- **`config`** (`RegistryInstanceConfig`) - Konfigurationsinstanz für den Service.
+- **`config`** (`RegistryInstanceConfig`) - Konfigurationsinstanz für den Dienst.
 
-</details>
+:::
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `process(self, context: PipelineContext) -> PipelineContext`</summary>
-
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `process(self, context: PipelineContext) -> PipelineContext`
 Verarbeitet den Pipeline-Kontext, indem vorbereitete Daten als Modellergebnis gespeichert werden.
+Diese Methode dient als Platzhalter für die eigentliche Modell-Inferenzlogik. Derzeit kopiert sie einfach die 'prepared_data' aus dem Kontext in 'model_result'.
 
 **Parameter:**
 
-- **`context`** (`PipelineContext`) - Der Pipeline-Kontext mit zu verarbeitenden Daten.
+- **`context`** (`PipelineContext`) - Der Pipeline-Kontext, der die zu verarbeitenden Daten enthält.
 
-**Rückgabe:** (`PipelineContext`) - Der aktualisierte Pipeline-Kontext mit gespeichertem Modellergebnis.
+**Rückgabe:** (`PipelineContext`) - Der aktualisierte Pipeline-Kontext mit dem gespeicherten Modellergebnis.
 
-</details>
+:::
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `get_description() -> str`</summary>
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `get_description() -> str`
+Liefert eine Beschreibung des Dienstes.
 
-Liefert eine Beschreibung des Services.
+**Rückgabe:** (`str`) - Beschreibungstext für den Hugging Face AI-Modelldienst.
 
-**Rückgabe:** (`str`) - Beschreibungstext für den Hugging Face KI-Modellservice.
-
-</details>
+:::
 
 
 ---
@@ -147,49 +141,45 @@ Liefert eine Beschreibung des Services.
 ## Modul: `open_ticket_ai\src\ce\run\pipe_implementations\subject_body_preparer.py`
 
 
-### <span style='color: #8E44AD;'>class</span> `SubjectBodyPreparer`
+### <span style='text-info'>class</span> `SubjectBodyPreparer`
 
-Extrahiert und verkettet den Ticket-Betreff und -Textkörper.
+Eine Pipeline-Komponente, die den Betreff und den Inhalt eines Tickets für die Verarbeitung vorbereitet.
+Diese Pipe extrahiert die Felder für Betreff und Inhalt aus den Ticketdaten, wiederholt den Betreff eine konfigurierbare Anzahl von Malen und verkettet ihn mit dem Inhalt. Die vorbereiteten Daten werden im Pipeline-Kontext für die nachgelagerte Verarbeitung gespeichert.
+
+**Parameter:**
+
+- **`preparer_config`** (`RegistryInstanceConfig`) - Konfigurationsparameter für den Preparer.
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `__init__(self, config: RegistryInstanceConfig)`</summary>
-
-Initialisiert den SubjectBodyPreparer mit Konfiguration.
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `__init__(self, config: RegistryInstanceConfig)`
+Initialisiert den SubjectBodyPreparer mit der Konfiguration.
 
 **Parameter:**
 
 - **`config`** (`RegistryInstanceConfig`) - Konfigurationsparameter für den Preparer.
 
-</details>
+:::
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `process(self, context: PipelineContext) -> PipelineContext`</summary>
-
-Verarbeitet Ticketdaten zur Vorbereitung von Betreff- und Textkörperinhalten.
-Extrahiert Betreff- und Textkörperfelder aus den Kontextdaten, wiederholt den Betreff
-gemäß Konfiguration und verkettet ihn mit dem Textkörper. Speichert
-das Ergebnis im Kontext unter dem Schlüssel 'prepared_data'.
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `process(self, context: PipelineContext) -> PipelineContext`
+Verarbeitet Ticketdaten, um Betreff und Inhalt vorzubereiten.
+Extrahiert Betreff- und Inhaltsfelder aus den Kontextdaten, wiederholt den Betreff wie in der Konfiguration angegeben und verkettet ihn mit dem Inhalt. Speichert das Ergebnis im Kontext unter dem Schlüssel 'prepared_data'.
 
 **Parameter:**
 
-- **`context`** (`PipelineContext`) - Pipeline-Kontext mit Ticketdaten.
+- **`context`** (`PipelineContext`) - Pipeline-Kontext, der Ticketdaten enthält.
 
 **Rückgabe:** (`PipelineContext`) - Aktualisierter Kontext mit vorbereiteten Daten.
 
-</details>
+:::
 
 
-<details>
-<summary>#### <span style='font-size: 0.7em; background-color: #34495E; color: white; padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>method</span> <span style='color: #2980B9;'>def</span> `get_description() -> str`</summary>
-
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `get_description() -> str`
 Liefert eine Beschreibung der Funktionalität der Pipe.
 
 **Rückgabe:** (`str`) - Beschreibung des Zwecks der Pipe.
 
-</details>
+:::
 
 
 ---
-```

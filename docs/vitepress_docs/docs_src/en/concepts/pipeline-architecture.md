@@ -30,7 +30,5 @@ Each stage in this pipeline consumes and produces **Value Objects** (e.g., `subj
 ## System Diagrams
 
 ### Application Class Diagram
-![Application Class Diagram](/images/application_class_diagram.png)
 
 ### Overview Diagram
-![Overview Diagram](/images/overview.png)
