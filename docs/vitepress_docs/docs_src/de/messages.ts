@@ -1,7 +1,7 @@
 export default {
     otai_prediction_demo_component: {
         title: 'Open Ticket AI Demo',
-        pickExampleText: 'Wählen Sie ein Beispiel aus, um zu beginnen',
+        pickExampleText: 'Beispiel',
         exampleSelectDefault: 'Beispiel auswählen...',
         subjectLabel: 'Betreff',
         subjectPlaceholder: 'Geben Sie den Betreff des Tickets ein',

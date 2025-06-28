@@ -90,34 +90,20 @@ interface ContactFormData {
     requirements: string
 }
 
-const emit = defineEmits<{
-    (e: 'submit', data: ContactFormData): void
+const {plan} = defineProps<{
+    plan: string
 }>()
 
-const isVisible = ref(false)
+
+
 
 const form = ref<ContactFormData>({
-    plan: 'Professional Acceleration',
+    plan: plan,
     name: '',
     company: '',
     email: '',
     requirements: ''
 })
-
-function open() {
-    isVisible.value = true
-}
-
-function close() {
-    isVisible.value = false
-}
-
-function handleSubmit() {
-    emit('submit', {...form.value})
-    close()
-}
-
-defineExpose({open, close})
 </script>
 
 <style scoped>

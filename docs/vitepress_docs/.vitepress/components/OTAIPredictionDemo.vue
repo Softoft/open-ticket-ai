@@ -1,6 +1,8 @@
 <template>
-    <h2 class="mb-3 w-100 text-center text-body-emphasis">{{ title }}</h2>
-    <div class="container my-4">
+    <h2 class="mb-4 w-100 text-center text-body-emphasis">{{
+            t('otai_prediction_demo_component.title')
+        }}</h2>
+    <div class="container my-3">
         <div class="row justify-content-center">
             <div class="col-md-12 col-lg-8">
 
@@ -14,7 +16,9 @@
                         class="form-select"
                         @change="applyExample"
                     >
-                        <option :value="-1" disabled>{{ t('otai_prediction_demo_component.exampleSelectDefault') }}</option>
+                        <option :value="-1" disabled>
+                            {{ t('otai_prediction_demo_component.exampleSelectDefault') }}
+                        </option>
                         <option v-for="(ex, i) in examples" :key="i" :value="i">
                             {{ ex.name }}
                         </option>
@@ -22,7 +26,9 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-bold" for="demo-subject">{{ t('otai_prediction_demo_component.subjectLabel') }}</label>
+                    <label class="form-label fw-bold" for="demo-subject">{{
+                            t('otai_prediction_demo_component.subjectLabel')
+                        }}</label>
                     <input
                         id="demo-subject"
                         v-model="subject"
@@ -33,7 +39,9 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-bold" for="demo-body">{{ t('otai_prediction_demo_component.messageLabel') }}</label>
+                    <label class="form-label fw-bold" for="demo-body">{{
+                            t('otai_prediction_demo_component.messageLabel')
+                        }}</label>
                     <textarea
                         id="demo-body"
                         v-model="body"
@@ -45,13 +53,15 @@
 
                 <button
                     :disabled="loading"
-                    class="btn btn-primary mb-4"
+                    class="btn btn-lg btn-primary mb-4 mt-1"
                     type="button"
                     @click="predict"
                 >
-                    <span v-if="loading" aria-hidden="true" class="spinner-border spinner-border-sm me-1"></span>
-                    <span v-if="loading" role="status">{{ t('otai_prediction_demo_component.loadingText') }}</span>
-                    <span v-else>{{ t('otai_prediction_demo_component.submitButtonText') }}</span>
+                    <span v-if="loading" aria-hidden="true"
+                          class="spinner-border spinner-border-sm me-1"></span>
+                    <span v-if="loading"
+                          role="status">{{ t('otai_prediction_demo_component.loadingText') }}</span>
+                    <span class="text-white" v-else>{{ t('otai_prediction_demo_component.submitButtonText') }}</span>
                 </button>
 
                 <div v-if="errorMessage" class="alert alert-danger" role="alert">
@@ -59,32 +69,44 @@
                 </div>
 
                 <div v-if="queueResult && prioResult" class="mt-4">
-                    <h3 class="fw-bold text-body-emphasis mb-3">{{ t('otai_prediction_demo_component.resultTitle') }}</h3>
+                    <h3 class="fw-bold text-body-emphasis mb-3">
+                        {{ t('otai_prediction_demo_component.resultTitle') }}</h3>
                     <div class="table-responsive">
                         <table class="table table-dark table-hover align-middle">
                             <thead class="table-light">
                             <tr>
-                                <th scope="col">{{ t('otai_prediction_demo_component.typeColumnHeader') }}</th>
-                                <th scope="col">{{ t('otai_prediction_demo_component.predictionColumnHeader') }}</th>
-                                <th class="text-center" scope="col">{{ t('otai_prediction_demo_component.confidenceColumnHeader') }}
+                                <th scope="col">
+                                    {{ t('otai_prediction_demo_component.typeColumnHeader') }}
+                                </th>
+                                <th scope="col">
+                                    {{ t('otai_prediction_demo_component.predictionColumnHeader') }}
+                                </th>
+                                <th class="text-center" scope="col">
+                                    {{ t('otai_prediction_demo_component.confidenceColumnHeader') }}
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <th scope="row">{{ t('otai_prediction_demo_component.queueRowHeader') }}</th>
+                                <th scope="row">
+                                    {{ t('otai_prediction_demo_component.queueRowHeader') }}
+                                </th>
                                 <td>{{ queueResult[0].label }}</td>
                                 <td class="text-center">
-                                    <span :class="['badge', 'fs-6', confidenceBadge(queueResult[0].score)]">
+                                    <span
+                                        :class="['badge', 'fs-6', confidenceBadge(queueResult[0].score)]">
                                         {{ formatScore(queueResult[0].score) }}
                                     </span>
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row">{{ t('otai_prediction_demo_component.priorityRowHeader') }}</th>
+                                <th scope="row">
+                                    {{ t('otai_prediction_demo_component.priorityRowHeader') }}
+                                </th>
                                 <td>{{ prioResult[0].label }}</td>
                                 <td class="text-center">
-                                    <span :class="['badge', 'fs-6', confidenceBadge(prioResult[0].score)]">
+                                    <span
+                                        :class="['badge', 'fs-6', confidenceBadge(prioResult[0].score)]">
                                         {{ formatScore(prioResult[0].score) }}
                                     </span>
                                 </td>
@@ -100,11 +122,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { examples } from "./demoExamples";
-import { useI18n } from 'vue-i18n'
+import {ref} from 'vue'
+import {examples} from "./demoExamples";
+import {useI18n} from 'vue-i18n'
 
-const { t } = useI18n()
+const {t} = useI18n()
 
 async function query(endpoint: string, payload: any) {
     // ... (rest of the function is unchanged)
@@ -159,8 +181,8 @@ async function predict() {
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         try {
             const [q, p] = await Promise.all([
-                query(QUEUE_EP, { inputs: text, parameters: {} }),
-                query(PRIORITY_EP, { inputs: text, parameters: {} })
+                query(QUEUE_EP, {inputs: text, parameters: {}}),
+                query(PRIORITY_EP, {inputs: text, parameters: {}})
             ])
             queueResult.value = q
             prioResult.value = p

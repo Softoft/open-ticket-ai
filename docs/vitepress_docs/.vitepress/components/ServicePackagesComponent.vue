@@ -51,6 +51,8 @@ const servicePackages = computed(() => [
     }
 ]);
 
+
+
 </script>
 
 <template>
@@ -58,8 +60,9 @@ const servicePackages = computed(() => [
         :buttonText="t('servicePackages.buttonText')"
         :products="servicePackages"
         :title="t('servicePackages.title')"
-        ctaLink="mailto:sales@softoft.de"
+        cta
     />
+    <ContactFormModal/>
 </template>
 
 <style scoped>
