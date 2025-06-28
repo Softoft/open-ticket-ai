@@ -14,6 +14,17 @@ import pytest
 
 from open_ticket_ai.experimental.anonymize_data import anonymize_text
 
+# List of text examples containing personal identifiable information (PII) for testing.
+#
+# This collection includes various text snippets with different types of PII such as:
+# - Names (with titles, initials, compound names)
+# - Addresses (street names, cities, postal codes)
+# - Contact information (email addresses, phone numbers)
+# - Financial details (IBANs, BICs, credit card numbers)
+# - Professional titles and academic degrees
+#
+# The examples range from short phrases to longer multi-sentence texts to test
+# anonymization in different contexts.
 texts = [
     # kurze Beispiele
     "Hallo, ich heiße Max Mustermann und wohne in der Hauptstraße 5, 12345 Musterstadt.",

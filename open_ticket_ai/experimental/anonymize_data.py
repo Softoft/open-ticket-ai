@@ -12,17 +12,30 @@ fake = Faker("de_DE")
 
 def anonymize_text(text):
     """
-    Anonymize sensitive information in a given text.
+    Anonymizes sensitive information (PII) in the input text by replacing it with fake data.
+
+    This function identifies and replaces the following types of personally identifiable information (PII):
+      - Person names (PER), organization names (ORG), and locations (LOC) using spaCy's named entity recognition
+      - Email addresses using regular expressions
+      - Phone numbers (valid German numbers) using the `phonenumbers` library
+      - IBANs using regular expressions
+      - Street addresses (German format) using regular expressions
+
+    The replacements are done in the following order:
+      1. Named entities (processed from last to first to avoid index shifting)
+      2. Email addresses
+      3. Phone numbers
+      4. IBANs
+      5. Street addresses
 
     Args:
-        text (str): The input text to anonymize.
+        text (str): The input text containing sensitive information to be anonymized.
 
     Returns:
-        str: The anonymized text with replaced named entities, email addresses, phone numbers, IBANs, and addresses.
+        str: The anonymized text with all detected PII replaced by fake data.
 
-    This function uses the spaCy library to identify named entities (persons, organizations, locations) and replaces them with fake data.
-    Additionally, it uses regular expressions to detect and replace email addresses, phone numbers, IBANs, and addresses with fake data.
-    The function returns the anonymized text.
+    Note:
+        Uses Faker with German localization for generating replacement data.
     """
     doc = nlp(text)
     new_text = text
@@ -43,13 +56,13 @@ def anonymize_text(text):
     # Telefonnummern erkennen und ersetzen
     def replace_phone(match):
         """
-        Replaces a matched phone number with a fake one.
+        Replaces a matched phone number with a fake German phone number if valid.
 
         Args:
-            match: A match object containing the phone number to be replaced.
+            match: A regex match object containing the phone number string.
 
         Returns:
-            str: A fake phone number if the input is a valid German phone number, otherwise the original input string.
+            str: Fake phone number if input is valid, original string otherwise.
         """
         num_str = match.group(0)
         try:

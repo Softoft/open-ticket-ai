@@ -1,3 +1,16 @@
+"""Module for generating the JSON schema of the OpenTicketAI configuration.
+
+This module defines the `RootConfig` model, which is a wrapper around the main configuration
+model `OpenTicketAIConfig`. The purpose of this wrapper is to facilitate the generation of
+a JSON schema that describes the entire configuration structure.
+
+When this module is run as a script, it will:
+  1. Generate the JSON schema for the `RootConfig` model.
+  2. Write the schema to a file named `config.schema.json` in the project's root directory.
+
+The generated schema file can be used for validating configuration files or for providing
+configuration autocompletion and documentation in editors.
+"""
 import json
 
 from pydantic import BaseModel

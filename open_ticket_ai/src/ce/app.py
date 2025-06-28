@@ -1,3 +1,10 @@
+"""Main application module for OpenTicketAI.
+
+This module contains the `App` class which serves as the primary entry point
+for the OpenTicketAI system. It orchestrates configuration validation, job
+scheduling, and continuous execution of scheduled tasks.
+"""
+
 import logging
 import time
 
@@ -10,6 +17,7 @@ from open_ticket_ai.src.ce.core.config.config_validator import OpenTicketAIConfi
 from open_ticket_ai.src.ce.run.orchestrator import Orchestrator
 
 console = Console()
+"""Global console instance for rich text output throughout the application."""
 
 class App:
     """Main application entry point for the OpenTicketAI system.
@@ -21,6 +29,11 @@ class App:
 
     The application follows a scheduled execution model where jobs are run at
     predefined intervals.
+
+    Attributes:
+        config: Loaded application configuration.
+        validator: Configuration validator instance.
+        orchestrator: Job orchestration manager.
     """
 
     @inject

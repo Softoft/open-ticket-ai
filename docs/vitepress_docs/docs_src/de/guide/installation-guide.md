@@ -1,4 +1,3 @@
-```markdown
 ---
 title: Installation von Open Ticket AI
 description: Schritt-für-Schritt-Anleitung zur Installation von Open Ticket AI.
@@ -6,7 +5,7 @@ description: Schritt-für-Schritt-Anleitung zur Installation von Open Ticket AI.
 
 # Installation
 
-Befolgen Sie diese Schritte, um Open Ticket AI zu installieren:
+Folgen Sie diesen Schritten, um Open Ticket AI zu installieren:
 
 1.  **Repository klonen**
     ```bash
@@ -18,7 +17,7 @@ Befolgen Sie diese Schritte, um Open Ticket AI zu installieren:
     Details zur Einrichtung dieser Datei finden Sie in der [Konfigurationsdokumentation](../reference/configuration-reference.md).
 
 3.  **Mit Docker Compose starten**
-    Dieser Befehl erstellt die erforderlichen Docker-Images und startet die Anwendungsdienste im Hintergrundmodus (detached mode).
+    Dieser Befehl erstellt die erforderlichen Docker-Images und startet die Anwendungsdienste im Hintergrundmodus.
     ```bash
     docker-compose up -d --build
     ```
@@ -28,4 +27,3 @@ Befolgen Sie diese Schritte, um Open Ticket AI zu installieren:
     ```bash
     docker-compose logs -f
     ```
-```

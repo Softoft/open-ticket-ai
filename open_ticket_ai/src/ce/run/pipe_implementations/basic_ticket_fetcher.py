@@ -7,7 +7,16 @@ from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter impor
 
 
 class BasicTicketFetcher(Pipe):
-    """Simple fetcher that loads ticket data using the ticket system adapter."""
+    """Simple fetcher that loads ticket data using the ticket system adapter.
+
+    This pipe retrieves ticket information from an external ticket system using
+    the provided adapter. It serves as a placeholder for more complex fetching
+    implementations.
+
+    Attributes:
+        fetcher_config (RegistryInstanceConfig): Configuration instance for the fetcher.
+        ticket_system (TicketSystemAdapter): Adapter for interacting with the ticket system.
+    """
 
     def __init__(self, config: RegistryInstanceConfig, ticket_system: TicketSystemAdapter):
         """Initializes the BasicTicketFetcher with configuration and ticket system adapter.
@@ -23,14 +32,16 @@ class BasicTicketFetcher(Pipe):
     def process(self, context: PipelineContext) -> PipelineContext:
         """Fetches ticket data and updates the pipeline context.
 
-        Retrieves the ticket using the ticket ID from the context and updates
-        the context's data dictionary with the ticket information.
+        Retrieves the ticket using the ticket ID from the context. If found, updates
+        the context's data dictionary with the ticket information. If no ticket is found,
+        the context remains unchanged.
 
         Args:
             context: The pipeline context containing the ticket ID.
 
         Returns:
-            PipelineContext: The updated pipeline context with ticket data.
+            PipelineContext: The context object. If a ticket was found, its data dictionary
+                contains the ticket information. Otherwise, returns the original context.
         """
         ticket = self.ticket_system.find_first_ticket({"TicketID": context.ticket_id})
         if ticket:

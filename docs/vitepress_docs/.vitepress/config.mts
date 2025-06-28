@@ -52,7 +52,7 @@ export default defineConfig({
     themeConfig: {
         footer: {
             message: '<b>OTAI</b> - Open Ticket AI',
-            copyright: "by <a href='https://www.softoft.de' target='_blank'>Softoft</a>"
+            copyright: "by <a href='https://www.softoft.de' target='_blank'>Softoft, Tobias Bück Einzelunternehmen</a>"
         }
     }
 })

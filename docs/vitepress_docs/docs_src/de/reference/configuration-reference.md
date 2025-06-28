@@ -1,4 +1,3 @@
-```markdown
 ---
 title: Konfiguration von Open Ticket AI
 description: Wie man Open Ticket AI mit `config.yml` konfiguriert.
@@ -6,11 +5,11 @@ description: Wie man Open Ticket AI mit `config.yml` konfiguriert.
 
 # Konfiguration
 
-Open Ticket AI wird über eine `config.yml`-Datei im Projektstammverzeichnis konfiguriert.
+Open Ticket AI wird über eine `config.yml`-Datei konfiguriert, die im Projektstammverzeichnis liegt.
 
-## `config.yml` Beispiel
+## Beispiel für `config.yml`
 
-Nachfolgend ein Beispielaufbau der `config.yml`-Datei:
+Nachfolgend ist eine Beispielstruktur der `config.yml`-Datei dargestellt:
 
 ```yaml
 open_ticket_ai:
@@ -108,24 +107,24 @@ open_ticket_ai:
 
 ### Wichtige Konfigurationsabschnitte
 
-*   **`system`**: Definiert die Verbindung zum Ticketsystem.
-    * `provider_key` – Welche Adapter-Implementierung verwendet wird.
-    * `params` – Verbindungsdetails wie Serveradresse und Anmeldedaten.
-*   **`fetchers`**: Beschreiben, wie Tickets vom System abgerufen werden.
-*   **`data_preparers`**: Legen fest, wie Tickettexte vor der Verarbeitung kombiniert oder aufbereitet werden.
+*   **`system`**: Definiert die Verbindung zu Ihrem Ticket-System.
+    * `provider_key` – Welche Adapter-Implementierung verwendet werden soll.
+    * `params` – Verbindungsdetails wie Serveradresse und Anmeldeinformationen.
+*   **`fetchers`**: Beschreiben, wie Tickets aus dem System abgerufen werden.
+*   **`data_preparers`**: Legen fest, wie Ticketdaten für die Modellverarbeitung vorbereitet werden.
 *   **`ai_inference_services`**: Konfigurieren die KI-Modelle.
     * `hf_model` – Hugging Face Modellkennung.
-    * `hf_token_env_var` – Name der Umgebungsvariable für den Hugging Face Token.
+    * `hf_token_env_var` – Umgebungsvariable für Hugging Face Token.
 *   **`modifiers`**: Aktualisieren Tickets mit Vorhersageergebnissen.
     * Typische Parameter: `confidence_threshold` und `low_confidence_value`.
-*   **`attribute_predictors`**: Verknüpfen alle Komponenten. Jeder Predictor referenziert Fetcher, Preparer, KI-Service und Modifier und kann einen Zeitplan definieren.
+*   **`attribute_predictors`**: Verknüpfen alle Komponenten. Referenzieren Fetcher, Preparer, KI-Service und Modifier, inklusive Zeitplan.
 
 ## Standard Hugging Face Modelle
 
-Standardmäßig verwendet Open Ticket AI vortrainierte Modelle. Für den Basiseinsatz ist kein Fine-Tuning erforderlich.
+Open Ticket AI verwendet standardmäßig vortrainierte Modelle. Für Basisfunktionalität ist kein Fine-Tuning erforderlich.
 
 ::: note
-In Entwicklung: Aktuelle Modelle siehe Huggingface.
+In Entwicklung. Siehe Huggingface für aktuelle Modelle.
 :::
 
 *   `open-ticket-ai-queue-german-bert`
@@ -136,4 +135,3 @@ In Entwicklung: Aktuelle Modelle siehe Huggingface.
 So verwenden Sie eigene Modelle:
 1.  Setzen Sie `hf_model: "<Ihr-Benutzername>/<Ihr-Modellname>"` in der jeweiligen Klassifikatorkonfiguration.
 2.  Stellen Sie sicher, dass Ihr `hf_token` bei privaten Modellen Zugriff gewährt.
-```

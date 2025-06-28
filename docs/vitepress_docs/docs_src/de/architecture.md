@@ -1,54 +1,51 @@
-```de
 ---
-title: Übersicht der Open Ticket AI-Architektur
-description: Überblick über die Komponenten und den Datenfluss in Open Ticket AI.
+title: Übersicht über die Architektur von Open Ticket AI
+description: Überblick auf hoher Ebene über die Komponenten und den Datenfluss in Open Ticket AI.
 ---
 
 # Architekturübersicht
 
-Open Ticket AI basiert auf einer modularen Pipeline, die jedes Ticket durch eine Reihe klar definierter Stufen verarbeitet. Das System nutzt Dependency Injection und Konfigurationsdateien, um diese Stufen zusammenzusetzen, was das Erweitern oder Austauschen einzelner Komponenten erleichtert.
+Open Ticket AI basiert auf einer modularen Pipeline, die jedes Ticket in einer Reihe von klar definierten Stufen verarbeitet. Das System setzt auf Dependency Injection und Konfigurationsdateien, um diese Stufen zusammenzusetzen, was es einfach macht, einzelne Teile zu erweitern oder auszutauschen.
 
 ## Verarbeitungspipeline
 
-Die Ticketverarbeitungspipeline sieht folgendermaßen aus:
+Der Ticket-Verarbeitungsprozess folgt diesem Ablauf:
 
 ```
 [ Incoming Ticket ]
        ↓
-[ Preprocessor ] — reinigt & vereinigt Betreff+Textkörper
+[ Preprocessor ] — cleans & merges subject+body
        ↓
 [ Transformer Tokenizer ]
        ↓
-[ Queue Classifier ] → Warteschlangen-ID + Konfidenz
+[ Queue Classifier ] → Queue ID + confidence
        ↓
-[ Priority Classifier ] → Prioritätswert + Konfidenz
+[ Priority Classifier ] → Priority score + confidence
        ↓
-[ Postprocessor ] — wendet Schwellenwerte an, leitet weiter oder markiert
+[ Postprocessor ] — applies thresholds, routes or flags
        ↓
-[ Ticket System Adapter ] — aktualisiert Ticket via REST API
+[ Ticket System Adapter ] — updates ticket via REST API
 ```
 
-Jeder Schritt verarbeitet und erzeugt **Value Objects** wie `subject`, `body`, `queue_id` und `priority`. Dieser Ansatz hält die Pipeline modular und ermöglicht das Hinzufügen neuer Schritte oder Value Objects mit minimalen Änderungen am restlichen System.
+Jeder Schritt verbraucht und produziert **Value Objects** wie `subject`, `body`, `queue_id` und `priority`. Dieser Ansatz hält die Pipeline modular und ermöglicht es, neue Schritte oder Value Objects mit minimalen Änderungen am restlichen System hinzuzufügen.
 
 ## Hauptkomponenten
 
-- **App & Orchestrator** – Validiert Konfigurationen, plant Jobs und verwaltet den Gesamtprozess.
-- **Fetchers** – Ruft neue Tickets aus externen Systemen ab.
+- **App & Orchestrator** – Validiert die Konfiguration, plant Jobs ein und verwaltet den Gesamtprozess.
+- **Fetchers** – Ruft neue Tickets von externen Systemen ab.
 - **Preparers** – Transformiert Rohdaten von Tickets in eine für KI-Modelle geeignete Form.
 - **AI Inference Services** – Lädt Hugging Face-Modelle und erzeugt Vorhersagen für Warteschlangen oder Prioritäten.
-- **Modifiers** – Wendet Vorhersagen über Adapter auf das Ticketsystem an.
+- **Modifiers** – Wendet die Vorhersagen über Adapter auf das Ticketsystem an.
 - **Ticket System Adapters** – Bietet REST-Integrationen mit Systemen wie OTOBO.
 
-Alle Komponenten sind in einem zentralen Dependency Injection-Container registriert und über `config.yml` konfiguriert.
+Alle Komponenten sind in einem zentralen Dependency-Injection-Container registriert und werden über `config.yml` konfiguriert.
 
 ## Diagramme
 
-### Anwendungsklassendiagramm
-![Application Class Diagram](/images/application_class_diagram.png)
+### Anwendungs-Klassendiagramm
+![Anwendungs-Klassendiagramm](/images/application_class_diagram.png)
 
 ### Übersichtsdiagramm
-![Overview Diagram](/images/overview.png)
+![Übersichtsdiagramm](/images/overview.png)
 
-Diese Diagramme veranschaulichen, wie die Pipeline orchestriert wird und wie die Komponenten miteinander interagieren.
-
----```
+Diese Diagramme veranschaulichen, wie die Pipeline orchestriert wird und wie die einzelnen Komponenten miteinander interagieren.

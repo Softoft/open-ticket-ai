@@ -110,7 +110,7 @@ client = AsyncOpenAI(
 generator = DocGenerationFacade(client)
 root_project_path = find_python_code_root_path().parent
 
-docs_temp_api = root_project_path / "original_source" / "v0_1" / "api"
+docs_temp_api = root_project_path / "docs" / "original_source" / "api"
 
 EXCLUDE_DIRS = {
     ".venv",

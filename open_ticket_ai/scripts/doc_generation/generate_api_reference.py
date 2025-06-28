@@ -142,7 +142,7 @@ class MarkdownVisitor(ast.NodeVisitor):
         """Processes a class definition."""
         self.current_class_name = node.name
         self.markdown_parts.append(
-            f"### <span style='color: #8E44AD;'>class</span> `{node.name}`\n",
+            f"### <span style='text-info'>class</span> `{node.name}`\n",
         )
 
         class_doc_md = self._process_docstring(ast.get_docstring(node))
@@ -179,16 +179,12 @@ class MarkdownVisitor(ast.NodeVisitor):
             return  # Skip private methods/functions
 
         signature = self._format_signature(node)
-        prefix: str = ("<span style='color: #2980B9;'>async def</span>" if is_async
-                       else "<span style='color: #2980B9;'>def</span>")
+        prefix: str = ('<span class="text-warning">async def</span>' if is_async
+                       else "<span class='text-warning'>def</span>")
 
         # Method vs Function styling
         if self.current_class_name:
-            badge = """
-            <span
-            style='font-size: 0.7em; background-color: #34495E; color: white;
-             padding: 2px 6px; border-radius: 4px; vertical-align: middle;'>
-            method</span>"""
+            badge = '<Badge type="info" text="method"/>'
             summary = f"#### {badge} {prefix} `{func_name}{signature}`"
         else:
             summary = f"### {prefix} `{func_name}{signature}`"
@@ -197,7 +193,7 @@ class MarkdownVisitor(ast.NodeVisitor):
 
         if self.current_class_name:  # Use collapsible sections for methods
             self.markdown_parts.append(
-                f"\n<details>\n<summary>{summary}</summary>\n\n{doc_md}\n</details>\n",
+                f"\n::: details {summary}\n{doc_md}\n:::\n",
             )
         else:  # Top-level functions are not collapsed
             self.markdown_parts.append(f"\n{summary}\n\n{doc_md}\n")

@@ -1,3 +1,14 @@
+"""This module provides text cleaning and email signature removal utilities for German text.
+
+It includes functions to:
+- Clean German text by removing stop words and converting to lowercase
+- Remove signature blocks from email bodies using pattern matching and NLP techniques
+
+Dependencies:
+    spacy: For German NLP processing
+    nltk: For stopword removal and tokenization
+"""
+
 import re
 
 import spacy

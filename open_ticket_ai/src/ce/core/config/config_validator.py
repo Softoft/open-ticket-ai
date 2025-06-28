@@ -24,6 +24,7 @@ from injector import inject
 from open_ticket_ai.src.ce.core.config.config_models import OpenTicketAIConfig
 from open_ticket_ai.src.ce.core.dependency_injection.registry import Registry
 
+
 class OpenTicketAIConfigValidator:
     """Validate configuration values against the registry.
 

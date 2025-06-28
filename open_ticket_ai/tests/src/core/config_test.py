@@ -27,10 +27,13 @@ from open_ticket_ai.src.ce.core.config import config_models
 
 @pytest.fixture
 def minimal_config_dict():
-    """
-    Build the smallest valid dict for ``OpenTicketAIConfig``.
+    """Build the smallest valid dict for ``OpenTicketAIConfig``.
+
     The config now follows the new pipes and filters structure with
     ``pipelines`` instead of ``attribute_predictors``.
+
+    Returns:
+        dict: Minimal valid configuration dictionary for testing.
     """
     return {
         "system": {

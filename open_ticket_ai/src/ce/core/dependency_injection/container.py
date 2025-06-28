@@ -22,6 +22,12 @@ from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter impor
     TicketSystemAdapter,
 )
 
+"""Path to the configuration file.
+
+Determined by:
+1. `OPEN_TICKET_AI_CONFIG` environment variable if set
+2. Defaults to `config.yml` in the project's root directory
+"""
 CONFIG_PATH = os.getenv('OPEN_TICKET_AI_CONFIG', find_python_code_root_path() / 'config.yml')
 
 
