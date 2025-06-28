@@ -1,45 +1,59 @@
 <script lang="ts" setup>
-const supportPlans = [
+import {computed} from 'vue'
+import {useI18n} from 'vue-i18n'
+import ProductCards from './ProductCards.vue' // Assuming ProductCards component is in the same directory
+
+const {t} = useI18n()
+
+// supportPlans is now a computed property for reactivity
+const supportPlans = computed(() => [
     {
-        name: 'Basic Care',
+        name: t('supportPlans.basic.name'),
         price: 100,
-        description: 'Ensures your system remains stable, secure, and up-to-date.',
+        pricePeriod: t('supportPlans.pricePeriod'),
+        description: t('supportPlans.basic.description'),
         features: [
-            {text: 'Proactive System Updates & Patching', icon: 'fa-sync-alt'},
-            {text: 'Uptime & Core Log Monitoring', icon: 'fa-chart-line'},
-            {text: 'Monthly AI Performance Health Check', icon: 'fa-calendar-check'},
-            {text: 'Support Response Time: Within 1 Business Day', icon: 'fa-clock'},
-        ]
+            {text: t('supportPlans.features.systemUpdates'), icon: 'fa-sync-alt'},
+            {text: t('supportPlans.features.uptimeMonitoring'), icon: 'fa-chart-line'},
+            {text: t('supportPlans.features.monthlyHealthCheck'), icon: 'fa-calendar-check'},
+            {text: t('supportPlans.features.responseTime'), icon: 'fa-clock'},
+        ],
     },
     {
-        name: 'Proactive Support',
+        name: t('supportPlans.proactive.name'),
         price: 300,
-        description: 'Advanced monitoring and reporting for optimal performance.',
+        pricePeriod: t('supportPlans.pricePeriod'),
+        description: t('supportPlans.proactive.description'),
         features: [
-            {text: 'All Basic Care Services', icon: 'fa-star'},
-            {text: 'Weekly In-Depth Performance Monitoring', icon: 'fa-tachometer-alt'},
-            {text: 'Comprehensive Monthly Performance Reports', icon: 'fa-file-alt'},
-            {text: 'Priority Support Response: Within 1 Business Day', icon: 'fa-clock'},
-        ]
+            {text: t('supportPlans.features.allBasic'), icon: 'fa-star'},
+            {text: t('supportPlans.features.weeklyMonitoring'), icon: 'fa-tachometer-alt'},
+            {text: t('supportPlans.features.monthlyReports'), icon: 'fa-file-alt'},
+            {text: t('supportPlans.features.priorityResponse'), icon: 'fa-clock'},
+        ],
     },
     {
-        name: 'Enterprise Assurance',
+        name: t('supportPlans.enterprise.name'),
         price: 1000,
-        description: 'Complete operational oversight with strategic AI optimization.',
+        pricePeriod: t('supportPlans.pricePeriod'),
+        description: t('supportPlans.enterprise.description'),
         features: [
-            {text: 'All Proactive Support Services', icon: 'fa-star'},
-            {text: 'Real-Time Monitoring & Anomaly Alerts', icon: 'fa-bell'},
-            {text: 'Strategic AI Review & Optimization', icon: 'fa-chart-bar'},
-            {text: 'Guaranteed Response Time: Within 1 Business Day', icon: 'fa-clock'},
-        ]
-    }
-];
+            {text: t('supportPlans.features.allProactive'), icon: 'fa-star'},
+            {text: t('supportPlans.features.realtimeAlerts'), icon: 'fa-bell'},
+            {text: t('supportPlans.features.strategicReview'), icon: 'fa-chart-bar'},
+            {text: t('supportPlans.features.guaranteedResponse'), icon: 'fa-clock'},
+        ],
+    },
+]);
 
 </script>
 
 <template>
-    <ProductCards :products="supportPlans" buttonText="Choose Plan"
-                  ctaLink="mailto:sales@softoft.de" title="Services"/>
+    <ProductCards
+        :buttonText="t('supportPlans.buttonText')"
+        :products="supportPlans"
+        :title="t('supportPlans.title')"
+        ctaLink="mailto:sales@softoft.de"
+    />
 </template>
 
 <style scoped>

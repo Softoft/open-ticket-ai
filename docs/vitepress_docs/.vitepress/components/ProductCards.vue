@@ -1,12 +1,8 @@
 <script lang="ts" setup>
-import {ref} from 'vue' // Import ref
+import {ref} from 'vue'
 
-// 'selectedPlan' is no longer a model. It's just a local state if needed.
-// We can actually remove it if the component itself doesn't use the selected state.
-// For this example, we'll assume it might be used for internal styling or logic later.
 const selectedPlan = ref<string | null>(null)
 
-// Props are defined as before
 const {
     products,
     title,
@@ -19,12 +15,10 @@ const {
     buttonHref?: string
 }>()
 
-// The emit declaration remains the same
 const emits = defineEmits<{
     (e: 'cta-click', productName: string): void
 }>()
 
-// --- Data Interfaces ---
 interface Feature {
     text: string
     icon: string
@@ -39,11 +33,8 @@ interface Product {
     featured?: boolean
 }
 
-// --- Methods ---
 const handleCtaClick = (productName: string) => {
-    // Set the local ref's value
     selectedPlan.value = productName
-    // Emit the event to the parent
     emits('cta-click', productName)
 }
 </script>
@@ -59,15 +50,15 @@ const handleCtaClick = (productName: string) => {
             >
                 <div
                     :class="{ 'border-primary border-2': product.featured }"
-                    class="card h-100 shadow-sm"
+                    class="card h-100 shadow-sm py-3"
                 >
-                    <div class="card-body p-4 d-flex flex-column">
+                    <div class="card-body px-4 py-0 d-flex flex-column">
                         <h3 class="card-title fw-bold">{{ product.name }}</h3>
                         <p class="text-body-secondary">{{ product.description }}</p>
 
                         <div class="my-3">
                             <span class="display-5 fw-bolder">${{ product.price }}</span>
-                            <span v-if="product.pricePeriod" class="text-body-secondary">&nbsp;/ {{
+                            <span v-if="product.pricePeriod" class="text-body-secondary"> / {{
                                     product.pricePeriod
                                 }}</span>
                         </div>

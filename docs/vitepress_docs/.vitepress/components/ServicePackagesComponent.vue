@@ -1,56 +1,67 @@
 <script lang="ts" setup>
+import {computed} from 'vue'
+import {useI18n} from 'vue-i18n'
+import ProductCards from './ProductCards.vue' // Assuming ProductCards component is in the same directory
 
-const servicePackages = [
+const {t} = useI18n()
+
+// servicePackages is now a computed property to be reactive to language changes
+const servicePackages = computed(() => [
     {
-        name: 'Essential Launch',
+        name: t('servicePackages.essential.name'),
         price: 1000,
-        description: 'Perfect for getting started with core AI capabilities.',
+        description: t('servicePackages.essential.description'),
         features: [
-            {text: 'Core Installation & System Setup', icon: 'fa-rocket'},
-            {text: 'Deployment of Standard Prediction Model', icon: 'fa-brain'},
-            {text: 'Ticket Prioritization Engine', icon: 'fa-sort-amount-up'},
-            {text: 'Automated Queue Classification', icon: 'fa-sitemap'},
+            {text: t('servicePackages.features.coreInstall'), icon: 'fa-rocket'},
+            {text: t('servicePackages.features.standardModel'), icon: 'fa-brain'},
+            {text: t('servicePackages.features.prioEngine'), icon: 'fa-sort-amount-up'},
+            {text: t('servicePackages.features.queueClassification'), icon: 'fa-sitemap'},
         ]
     },
     {
-        name: 'Professional Acceleration',
+        name: t('servicePackages.professional.name'),
         price: 4000,
-        description: 'Tailor the AI to your specific business data and needs.',
+        description: t('servicePackages.professional.description'),
         features: [
-            {text: 'Core Installation & System Setup', icon: 'fa-rocket'},
-            {text: 'Training of Queue Model', icon: 'fa-brain'},
-            {text: 'Training of Prio Model', icon: 'fa-brain'},
-            {text: 'Ticket Prioritization Engine', icon: 'fa-sort-amount-up'},
-            {text: 'Automated Queue Classification', icon: 'fa-sitemap'},
+            {text: t('servicePackages.features.coreInstall'), icon: 'fa-rocket'},
+            {text: t('servicePackages.features.trainingQueue'), icon: 'fa-brain'},
+            {text: t('servicePackages.features.trainingPrio'), icon: 'fa-brain'},
+            {text: t('servicePackages.features.prioEngine'), icon: 'fa-sort-amount-up'},
+            {text: t('servicePackages.features.queueClassification'), icon: 'fa-sitemap'},
         ]
     },
     {
-        name: 'Enterprise Integration',
+        name: t('servicePackages.enterprise.name'),
         price: 12000,
-        description: 'Full integration and custom development for complex workflows.',
+        description: t('servicePackages.enterprise.description'),
         features: [
-            {text: 'Core Installation & System Setup', icon: 'fa-rocket'},
-            {text: 'Training of Queue Model', icon: 'fa-brain'},
-            {text: 'Training of Prio Model', icon: 'fa-brain'},
-            {text: 'Ticket Prioritization Engine', icon: 'fa-sort-amount-up'},
-            {text: 'Automated Queue Classification', icon: 'fa-sitemap'},
-            {text: 'Custom Third-Party Ticket System Integration', icon: 'fa-project-diagram'},
-            {text: 'Includes up to 3 Custom Attribute Predictions', icon: 'fa-magic'},
-            {text: 'Each Additional Attribute Prediction: €3000', icon: 'fa-plus-circle'},
-            {text: 'Bespoke Feature & Workflow Development', icon: 'fa-code-branch'},
+            {text: t('servicePackages.features.coreInstall'), icon: 'fa-rocket'},
+            {text: t('servicePackages.features.trainingQueue'), icon: 'fa-brain'},
+            {text: t('servicePackages.features.trainingPrio'), icon: 'fa-brain'},
+            {text: t('servicePackages.features.prioEngine'), icon: 'fa-sort-amount-up'},
+            {text: t('servicePackages.features.queueClassification'), icon: 'fa-sitemap'},
+            {text: t('servicePackages.features.thirdPartyIntegration'), icon: 'fa-project-diagram'},
+            {text: t('servicePackages.features.customAttributePrediction'), icon: 'fa-magic'},
+            {
+                text: t('servicePackages.features.additionalAttributePrediction'),
+                icon: 'fa-plus-circle'
+            },
+            {text: t('servicePackages.features.bespokeDevelopment'), icon: 'fa-code-branch'},
         ]
     }
-];
+]);
 
 </script>
 
 <template>
-    <ProductCards :products="servicePackages" buttonText="Choose Plan"
-                  ctaLink="mailto:sales@softoft.de"
-                  title="Support"/>
-
+    <ProductCards
+        :buttonText="t('servicePackages.buttonText')"
+        :products="servicePackages"
+        :title="t('servicePackages.title')"
+        ctaLink="mailto:sales@softoft.de"
+    />
 </template>
 
 <style scoped>
-
+/* Your styles here */
 </style>
