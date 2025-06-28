@@ -68,15 +68,8 @@ features:
       alt: "OTOBO ATC AI Icon"
 ---
 
-
-<script>
-
-const myProducts = [
-  { name: 'Basic',      price: 1000, features: ['Setup', '1 Attribute'] },
-  { name: 'Pro',        price: 9000, features: ['Fine-Tuning', '1 Attribute'] },
-  { name: 'Enterprise', price: 12000, features: ['Integrations', '3 Attributes'] },
-]
-</script>
-
 <OTAIPredictionDemo/>
-<ProductCards :products="myProducts" />
+
+<ServicePackagesComponent/>
+
+<SupportPlansComponent/>

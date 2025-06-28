@@ -68,96 +68,14 @@ features:
             alt: "OTOBO ATC AI Icon"
 ---
 
-
-<script setup>import {useRouter} from 'vitepress';
-
-const myProducts = [
-  {
-    name: 'Basic',
-    price: 1000,
-    features: [
-      { text: 'Installation & Basic Setup', icon: 'fa-play-circle' },
-      { text: 'Prediction with Standard Model', icon: 'fa-brain' },
-      { text: 'Prioritization', icon: 'fa-tasks' },
-      { text: 'Queue Classification', icon: 'fa-stream' },
-    ]
-  },
-  {
-    name: 'Pro',
-    price: 9000,
-    features: [
-      { text: 'Installation & Basic Setup', icon: 'fa-play-circle' },
-      { text: 'Fine-Tuning on Customer Data', icon: 'fa-cogs' },
-      { text: 'Prioritization', icon: 'fa-tasks' },
-      { text: 'Queue Classification', icon: 'fa-stream' },
-    ]
-  },
-  {
-    name: 'Enterprise',
-    price: 12000,
-    features: [
-      { text: 'All Pro Features', icon: 'fa-check-circle' },
-      { text: 'Installation & Basic Setup', icon: 'fa-play-circle' },
-      { text: 'Fine-Tuning on Customer Data', icon: 'fa-cogs' },
-      { text: 'Prioritization', icon: 'fa-tasks' },
-      { text: 'Queue Classification', icon: 'fa-stream' },
-      { text: 'New Attribute Prediction', icon: 'fa-star' },
-      { text: 'New Ticket System Integration', icon: 'fa-project-diagram' },
-    ]
-  }
-];
-
-const mySupportProducts = [
-  {
-    name: 'Basic',
-    price: 150,
-    features: [
-      { text: 'Apply updates', icon: 'fa-sync-alt' },
-      { text: 'Basic monitoring (uptime, logs)', icon: 'fa-chart-line' },
-      { text: 'Monthly AI performance review', icon: 'fa-calendar-alt' },
-      { text: 'Response time ≤ 1 day', icon: 'fa-clock' },
-    ]
-  },
-  {
-    name: 'Pro',
-    price: 400,
-    features: [
-      { text: 'Basic services', icon: 'fa-tools' },
-      { text: 'Performance monitoring (weekly)', icon: 'fa-chart-line' },
-      { text: 'Monthly reporting', icon: 'fa-file-alt' },
-      { text: 'Response time ≤ 1 day', icon: 'fa-clock' },
-    ]
-  },
-  {
-    name: 'Enterprise',
-    price: 1000,
-    features: [
-      { text: 'Pro services', icon: 'fa-briefcase' },
-      { text: 'Real-time monitoring & alerts', icon: 'fa-bell' },
-      { text: 'Quarterly AI review & optimization', icon: 'fa-chart-bar' },
-      { text: 'Response time ≤ 1 day', icon: 'fa-clock' },
-    ]
-  }
-];
-const router = useRouter();
-
-function navigateToGetStarted() {
-  router.push('/get-started');
-}
-
-</script>
-
-
-
 <OTAIPredictionDemo/>
 
-## Products
+<ServicePackagesComponent/>
 
-<ProductCards :products="myProducts" title="Services" buttonText="Choose Plan" ctaLink="mailto:sales@softoft.de" />
+<SupportPlansComponent/>
 
-## Support
 
-<ProductCards :products="mySupportProducts" title="Support" buttonText="Choose Plan" ctaLink="mailto:sales@softoft.de" />
+
 
 ## Contact
 

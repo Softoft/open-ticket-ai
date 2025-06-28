@@ -1,102 +1,113 @@
 <template>
+    <h2 class="mb-3 w-100 text-center text-body-emphasis">{{ title }}</h2>
     <div class="container my-4">
-        <h2 class="mb-4 text-white">Open Ticket AI Demo</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-lg-8">
 
-        <!-- Examples dropdown -->
-        <div class="mb-3">
-            <label class="form-label fw-bold text-white">Beispiel wählen</label>
-            <select
-                v-model="selected"
-                class="form-select mb-2"
-                @change="applyExample"
-            >
-                <option :key=-1 disabled selected value="-1">Wähle ein Beispiel</option>
-                <option v-for="(ex, i) in examples" :key="i" :value="i">
-                    {{ ex.name }}
-                </option>
-            </select>
+                <div class="mb-3">
+                    <label class="form-label fw-bold" for="demo-example-select">
+                        {{ t('otai_prediction_demo_component.pickExampleText') }}
+                    </label>
+                    <select
+                        id="demo-example-select"
+                        v-model="selected"
+                        class="form-select"
+                        @change="applyExample"
+                    >
+                        <option :value="-1" disabled>{{ t('otai_prediction_demo_component.exampleSelectDefault') }}</option>
+                        <option v-for="(ex, i) in examples" :key="i" :value="i">
+                            {{ ex.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold" for="demo-subject">{{ t('otai_prediction_demo_component.subjectLabel') }}</label>
+                    <input
+                        id="demo-subject"
+                        v-model="subject"
+                        :placeholder="t('otai_prediction_demo_component.subjectPlaceholder')"
+                        class="form-control"
+                        type="text"
+                    />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold" for="demo-body">{{ t('otai_prediction_demo_component.messageLabel') }}</label>
+                    <textarea
+                        id="demo-body"
+                        v-model="body"
+                        :placeholder="t('otai_prediction_demo_component.messagePlaceholder')"
+                        class="form-control"
+                        rows="4"
+                    ></textarea>
+                </div>
+
+                <button
+                    :disabled="loading"
+                    class="btn btn-primary mb-4"
+                    type="button"
+                    @click="predict"
+                >
+                    <span v-if="loading" aria-hidden="true" class="spinner-border spinner-border-sm me-1"></span>
+                    <span v-if="loading" role="status">{{ t('otai_prediction_demo_component.loadingText') }}</span>
+                    <span v-else>{{ t('otai_prediction_demo_component.submitButtonText') }}</span>
+                </button>
+
+                <div v-if="errorMessage" class="alert alert-danger" role="alert">
+                    {{ errorMessage }}
+                </div>
+
+                <div v-if="queueResult && prioResult" class="mt-4">
+                    <h3 class="fw-bold text-body-emphasis mb-3">{{ t('otai_prediction_demo_component.resultTitle') }}</h3>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th scope="col">{{ t('otai_prediction_demo_component.typeColumnHeader') }}</th>
+                                <th scope="col">{{ t('otai_prediction_demo_component.predictionColumnHeader') }}</th>
+                                <th class="text-center" scope="col">{{ t('otai_prediction_demo_component.confidenceColumnHeader') }}
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">{{ t('otai_prediction_demo_component.queueRowHeader') }}</th>
+                                <td>{{ queueResult[0].label }}</td>
+                                <td class="text-center">
+                                    <span :class="['badge', 'fs-6', confidenceBadge(queueResult[0].score)]">
+                                        {{ formatScore(queueResult[0].score) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{{ t('otai_prediction_demo_component.priorityRowHeader') }}</th>
+                                <td>{{ prioResult[0].label }}</td>
+                                <td class="text-center">
+                                    <span :class="['badge', 'fs-6', confidenceBadge(prioResult[0].score)]">
+                                        {{ formatScore(prioResult[0].score) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
         </div>
-
-        <!-- Subject input -->
-        <div class="mb-3">
-            <label class="form-label fw-bold text-white">Betreff</label>
-            <input
-                v-model="subject"
-                class="form-control"
-                placeholder="Betreff eingeben"
-                type="text"
-            />
-        </div>
-
-        <!-- Body textarea -->
-        <div class="mb-3">
-            <label class="form-label fw-bold text-white">Nachricht</label>
-            <textarea
-                v-model="body"
-                class="form-control"
-                placeholder="Nachricht eingeben"
-                rows="4"
-            ></textarea>
-        </div>
-
-        <VPButton
-            :disabled="loading"
-            :text="loading ? 'Lädt…' : 'Vorhersage starten'"
-            class="mb-4"
-            theme="brand"
-            @click="predict"
-        >
-        </VPButton>
-        <div v-if="errorMessage" class="text-danger mb-3">
-            {{ errorMessage }}
-        </div>
-
-        <!-- Clean results -->
-        <div v-if="queueResult && prioResult" class="container mt-4">
-            <h3 class="fw-bold text-white mb-4">Ergebnis</h3>
-            <table class="atc-results-table text-white">
-                <thead>
-                <tr>
-                    <th scope="col">Typ</th>
-                    <th scope="col">Prediction</th>
-                    <th scope="col">Confidence</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <th scope="row">Queue</th>
-                    <td>{{ queueResult[0].label }}</td>
-                    <td>
-                        <VPBadge
-                            :text="formatScore(queueResult[0].score)"
-                            :type="confidenceBadge(queueResult[0].score)"
-                        />
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">Priorität</th>
-                    <td>{{ prioResult[0].label }}</td>
-                    <td>
-                        <VPBadge
-                            :text="formatScore(prioResult[0].score)"
-                            :type="confidenceBadge(prioResult[0].score)"
-                        />
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
     </div>
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue'
-import {VPBadge, VPButton} from 'vitepress/theme'
-import {examples} from "./demoExamples";
+import { ref } from 'vue'
+import { examples } from "./demoExamples";
+import { useI18n } from 'vue-i18n'
 
-// helper to POST to your HF endpoints
+const { t } = useI18n()
+
 async function query(endpoint: string, payload: any) {
+    // ... (rest of the function is unchanged)
     const res = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -122,6 +133,7 @@ const errorMessage = ref<string | null>(null)
 // API results
 const queueResult = ref<any>(null)
 const prioResult = ref<any>(null)
+
 // select logic
 const selected = ref(-1)
 
@@ -147,8 +159,8 @@ async function predict() {
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         try {
             const [q, p] = await Promise.all([
-                query(QUEUE_EP, {inputs: text, parameters: {}}),
-                query(PRIORITY_EP, {inputs: text, parameters: {}})
+                query(QUEUE_EP, { inputs: text, parameters: {} }),
+                query(PRIORITY_EP, { inputs: text, parameters: {} })
             ])
             queueResult.value = q
             prioResult.value = p
@@ -156,9 +168,9 @@ async function predict() {
         } catch (e) {
             console.error(`Attempt ${attempt} failed`, e)
             if (attempt === maxAttempts) {
-                errorMessage.value = 'Vorhersage fehlgeschlagen. Bitte später erneut versuchen.'
+                // Use the t() function for the error message
+                errorMessage.value = t('otai_prediction_demo_component.predictionError')
             } else {
-                // exponential backoff: 1s, then 2s
                 const delay = 1000 * Math.pow(2, attempt - 1)
                 await new Promise(res => setTimeout(res, delay))
             }
@@ -168,109 +180,20 @@ async function predict() {
     loading.value = false
 }
 
-// format score as percent with one decimal
 function confidenceBadge(score: number): string {
+    // ... (function is unchanged)
     const pct = score * 100;
-    if (pct > 90) return 'tip';
-    if (pct > 80) return 'info';
-    if (pct > 50) return 'warning';
-    return 'danger';
+    if (pct > 90) return 'bg-success';
+    if (pct > 80) return 'bg-info';
+    if (pct > 50) return 'bg-warning text-dark';
+    return 'bg-danger';
 }
 
 /**
  * Formats a 0–1 score as a percent string with one decimal
  */
 function formatScore(score: number): string {
+    // ... (function is unchanged)
     return (score * 100).toFixed(1) + '%';
 }
 </script>
-
-<style lang="scss" scoped>
-@import "./styles/custom-bootstrap";
-
-.atc-results-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin: 1rem 0;
-
-    thead {
-        background-color: var(--vp-c-default-3);
-    }
-
-    th, td {
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid var(--vp-c-divider);
-        vertical-align: middle;
-    }
-
-    th {
-        color: var(--vp-c-text-2);
-        font-weight: 600;
-        text-align: left;
-    }
-
-    tbody tr:hover {
-        background-color: var(--vp-c-bg-soft);
-    }
-
-    VPBadge {
-        display: inline-block;
-        min-width: 3.5rem;
-        text-align: center;
-    }
-}
-
-/* On medium+ screens, constrain the table to 80% width and center it */
-@media (min-width: 768px) {
-    .atc-results-table {
-        max-width: 80%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .atc-results-table th,
-    .atc-results-table td {
-        padding: 1rem 1.5rem;
-    }
-}
-
-/* On very large screens, go up to 90% width */
-@media (min-width: 1200px) {
-    .atc-results-table {
-        max-width: 90%;
-    }
-}
-
-.form-control {
-    background-color: var(--vp-input-bg-color) !important;
-    color: var(--vp-c-text-1) !important;
-    border: 1px solid var(--vp-input-border-color) !important;
-    transition: border-color 0.2s ease-in-out;
-}
-
-/* Change border color on focus */
-.form-control:focus {
-    outline: none !important;
-    border-color: var(--vp-c-brand-1) !important; /* your primary accent */
-    box-shadow: 0 0 0 0.2rem var(--vp-c-brand-soft) !important;
-}
-
-/* dropdown arrow a bit brighter */
-.form-select {
-    background-color: var(--vp-input-bg-color) !important;
-    color: var(--vp-c-text-1) !important;
-    border: 1px solid var(--vp-input-border-color) !important;
-    transition: border-color 0.2s ease-in-out;
-}
-
-.form-select:focus {
-    outline: none !important;
-    border-color: var(--vp-c-brand-1) !important;
-    box-shadow: 0 0 0 0.2rem var(--vp-c-brand-soft) !important;
-}
-
-.form-control,
-.form-select {
-    border-radius: 0.5rem !important;
-}
-</style>

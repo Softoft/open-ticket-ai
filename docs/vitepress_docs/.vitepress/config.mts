@@ -22,19 +22,11 @@ export default defineConfig({
                 crossorigin: 'anonymous'
             }
         ],
-        // https://unpkg.com/primevue/umd/primevue.min.js
-                [
-            'script',
-            {
-                src: 'https://unpkg.com/primevue/umd/primevue.min.js',
-            }
-        ],
     ],
     description: '',
     sitemap: {
         hostname: 'https://ai-ticket-classification.softoft.de'
     },
-    // Change docs dir structure to be /{lang}/{version} instead of /{version}/{lang}
     locales: {
         root: {
             label: 'English',
@@ -59,7 +51,7 @@ export default defineConfig({
     },
     themeConfig: {
         footer: {
-            message: '<b>ATC</b> - AI Ticket Classification',
+            message: '<b>OTAI</b> - Open Ticket AI',
             copyright: "by <a href='https://www.softoft.de' target='_blank'>Softoft</a>"
         }
     }
