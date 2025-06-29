@@ -1,6 +1,9 @@
 # FILE_PATH: open_ticket_ai\tests\src\run\test_ai_models.py
 
 import pytest
+import sys
+
+from unittest.mock import MagicMock, patch
 
 from open_ticket_ai.src.ce.core.config.config_models import AIInferenceServiceConfig
 from open_ticket_ai.src.ce.run.pipe_implementations.hf_local_ai_inference_service import (
@@ -49,7 +52,16 @@ def example_config():
     Returns:
         AIInferenceServiceConfig: Configuration instance for testing.
     """
-    return AIInferenceServiceConfig(id="dummy", provider_key="dummy_provider")
+    return AIInferenceServiceConfig(
+        id="dummy",
+        provider_key="HFAIInferenceService",
+        params={
+            "input_field": "subject_body_combined",
+            "hf_model": "dummy-model",
+            "hf_token_env_var": "HF_TOKEN",
+            "result_field": "queue_classification",
+        },
+    )
 
 
 def test_service_process_sets_result(example_config):
@@ -82,18 +94,33 @@ def test_hf_service_description():
     assert "Hugging Face" in HFAIInferenceService.get_description()
 
 
-def test_hf_service_process_returns_context(example_config):
-    """Tests the process method of HFAIInferenceService.
+def test_hf_service_process_returns_context(example_config, monkeypatch):
+    """Service should run inference and store result using configured fields."""
+    fake_pipeline = MagicMock(return_value=[{"label": "A", "score": 0.9}])
+    import types, importlib.machinery
+    stub = types.ModuleType("openai")
+    stub.__spec__ = importlib.machinery.ModuleSpec("openai", loader=None)
+    monkeypatch.setitem(sys.modules, "openai", stub)
+    with patch(
+        "open_ticket_ai.src.ce.core.mixins.registry_providable_instance.pretty_print_config"
+    ), patch(
+        "transformers.AutoTokenizer.from_pretrained",
+        return_value=MagicMock(),
+    ) as tok, patch(
+        "transformers.AutoModelForSequenceClassification.from_pretrained",
+        return_value=MagicMock(),
+    ) as model, patch(
+        "transformers.pipelines.pipeline",
+        return_value=fake_pipeline,
+    ) as pipe:
+        monkeypatch.setenv("HF_TOKEN", "t")
+        svc = HFAIInferenceService(example_config)
+        ctx = PipelineContext(
+            ticket_id="1", data={"subject_body_combined": "hi"}
+        )
+        out = svc.process(ctx)
 
-    This test verifies that:
-        1. The service correctly processes input context
-        2. Returns a context containing model results
-        3. Sets the model_result field appropriately
-
-    Args:
-        example_config: Pytest fixture providing AI service configuration
-    """
-    svc = HFAIInferenceService(example_config)
-    ctx = PipelineContext(ticket_id="1", data={"prepared_data": "hi"})
-    out = svc.process(ctx)
-    assert out.data["model_result"] == "hi"
+    tok.assert_called_once_with("dummy-model", token="t")
+    model.assert_called_once_with("dummy-model", token="t")
+    pipe.assert_called_once()
+    assert out.data["queue_classification"] == fake_pipeline.return_value
