@@ -9,7 +9,6 @@ first line with the relative path of the file to the project root.
 """
 from __future__ import annotations
 
-import argparse
 import re
 from pathlib import Path
 

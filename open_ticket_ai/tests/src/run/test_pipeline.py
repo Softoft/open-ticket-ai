@@ -11,11 +11,7 @@ The classes included are:
 - `DummyAI`: Simulates an AI model by returning formatted prompts as responses.
 - `DummyModifier`: Simulates result modification and tracks call arguments.
 """
-from types import SimpleNamespace
-from unittest.mock import MagicMock
 
-from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
-from open_ticket_ai.src.ce.run.pipeline.pipeline import Pipeline
 
 
 class DummyPreparer:

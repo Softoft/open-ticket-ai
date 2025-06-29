@@ -1,7 +1,8 @@
 ---
-description: "Guide to evaluating ticket classification models with precision, recall, F1, macro/micro averages, multi-label metrics, and practical strategies."
+description: Master AI ticket classification with this guide to evaluation. Learn
+  why accuracy is misleading for imbalanced data and discover the essential metrics
+  that truly matter, including precision, recall, F1-score, and multi-label strategies.
 ---
-
 # Evaluating AI Classifiers on Real Ticket Data: Metrics That Matter
 
 ## Introduction

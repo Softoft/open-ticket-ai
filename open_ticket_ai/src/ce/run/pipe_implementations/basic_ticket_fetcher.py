@@ -1,8 +1,10 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\basic_ticket_fetcher.py
 from open_ticket_ai.src.ce.core.config.config_models import RegistryInstanceConfig
-from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
-from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
+from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import (
+    TicketSystemAdapter,
+)
 
 
 class BasicTicketFetcher(Pipe):

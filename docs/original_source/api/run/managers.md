@@ -1,3 +1,8 @@
+---
+description: Official documentation for the Orchestrator class in open_ticket_ai.
+  Learn how this core component manages and executes ticket processing pipelines,
+  handles dependency injection, and configures scheduled pipeline runs.
+---
 # Documentation for `**/ce/run/managers/*.py`
 
 ## Module: `open_ticket_ai\src\ce\run\managers\orchestrator.py`

@@ -1,3 +1,8 @@
+---
+description: Explore the open_ticket_ai dependency injection system. Learn how the
+  Registry, Container, and create_registry function establish a flexible architecture
+  for managing core services like the OTOBOAdapter and HFAIInferenceService.
+---
 # Documentation for `**/ce/core/dependency_injection/**/*.py`
 
 ## Module: `open_ticket_ai\src\ce\core\dependency_injection\abstract_container.py`

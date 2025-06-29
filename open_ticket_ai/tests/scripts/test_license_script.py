@@ -10,15 +10,15 @@ It tests the functionality of:
 The tests use pytest fixtures to create temporary directories with test files
 and parametrized tests to cover multiple input cases.
 """
-import pytest
 import os
-import shutil
+
+import pytest
+
 from open_ticket_ai.scripts.license_script import (
     find_start_of_code,
-    update_license_in_files,
     new_license_notice,
     read_file,
-    write_file
+    update_license_in_files,
 )
 
 TEST_DIR = "test_license_files_temp"

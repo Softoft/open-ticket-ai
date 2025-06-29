@@ -2,8 +2,9 @@
 # --- registry + decorator ---------------------------------------------
 from typing import Type
 
-from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import \
-    RegistryProvidableInstance
+from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import (
+    RegistryProvidableInstance,
+)
 
 
 class Registry:

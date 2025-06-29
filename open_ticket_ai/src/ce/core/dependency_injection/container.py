@@ -2,18 +2,19 @@
 import os
 
 from injector import Binder, Injector, Module, provider, singleton
-from otobo import OTOBOClient, OTOBOClientConfig, AuthData, TicketOperation
 
 from open_ticket_ai.src.ce.core.config.config_models import (
     OpenTicketAIConfig,
-    load_config, PipelineConfig,
+    PipelineConfig,
+    load_config,
 )
 from open_ticket_ai.src.ce.core.config.config_validator import OpenTicketAIConfigValidator
 from open_ticket_ai.src.ce.core.dependency_injection.abstract_container import AbstractContainer
 from open_ticket_ai.src.ce.core.dependency_injection.create_registry import create_registry
 from open_ticket_ai.src.ce.core.dependency_injection.registry import Registry
-from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import \
-    RegistryProvidableInstance
+from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import (
+    RegistryProvidableInstance,
+)
 from open_ticket_ai.src.ce.core.util.path_util import find_python_code_root_path
 from open_ticket_ai.src.ce.run.managers.orchestrator import Orchestrator
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
@@ -22,6 +23,7 @@ from open_ticket_ai.src.ce.ticket_system_integration.otobo_adapter_config import
 from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import (
     TicketSystemAdapter,
 )
+from otobo import AuthData, OTOBOClient, OTOBOClientConfig, TicketOperation
 
 """Path to the configuration file.
 

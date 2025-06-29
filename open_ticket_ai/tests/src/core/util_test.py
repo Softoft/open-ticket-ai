@@ -19,17 +19,19 @@ The tests are organized into three main sections:
 
 These tests use `pytest` and rely on fixtures for temporary directories and environment patching.
 """
-import json
-import runpy
-from types import SimpleNamespace
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
+from pydantic import BaseModel
 from rich.syntax import Syntax
 
-from open_ticket_ai.src.ce.core.util import path_util, pretty_print_config, create_json_config_schema
-from pydantic import BaseModel
+from open_ticket_ai.src.ce.core.util import (
+    create_json_config_schema,
+    path_util,
+    pretty_print_config,
+)
 
 
 class DummyModel(BaseModel):

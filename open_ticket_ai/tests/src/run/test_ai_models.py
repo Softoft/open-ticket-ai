@@ -1,13 +1,13 @@
 # FILE_PATH: open_ticket_ai\tests\src\run\test_ai_models.py
-from unittest.mock import patch
 
 import pytest
 
 from open_ticket_ai.src.ce.core.config.config_models import AIInferenceServiceConfig
-from open_ticket_ai.src.ce.run.pipe_implementations.hf_local_ai_inference_service import \
-    HFAIInferenceService
-from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
+from open_ticket_ai.src.ce.run.pipe_implementations.hf_local_ai_inference_service import (
+    HFAIInferenceService,
+)
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
+from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 
 
 class DummyService(Pipe):

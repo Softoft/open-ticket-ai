@@ -21,9 +21,6 @@ from typing import List, Optional, Union
 
 from docstring_parser import Docstring, DocstringParam, DocstringRaises, DocstringReturns, parse
 
-from open_ticket_ai.src.ce.core.util.path_util import find_python_code_root_path
-
-
 # --- Helper Classes for Styling and Structure ---
 
 class DocstringStyler:

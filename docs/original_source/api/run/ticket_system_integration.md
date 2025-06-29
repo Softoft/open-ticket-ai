@@ -1,3 +1,9 @@
+---
+description: Official documentation for Python ticket system integration. Learn to
+  use the `TicketSystemAdapter` abstract base class, its asynchronous methods like
+  `update_ticket` and `find_tickets`, and the concrete OTOBO adapter to build robust,
+  scalable ticketing solutions.
+---
 # Documentation for `**/ce/ticket_system_integration/*.py`
 
 ## Module: `open_ticket_ai\src\ce\ticket_system_integration\otobo_adapter.py`

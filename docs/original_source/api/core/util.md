@@ -1,3 +1,9 @@
+---
+description: Explore the documentation for OpenTicketAI's core configuration utilities.
+  Learn how to generate a `config.schema.json` from Pydantic models for validation
+  and editor autocompletion, and how to pretty-print configurations as syntax-highlighted
+  YAML for enhanced readability.
+---
 # Documentation for `**/ce/core/util/**/*.py`
 
 ## Module: `open_ticket_ai\src\ce\core\util\create_json_config_schema.py`

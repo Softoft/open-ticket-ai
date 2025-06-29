@@ -23,7 +23,6 @@ from pydantic import ValidationError
 
 from open_ticket_ai.src.ce.core.config import config_models
 
-
 # --- Test Fixtures and Helper Functions ---
 
 @pytest.fixture

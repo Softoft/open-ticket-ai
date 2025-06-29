@@ -2,8 +2,8 @@
 from unittest.mock import patch
 
 from open_ticket_ai.src.ce.core.config.config_models import PreparerConfig
-from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
+from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 
 
 class DummyPreparer(Pipe):

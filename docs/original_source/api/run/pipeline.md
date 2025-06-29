@@ -1,3 +1,10 @@
+---
+description: Learn how to build and run modular data processing pipelines in Python
+  using this framework. This guide covers the `Pipeline` class for executing a sequence
+  of stages, the `Pipe` interface for creating custom processing components, and the
+  `PipelineContext` object for managing shared state to create powerful, sequential
+  data workflows.
+---
 # Documentation for `**/ce/run/pipeline/*.py`
 
 ## Module: `open_ticket_ai\src\ce\run\pipeline\context.py`

@@ -1,8 +1,9 @@
 # FILE_PATH: open_ticket_ai\src\ce\core\dependency_injection\abstract_container.py
 import abc
 
-from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import \
-    RegistryProvidableInstance
+from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import (
+    RegistryProvidableInstance,
+)
 
 
 class AbstractContainer(abc.ABC):

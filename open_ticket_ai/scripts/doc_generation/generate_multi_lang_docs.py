@@ -5,10 +5,9 @@ import asyncio
 from pathlib import Path
 from typing import List
 
-from openai import AsyncOpenAI
 import tenacity
+from openai import AsyncOpenAI
 from tenacity import stop_after_attempt, wait_exponential
-
 
 # TODO update, dir structure changed, other languages arent in direrct super dir but instead are in parent parent / version / lang
 

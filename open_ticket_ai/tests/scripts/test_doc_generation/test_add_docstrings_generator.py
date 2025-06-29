@@ -1,8 +1,7 @@
 # FILE_PATH: open_ticket_ai\tests\scripts\test_doc_generation\test_add_docstrings_generator.py
-import asyncio
-from types import SimpleNamespace, ModuleType
-from pathlib import Path
 import sys
+from pathlib import Path
+from types import ModuleType, SimpleNamespace
 
 # Provide a dummy openai module if it's not installed
 if "openai" not in sys.modules:
@@ -10,7 +9,6 @@ if "openai" not in sys.modules:
     dummy.AsyncOpenAI = object
     sys.modules["openai"] = dummy
 
-from open_ticket_ai.scripts.doc_generation.add_docstrings import DocstringGenerator
 
 
 class MockClient:

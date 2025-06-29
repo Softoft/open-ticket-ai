@@ -39,7 +39,9 @@ class DocumentationSummarizer:
                 },
                 {
                     "role": "user",
-                    "content": f"Summarize the following markdown:\n\n{text}",
+                    "content": f"Write a Meta SEO optimized description of this document,"
+                               f"only return the summary as a plain text and nothing else"
+                               f" \n{text}",
                 },
             ],
             temperature=0.2,

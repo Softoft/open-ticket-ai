@@ -1,8 +1,9 @@
 ---
+description: Boost support efficiency with ATC Community Edition, a free, on-premise
+  tool for automated ticket classification. Installs easily with Docker and integrates
+  seamlessly with OTOBO to improve accuracy and ensure data security.
 title: ATC Community Edition Overview
-description: A comprehensive overview of the features and use cases of the ATC Community Edition.
 ---
-
 # ATC Community Edition Overview
 
 ## Introduction

@@ -3,8 +3,8 @@ from unittest.mock import MagicMock
 
 from open_ticket_ai.src.ce.core.config.config_models import FetcherConfig
 from open_ticket_ai.src.ce.run.pipe_implementations.basic_ticket_fetcher import BasicTicketFetcher
-from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
+from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 
 
 class DummyFetcher(Pipe):

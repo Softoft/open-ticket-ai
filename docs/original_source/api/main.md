@@ -1,3 +1,9 @@
+---
+description: Discover the OpenTicketAI core engine (`ce`) documentation. Learn how
+  the `App` class in `app.py` handles job scheduling and orchestration, while `main.py`
+  provides the CLI entry point for running the system, managing configuration, and
+  setting logging levels.
+---
 # Documentation for `**/ce/*.py`
 
 ## Module: `open_ticket_ai\src\ce\app.py`

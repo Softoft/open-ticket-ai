@@ -3,9 +3,9 @@ from __future__ import annotations
 
 from typing import List
 
+from ...core.config.config_models import PipelineConfig
 from .context import PipelineContext
 from .pipe import Pipe
-from ...core.config.config_models import PipelineConfig
 
 
 class Pipeline(Pipe):

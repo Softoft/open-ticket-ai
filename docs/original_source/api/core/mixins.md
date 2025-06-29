@@ -1,3 +1,9 @@
+---
+description: Explore the core Python mixins for creating flexible registry systems.
+  This guide covers `RegistryInstanceConfig` for defining unique instance configurations
+  and `RegistryProvidableInstance`, the essential base class for objects managed by
+  a provider.
+---
 # Documentation for `**/ce/core/mixins/**/*.py`
 
 ## Module: `open_ticket_ai\src\ce\core\mixins\registry_instance_config.py`

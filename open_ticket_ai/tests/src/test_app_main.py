@@ -10,9 +10,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from open_ticket_ai.src.ce.app import App, console
-from open_ticket_ai.src.ce import main as main_module
 import open_ticket_ai.src.ce.app as app_module
+from open_ticket_ai.src.ce import main as main_module
+from open_ticket_ai.src.ce.app import App, console
 
 
 class TestAppRun:

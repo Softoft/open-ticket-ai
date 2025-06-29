@@ -1,10 +1,9 @@
 # FILE_PATH: open_ticket_ai\tests\otobo_adapter_test.py
-import asyncio
 from unittest.mock import AsyncMock
 
 import pytest
-import otobo
 
+import otobo
 from open_ticket_ai.src.ce.core.config.config_models import SystemConfig
 from open_ticket_ai.src.ce.ticket_system_integration.otobo_adapter import OTOBOAdapter
 from open_ticket_ai.src.ce.ticket_system_integration.otobo_adapter_config import OTOBOAdapterConfig

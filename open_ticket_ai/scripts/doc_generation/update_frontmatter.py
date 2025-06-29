@@ -32,7 +32,7 @@ def _parse_frontmatter(content: str) -> Tuple[dict, str]:
 
 def _dump_frontmatter(data: dict) -> str:
     """Serialize ``data`` as a YAML frontmatter block."""
-    dumped = yaml.safe_dump(data, sort_keys=False).strip()
+    dumped = yaml.safe_dump(data).strip()
     return f"---\n{dumped}\n---\n"
 
 

@@ -1,12 +1,12 @@
 # FILE_PATH: open_ticket_ai\src\ce\ticket_system_integration\ticket_system_adapter.py
 from abc import ABC, abstractmethod
 
-from faker.sphinx.documentor import PROVIDER_AUTODOC_TEMPLATE
 from injector import inject
 
-from open_ticket_ai.src.ce.core.config.config_models import RegistryInstanceConfig, SystemConfig
-from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import \
-    RegistryProvidableInstance
+from open_ticket_ai.src.ce.core.config.config_models import SystemConfig
+from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import (
+    RegistryProvidableInstance,
+)
 
 
 class TicketSystemAdapter(RegistryProvidableInstance, ABC):

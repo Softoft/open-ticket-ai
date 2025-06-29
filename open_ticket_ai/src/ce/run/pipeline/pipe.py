@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from .context import PipelineContext
 from ...core.mixins.registry_providable_instance import RegistryProvidableInstance
+from .context import PipelineContext
 
 
 class Pipe(RegistryProvidableInstance, ABC):
