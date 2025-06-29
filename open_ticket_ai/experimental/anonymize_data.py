@@ -16,11 +16,15 @@ Note:
 import re
 
 import phonenumbers
-import spacy
 from faker import Faker
 
-# spaCy-German-Modell und Faker-Generator mit deutscher Lokalisierung
-nlp = spacy.load("de_core_news_sm")
+try:
+    import spacy
+
+    nlp = spacy.load("de_core_news_sm")
+except Exception:  # pragma: no cover - optional dependency
+    nlp = None
+
 fake = Faker("de_DE")
 
 def anonymize_text(text):
@@ -50,6 +54,9 @@ def anonymize_text(text):
     Note:
         Uses Faker with German localization for generating replacement data.
     """
+    if nlp is None:
+        return text
+
     doc = nlp(text)
     new_text = text
     # Ersetzungen für erkannte Named Entities (von hinten nach vorn, um Indexprobleme zu vermeiden)

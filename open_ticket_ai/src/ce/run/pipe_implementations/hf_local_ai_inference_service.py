@@ -1,4 +1,9 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\hf_local_ai_inference_service.py
+from __future__ import annotations
+
+import os
+
+
 from open_ticket_ai.src.ce.core.config.config_models import ProvidableConfig
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
@@ -19,23 +24,36 @@ class HFLocalAIInferenceService(Pipe):
         Args:
             config (ProvidableConfig): Configuration instance for the service.
         """
+
         super().__init__(config)
         self.ai_inference_config = config
 
+        params = config.params
+        self.input_field: str = params.get("input_field", "prepared_data")
+        self.result_field: str = params.get("result_field", "model_result")
+        self.model_name: str = params["hf_model"]
+        token_env = params.get("hf_token_env_var")
+        token = os.getenv(token_env) if token_env else None
+
+        from transformers import (
+            AutoModelForSequenceClassification,
+            AutoTokenizer,
+            pipeline,
+        )
+
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, token=token)
+        model = AutoModelForSequenceClassification.from_pretrained(self.model_name, token=token)
+        self._pipeline = pipeline(
+            "text-classification",
+            model=model,
+            tokenizer=self.tokenizer,
+        )
+
     def process(self, context: PipelineContext) -> PipelineContext:
-        """
-        Processes pipeline context by storing prepared data as model result.
-
-        This method acts as a placeholder for actual model inference logic. Currently,
-        it simply copies the 'prepared_data' from the context to 'model_result'.
-
-        Args:
-            context (PipelineContext): The pipeline context containing data to process.
-
-        Returns:
-            PipelineContext: The updated pipeline context with model result stored.
-        """
-        context.data["model_result"] = context.data.get("prepared_data")
+        """Run inference on the configured input field and store the result."""
+        text = context.data.get(self.input_field, "")
+        result = self._pipeline(text)
+        context.data[self.result_field] = result
         return context
 
     @staticmethod
@@ -46,4 +64,4 @@ class HFLocalAIInferenceService(Pipe):
         Returns:
             str: Description text for the Hugging Face AI model service.
         """
-        return "Hugging Face AI Model - Placeholder for future implementation"
+        return "Hugging Face AI Model"
