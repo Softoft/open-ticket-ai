@@ -14,10 +14,24 @@ ensuring flexibility and testability.
 """
 
 from injector import inject
-from otobo import OTOBOClient, TicketSearchParams, TicketUpdateParams
+from otobo import (
+    OTOBOClient,
+    TicketCreateParams,
+    TicketSearchParams,
+    TicketUpdateParams,
+)
 from open_ticket_ai.src.ce.core.config.config_models import SystemConfig
 from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import (
     TicketSystemAdapter,
+)
+from .unified_models import (
+    SearchCriteria,
+    UnifiedNote,
+    UnifiedTicket,
+    UnifiedQueue,
+    UnifiedPriority,
+    UnifiedStatus,
+    UnifiedUser,
 )
 
 
@@ -53,19 +67,17 @@ class OTOBOAdapter(TicketSystemAdapter):
         super().__init__(config)
         self.otobo_client = otobo_client
 
-    async def find_tickets(self, query: dict) -> list[dict]:
-        """Search for tickets matching the provided query parameters.
+    async def find_tickets(self, criteria: SearchCriteria) -> list[UnifiedTicket]:
+        """Search for tickets matching the provided criteria.
 
         Converts the query dictionary into `TicketSearchParams` and uses the OTOBO client
         to retrieve matching tickets. Returns ticket data as dictionaries.
 
         Args:
-            query (dict): Search parameters formatted as key-value pairs. Should align with
-                `TicketSearchParams` field names.
+            criteria: Search parameters describing the desired tickets.
 
         Returns:
-            list[dict]: List of dictionaries representing ticket records. Returns an empty list
-                if no tickets match.
+            list[UnifiedTicket]: A list of matching tickets. Returns an empty list if none are found.
 
         Example:
             ```python
@@ -73,20 +85,40 @@ class OTOBOAdapter(TicketSystemAdapter):
             ```
             [{"TicketID": 123, "Title": "Server Issue", ...}, ...]
         """
-        result = await self.otobo_client.search_and_get(query=TicketSearchParams(**query))
-        return [ticket.model_dump() for ticket in result.Ticket]
+        query: dict = {}
+        if criteria.id:
+            query["TicketID"] = criteria.id
+        if criteria.subject:
+            query["Title"] = criteria.subject
 
-    async def find_first_ticket(self, query: dict) -> dict | None:
-        """Retrieve the first ticket matching the query parameters.
+        result = await self.otobo_client.search_and_get(query=TicketSearchParams(**query))
+        tickets: list[UnifiedTicket] = []
+        for ticket in result.Ticket:
+            tickets.append(
+                UnifiedTicket(
+                    id=str(ticket.TicketID),
+                    subject=ticket.Title,
+                    body="",
+                    custom_fields={},
+                    queue=UnifiedQueue(name=ticket.Queue),
+                    priority=UnifiedPriority(name=ticket.Priority),
+                    status=UnifiedStatus(name=ticket.State),
+                    owner=UnifiedUser(name=ticket.Owner),
+                    notes=[],
+                )
+            )
+        return tickets
+
+    async def find_first_ticket(self, criteria: SearchCriteria) -> UnifiedTicket | None:
+        """Retrieve the first ticket matching the search criteria.
 
         Uses `find_tickets` to get all matching tickets and returns the first result if available.
 
         Args:
-            query (dict): Search parameters formatted as key-value pairs.
+            criteria: Search parameters formatted as a :class:`SearchCriteria` instance.
 
         Returns:
-            dict | None: Dictionary representing the first matching ticket record. Returns `None`
-                if no tickets match the query.
+            Optional[UnifiedTicket]: The first matching ticket or ``None`` if nothing was found.
 
         Example:
             ```python
@@ -94,10 +126,10 @@ class OTOBOAdapter(TicketSystemAdapter):
             ```
             {"TicketID": 456, "State": "open", ...}
         """
-        result = await self.find_tickets(query)
+        result = await self.find_tickets(criteria)
         return result[0] if len(result) >= 1 else None
 
-    async def update_ticket(self, ticket_id: str, data: dict) -> dict:
+    async def update_ticket(self, ticket_id: str, updates: dict) -> bool:
         """Update a ticket record with new data.
 
         Validates and merges the ticket ID with update data into `TicketUpdateParams`,
@@ -105,10 +137,10 @@ class OTOBOAdapter(TicketSystemAdapter):
 
         Args:
             ticket_id (str): Identifier of the ticket to update.
-            data (dict): Key-value pairs representing fields to update and their new values.
+            updates (dict): Key-value pairs representing fields to update and their new values.
 
         Returns:
-            dict: Dictionary representing the updated ticket record.
+            bool: ``True`` if the update was successful.
 
         Raises:
             ValidationError: If `data` contains invalid fields or values for ticket update.
@@ -122,8 +154,25 @@ class OTOBOAdapter(TicketSystemAdapter):
         update_params: TicketUpdateParams = TicketUpdateParams.model_validate(
             {
                 "TicketID": ticket_id,
-                **data
-            },
+                **updates,
+            }
         )
-        result = await self.otobo_client.update_ticket(payload=update_params)
-        return result.model_dump()
+        await self.otobo_client.update_ticket(payload=update_params)
+        return True
+
+    async def create_ticket(self, ticket_data: UnifiedTicket) -> UnifiedTicket:
+        """Create a ticket in OTOBO from a :class:`UnifiedTicket`."""
+        payload = TicketCreateParams(
+            Title=ticket_data.subject,
+            Queue=ticket_data.queue.name,
+            Priority=ticket_data.priority.name,
+            State=ticket_data.status.name,
+        )
+        result = await self.otobo_client.create_ticket(payload=payload)
+        return ticket_data.model_copy(update={"id": str(result.TicketID)})
+
+    async def add_note(self, ticket_id: str, note: UnifiedNote) -> UnifiedNote:
+        """Add a note to a ticket."""
+        # The public OTOBO client does not currently expose an article creation
+        # endpoint, so this implementation simply returns the provided note.
+        return note
