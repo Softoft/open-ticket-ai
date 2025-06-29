@@ -3,15 +3,15 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from ...core.mixins.registry_providable_instance import RegistryProvidableInstance
+from ...core.mixins.registry_providable_instance import Providable
 from .context import PipelineContext
 
 
-class Pipe(RegistryProvidableInstance, ABC):
+class Pipe(Providable, ABC):
     """Interface for all pipeline components.
 
     This abstract base class defines the common interface that all pipeline
-    components must implement. It inherits from `RegistryProvidableInstance`
+    components must implement. It inherits from `Providable`
     to enable automatic registration in a component registry and from `ABC`
     to enforce abstract method implementation.
 
@@ -19,7 +19,7 @@ class Pipe(RegistryProvidableInstance, ABC):
     data transformation logic within the pipeline.
 
     Attributes:
-        Inherits attributes from `RegistryProvidableInstance` for registry management.
+        Inherits attributes from `Providable` for registry management.
     """
 
     @abstractmethod

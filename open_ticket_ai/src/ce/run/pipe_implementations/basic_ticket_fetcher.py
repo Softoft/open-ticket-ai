@@ -1,5 +1,5 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\basic_ticket_fetcher.py
-from open_ticket_ai.src.ce.core.config.config_models import RegistryInstanceConfig
+from open_ticket_ai.src.ce.core.config.config_models import ProvidableConfig
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import (
@@ -15,15 +15,15 @@ class BasicTicketFetcher(Pipe):
     implementations.
 
     Attributes:
-        fetcher_config (`open_ticket_ai.src.ce.core.config.config_models.RegistryInstanceConfig`): Configuration instance for the fetcher.
+        fetcher_config (`open_ticket_ai.src.ce.core.config.config_models.ProvidableConfig`): Configuration instance for the fetcher.
         ticket_system (`TicketSystemAdapter`): Adapter for interacting with the ticket system.
     """
 
-    def __init__(self, config: RegistryInstanceConfig, ticket_system: TicketSystemAdapter):
+    def __init__(self, config: ProvidableConfig, ticket_system: TicketSystemAdapter):
         """Initializes the BasicTicketFetcher with configuration and ticket system adapter.
 
         Args:
-            config (`open_ticket_ai.src.ce.core.config.config_models.RegistryInstanceConfig`): The configuration instance for the fetcher.
+            config (`open_ticket_ai.src.ce.core.config.config_models.ProvidableConfig`): The configuration instance for the fetcher.
             ticket_system (`TicketSystemAdapter`): The adapter for interacting with the ticket system.
         """
         super().__init__(config)

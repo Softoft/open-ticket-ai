@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 
 from open_ticket_ai.src.ce.core.config.config_models import AIInferenceServiceConfig
 from open_ticket_ai.src.ce.run.pipe_implementations.hf_local_ai_inference_service import (
-    HFAIInferenceService,
+    HFLocalAIInferenceService,
 )
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
@@ -86,12 +86,12 @@ def test_service_process_sets_result(example_config):
 
 
 def test_hf_service_description():
-    """Tests the get_description method of HFAIInferenceService.
+    """Tests the get_description method of HFLocalAIInferenceService.
 
     Verifies that the service description contains the expected "Hugging Face" identifier.
     This ensures the correct service type is being used in the pipeline.
     """
-    assert "Hugging Face" in HFAIInferenceService.get_description()
+    assert "Hugging Face" in HFLocalAIInferenceService.get_description()
 
 
 def test_hf_service_process_returns_context(example_config, monkeypatch):

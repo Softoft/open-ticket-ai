@@ -4,11 +4,11 @@ import logging
 from injector import inject
 from rich.console import Console
 
-from open_ticket_ai.src.ce.core.config.config_models import RegistryInstanceConfig
+from open_ticket_ai.src.ce.core.config.config_models import ProvidableConfig
 from open_ticket_ai.src.ce.core.util.pretty_print_config import pretty_print_config
 
 
-class RegistryProvidableInstance:
+class Providable:
     """Base class for objects that can be provided by a registry.
 
     This class provides common functionality for registry-managed objects including
@@ -16,11 +16,11 @@ class RegistryProvidableInstance:
 
     Attributes:
         console (Console): Rich console instance for output formatting.
-        config (RegistryInstanceConfig): Configuration object for this instance.
+        config (ProvidableConfig): Configuration object for this instance.
     """
 
     @inject
-    def __init__(self, config: RegistryInstanceConfig, console: Console | None = None):
+    def __init__(self, config: ProvidableConfig, console: Console | None = None):
         """Initializes the instance with configuration and console.
 
         Stores the provided configuration and initializes a Rich Console instance if not provided.

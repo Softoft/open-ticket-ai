@@ -3,7 +3,7 @@
 from typing import Type
 
 from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import (
-    RegistryProvidableInstance,
+    Providable,
 )
 
 
@@ -15,43 +15,44 @@ class Registry:
     It enforces type checking during retrieval to ensure compatibility with expected interfaces.
 
     Attributes:
-        _registry (list[type[RegistryProvidableInstance]]): Internal list storing registered classes.
+        _registry (list[type[Providable]]): Internal list storing registered classes.
     """
 
     def __init__(self):
         """Initializes an empty registry with no registered classes."""
         super().__init__()
-        self._registry: list[type[RegistryProvidableInstance]] = []
+        self._registry: list[type[Providable]] = []
 
-    def register_all(self, instance_classes: list[Type[RegistryProvidableInstance]]) -> None:
+    def register_all(self, instance_classes: list[Type[Providable]]) -> None:
         """
         Registers multiple classes in the registry simultaneously.
 
         Args:
-            instance_classes (list[Type[RegistryProvidableInstance]]):
-                List of classes to register. Each class must implement the `RegistryProvidableInstance` interface.
+            instance_classes (list[Type[Providable]]):
+                List of classes to register. Each class must implement the `Providable` interface.
         """
         for instance_class in instance_classes:
             self.register(instance_class)
 
-    def register[T: RegistryProvidableInstance](self, instance_class: type[T]) -> None:
+    def register[T: Providable](self, instance_class: type[T]) -> None:
         """
         Registers a single class in the registry.
 
-        The class must implement the `RegistryProvidableInstance` interface which requires:
+        The class must implement the `Providable` interface which requires:
         - A `get_provider_key()` method returning a unique string identifier.
         - A `get_description()` method returning a descriptive string.
 
         Args:
             instance_class (type[T]):
-                The class to register. Must be a subclass of `RegistryProvidableInstance`.
+                The class to register. Must be a subclass of `Providable`.
         """
         self._registry.append(instance_class)
 
-    def get[T: RegistryProvidableInstance](self,
-                                           registry_instance_key: str,
-                                           instance_class: type[T]
-                                           ) -> type[T]:
+    def get[T: Providable](
+        self,
+        registry_instance_key: str,
+        instance_class: type[T]
+    ) -> type[T]:
         """
         Retrieves a registered class by its key and validates its type.
 
@@ -73,7 +74,8 @@ class Registry:
         registered_class = self._registry[registry_instance_key]
         if not issubclass(registered_class, instance_class):
             raise TypeError(
-                f"Registered class {registered_class} is not a subclass of {instance_class}.")
+                f"Registered class {registered_class} is not a subclass of {instance_class}.",
+            )
         return registered_class
 
     def contains(self, registry_instance_key: str) -> bool:
@@ -102,7 +104,7 @@ class Registry:
         """
         return ("\n".join(
             [f"{registry_instance.get_provider_key()}: {registry_instance.get_description()}" for
-             registry_instance in self._registry]
+             registry_instance in self._registry],
         ) or "No registered types found.")
 
     def get_all_registry_keys(self) -> list[str]:
@@ -114,7 +116,7 @@ class Registry:
         """
         return [instance.get_provider_key() for instance in self._registry]
 
-    def get_type_from_key(self, registry_instance_key: str) -> type[RegistryProvidableInstance]:
+    def get_type_from_key(self, registry_instance_key: str) -> type[Providable]:
         """
         Retrieves the class type associated with a registration key.
 
@@ -122,7 +124,7 @@ class Registry:
             registry_instance_key (str): The key to look up.
 
         Returns:
-            type[RegistryProvidableInstance]: The class registered under the key.
+            type[Providable]: The class registered under the key.
 
         Raises:
             KeyError: If the key is not found in the registry.

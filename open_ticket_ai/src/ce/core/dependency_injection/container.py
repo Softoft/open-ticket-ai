@@ -13,7 +13,7 @@ from open_ticket_ai.src.ce.core.dependency_injection.abstract_container import A
 from open_ticket_ai.src.ce.core.dependency_injection.create_registry import create_registry
 from open_ticket_ai.src.ce.core.dependency_injection.registry import Registry
 from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import (
-    RegistryProvidableInstance,
+    Providable,
 )
 from open_ticket_ai.src.ce.core.util.path_util import find_python_code_root_path
 from open_ticket_ai.src.ce.run.managers.orchestrator import Orchestrator
@@ -146,7 +146,7 @@ class DIContainer(Injector, AbstractContainer):
             raise KeyError(f"Unknown instance ID: {id}")
         return instance_config
 
-    def get_instance[T: RegistryProvidableInstance](self, id: str, subclass_of: type[T]) -> T:
+    def get_instance[T: Providable](self, id: str, subclass_of: type[T]) -> T:
         """Retrieve a configured instance from the registry.
 
         Looks up the configuration by ID, retrieves the corresponding class from the registry,

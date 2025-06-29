@@ -5,11 +5,11 @@ from injector import inject
 
 from open_ticket_ai.src.ce.core.config.config_models import SystemConfig
 from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import (
-    RegistryProvidableInstance,
+    Providable,
 )
 
 
-class TicketSystemAdapter(RegistryProvidableInstance, ABC):
+class TicketSystemAdapter(Providable, ABC):
     """
     An abstract base class for ticket system adapters.
 
