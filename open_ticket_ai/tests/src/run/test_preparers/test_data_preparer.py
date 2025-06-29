@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\tests\src\run\test_preparers\test_data_preparer.py
 from unittest.mock import patch
 
 from open_ticket_ai.src.ce.core.config.config_models import PreparerConfig

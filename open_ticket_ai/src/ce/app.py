@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\src\ce\app.py
 """Main application module for OpenTicketAI.
 
 This module contains the `App` class which serves as the primary entry point
@@ -14,7 +15,7 @@ from rich.console import Console
 
 from open_ticket_ai.src.ce.core.config.config_models import OpenTicketAIConfig
 from open_ticket_ai.src.ce.core.config.config_validator import OpenTicketAIConfigValidator
-from open_ticket_ai.src.ce.run.orchestrator import Orchestrator
+from open_ticket_ai.src.ce.run.managers.orchestrator import Orchestrator
 
 console = Console()
 """Global console instance for rich text output throughout the application."""

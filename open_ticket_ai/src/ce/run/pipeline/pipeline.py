@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\src\ce\run\pipeline\pipeline.py
 from __future__ import annotations
 
 from typing import List

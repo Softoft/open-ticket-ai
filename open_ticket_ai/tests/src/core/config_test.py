@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\tests\src\core\config_test.py
 # tests/core/config_test.py
 """Tests for the configuration models and loading functionality.
 

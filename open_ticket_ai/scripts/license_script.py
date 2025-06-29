@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\scripts\license_script.py
 import datetime
 import os
 

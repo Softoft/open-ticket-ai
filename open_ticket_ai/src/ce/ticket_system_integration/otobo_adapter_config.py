@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\src\ce\ticket_system_integration\otobo_adapter_config.py
 """Configuration model for the OTOBO adapter.
 
 This module defines a Pydantic-based configuration model for interacting with an OTOBO server.

@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\scripts\doc_generation\generate_api_reference.py
 #!/usr/bin/env python3
 """
 A script to generate beautiful Markdown documentation from Python source code.

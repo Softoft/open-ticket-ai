@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\src\ce\ticket_system_integration\otobo_adapter.py
 """
 This module provides an adapter for integrating with the OTOBO ticket system.
 

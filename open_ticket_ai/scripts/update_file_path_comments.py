@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\scripts\update_file_path_comments.py
 #!/usr/bin/env python3
 """Utility to update FILE_PATH comments in Python files.
 
@@ -40,11 +41,7 @@ def process_directory(directory: Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Add or update FILE_PATH comments in Python files.")
-    parser.add_argument("directory", type=Path, help="Directory to search")
-    args = parser.parse_args()
-    process_directory(args.directory.resolve())
+    process_directory(find_python_code_root_path())
 
 
 if __name__ == "__main__":

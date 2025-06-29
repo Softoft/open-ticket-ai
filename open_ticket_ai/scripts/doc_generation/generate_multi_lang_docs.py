@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\scripts\doc_generation\generate_multi_lang_docs.py
 from __future__ import annotations
 
 import asyncio

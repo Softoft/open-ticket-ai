@@ -1,9 +1,10 @@
+# FILE_PATH: open_ticket_ai\src\ce\core\mixins\registry_providable_instance.py
 import logging
 
 from injector import inject
 from rich.console import Console
 
-from open_ticket_ai.src.ce.core.mixins.registry_instance_config import RegistryInstanceConfig
+from open_ticket_ai.src.ce.core.config.config_models import RegistryInstanceConfig
 from open_ticket_ai.src.ce.core.util.pretty_print_config import pretty_print_config
 
 

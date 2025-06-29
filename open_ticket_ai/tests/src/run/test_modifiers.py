@@ -1,7 +1,9 @@
+# FILE_PATH: open_ticket_ai\tests\src\run\test_modifiers.py
 from unittest.mock import MagicMock, patch
 
 from open_ticket_ai.src.ce.core.config.config_models import ModifierConfig
-from open_ticket_ai.src.ce.run.modifiers.generic_ticket_updater import GenericTicketUpdater
+from open_ticket_ai.src.ce.run.pipe_implementations.generic_ticket_updater import \
+    GenericTicketUpdater
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 

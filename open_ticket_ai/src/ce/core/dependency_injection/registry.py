@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\src\ce\core\dependency_injection\registry.py
 # --- registry + decorator ---------------------------------------------
 from typing import Type
 
@@ -26,7 +27,7 @@ class Registry:
         Registers multiple classes in the registry simultaneously.
 
         Args:
-            instance_classes (list[Type[RegistryProvidableInstance]]): 
+            instance_classes (list[Type[RegistryProvidableInstance]]):
                 List of classes to register. Each class must implement the `RegistryProvidableInstance` interface.
         """
         for instance_class in instance_classes:
@@ -41,7 +42,7 @@ class Registry:
         - A `get_description()` method returning a descriptive string.
 
         Args:
-            instance_class (type[T]): 
+            instance_class (type[T]):
                 The class to register. Must be a subclass of `RegistryProvidableInstance`.
         """
         self._registry.append(instance_class)
@@ -54,9 +55,9 @@ class Registry:
         Retrieves a registered class by its key and validates its type.
 
         Args:
-            registry_instance_key (str): 
+            registry_instance_key (str):
                 The unique key identifying the class to retrieve.
-            instance_class (type[T]): 
+            instance_class (type[T]):
                 The expected class/interface type for validation.
 
         Returns:
@@ -95,7 +96,7 @@ class Registry:
         One entry per line.
 
         Returns:
-            str: Formatted string of all registered keys and descriptions, 
+            str: Formatted string of all registered keys and descriptions,
                   or "No registered types found." if the registry is empty.
         """
         return ("\n".join(

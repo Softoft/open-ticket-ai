@@ -1,8 +1,7 @@
 ---
 title: Installation und Nutzung von ATC
 description: Installieren Sie ATC auf Ihrem Server und nutzen Sie die API zur automatisierten Klassifizierung von Support-Tickets.
---------------------------------------------------------------------------------------------------------
-
+---
 # Installation von ATC
 
 ATC kann einfach mit Docker auf Ihrem Server installiert werden. Führen Sie die folgenden Schritte aus, um die Installation durchzuführen:

@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\tests\src\run\test_pipeline.py
 """Module providing dummy implementations for pipeline components testing.
 
 This module defines several classes that mimic the behavior of real pipeline components

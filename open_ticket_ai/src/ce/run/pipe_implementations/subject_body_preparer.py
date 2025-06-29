@@ -1,4 +1,5 @@
-from open_ticket_ai.src.ce.core.mixins.registry_instance_config import RegistryInstanceConfig
+# FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\subject_body_preparer.py
+from open_ticket_ai.src.ce.core.config.config_models import RegistryInstanceConfig
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 

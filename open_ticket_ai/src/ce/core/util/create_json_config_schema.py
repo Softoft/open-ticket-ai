@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\src\ce\core\util\create_json_config_schema.py
 """Module for generating the JSON schema of the OpenTicketAI configuration.
 
 This module defines the `RootConfig` model, which is a wrapper around the main configuration

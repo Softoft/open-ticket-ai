@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\src\ce\run\pipeline\context.py
 from typing import Any, Dict
 
 from pydantic import BaseModel

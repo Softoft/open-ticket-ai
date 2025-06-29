@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\src\ce\run\pipeline\pipe.py
 from __future__ import annotations
 
 from abc import ABC, abstractmethod

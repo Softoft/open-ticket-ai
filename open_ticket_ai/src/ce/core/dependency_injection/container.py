@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\src\ce\core\dependency_injection\container.py
 import os
 
 from injector import Binder, Injector, Module, provider, singleton
@@ -14,7 +15,7 @@ from open_ticket_ai.src.ce.core.dependency_injection.registry import Registry
 from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import \
     RegistryProvidableInstance
 from open_ticket_ai.src.ce.core.util.path_util import find_python_code_root_path
-from open_ticket_ai.src.ce.run.orchestrator import Orchestrator
+from open_ticket_ai.src.ce.run.managers.orchestrator import Orchestrator
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 from open_ticket_ai.src.ce.run.pipeline.pipeline import Pipeline
 from open_ticket_ai.src.ce.ticket_system_integration.otobo_adapter_config import OTOBOAdapterConfig

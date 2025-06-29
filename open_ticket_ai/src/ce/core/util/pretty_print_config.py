@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\src\ce\core\util\pretty_print_config.py
 """Module for pretty printing configuration objects.
 
 This module provides functionality to display Pydantic configuration models in a

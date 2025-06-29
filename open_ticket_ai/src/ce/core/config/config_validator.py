@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\src\ce\core\config\config_validator.py
 """Module for validating OpenTicketAI configuration against a registry.
 
 This module provides the `OpenTicketAIConfigValidator` class which validates

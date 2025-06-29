@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\tests\scripts\test_license_script.py
 """Tests for the license_script module.
 
 This module contains unit tests for the functions in `open_ticket_ai.scripts.license_script`.

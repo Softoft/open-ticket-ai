@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\tests\scripts\test_doc_generation\test_add_docstrings_generator.py
 import asyncio
 from types import SimpleNamespace, ModuleType
 from pathlib import Path
@@ -14,7 +15,7 @@ from open_ticket_ai.scripts.doc_generation.add_docstrings import DocstringGenera
 
 class MockClient:
     """Mock client for testing OpenAI API interactions.
-    
+
     This class simulates the behavior of an OpenAI client by capturing API call arguments
     and returning predefined responses. It's designed specifically for testing the
     DocstringGenerator functionality.
@@ -32,10 +33,10 @@ class MockClient:
         """
         async def create(**kwargs):
             """Mock API call that captures arguments and returns a fixed response.
-            
+
             Args:
                 **kwargs: Arbitrary keyword arguments representing the API request.
-            
+
             Returns:
                 SimpleNamespace: Simulated API response containing the predefined content.
             """

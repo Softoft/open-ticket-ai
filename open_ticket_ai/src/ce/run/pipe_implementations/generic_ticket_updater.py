@@ -1,6 +1,5 @@
-from open_ticket_ai.src.ce.core.mixins.registry_instance_config import (
-    RegistryInstanceConfig,
-)
+# FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\generic_ticket_updater.py
+from open_ticket_ai.src.ce.core.config.config_models import RegistryInstanceConfig
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter

@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\tests\src\test_app_main.py
 """Tests for the application and main module of the Open Ticket AI command-line tool.
 
 This module contains unit tests for the `App` class and the `main` module, focusing on
