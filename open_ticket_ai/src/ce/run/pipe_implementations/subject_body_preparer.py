@@ -27,9 +27,9 @@ class SubjectBodyPreparer(Pipe):
     def process(self, context: PipelineContext) -> PipelineContext:
         """Processes ticket data to prepare subject and body content.
 
-        Extracts subject and body fields from context data, repeats the subject
-        as specified in configuration, and concatenates with the body. Stores
-        the result in context under 'prepared_data' key.
+        Extracts the configured subject and body fields from context data,
+        repeats the subject as specified in configuration, concatenates it with
+        the body and stores the result in the configured result field.
 
         Args:
             context (PipelineContext): Pipeline context containing ticket data.
@@ -39,13 +39,14 @@ class SubjectBodyPreparer(Pipe):
         """
         subject_field = self.preparer_config.params.get("subject_field", "subject")
         body_field = self.preparer_config.params.get("body_field", "body")
-        repeat_subject = int(self.preparer_config.params.get("repeat_subject", 1))
+        repeat_subject = int(self.preparer_config.params.get("repeat_subject", 3))
+        result_field = self.preparer_config.params.get("result_field", "subject_body_combined")
 
         subject = context.data.get(subject_field, "")
         body = context.data.get(body_field, "")
 
         prepared = f"{subject} " * repeat_subject + body
-        context.data["prepared_data"] = prepared.strip()
+        context.data[result_field] = prepared.strip()
         return context
 
     @staticmethod
