@@ -1,0 +1,247 @@
+{
+  "$defs": {
+    "AIInferenceServiceConfig": {
+      "description": "Configuration for AI inference services.",
+      "properties": {
+        "provider_key": {
+          "minLength": 1,
+          "title": "Provider Key",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "provider_key",
+        "id"
+      ],
+      "title": "AIInferenceServiceConfig",
+      "type": "object"
+    },
+    "FetcherConfig": {
+      "description": "Configuration for data fetchers.",
+      "properties": {
+        "provider_key": {
+          "minLength": 1,
+          "title": "Provider Key",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "provider_key",
+        "id"
+      ],
+      "title": "FetcherConfig",
+      "type": "object"
+    },
+    "ModifierConfig": {
+      "description": "Configuration for modifiers.",
+      "properties": {
+        "provider_key": {
+          "minLength": 1,
+          "title": "Provider Key",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "provider_key",
+        "id"
+      ],
+      "title": "ModifierConfig",
+      "type": "object"
+    },
+    "OpenTicketAIConfig": {
+      "description": "Root configuration model for Open Ticket AI.",
+      "properties": {
+        "system": {
+          "$ref": "#/$defs/SystemConfig"
+        },
+        "fetchers": {
+          "items": {
+            "$ref": "#/$defs/FetcherConfig"
+          },
+          "minItems": 1,
+          "title": "Fetchers",
+          "type": "array"
+        },
+        "data_preparers": {
+          "items": {
+            "$ref": "#/$defs/PreparerConfig"
+          },
+          "minItems": 1,
+          "title": "Data Preparers",
+          "type": "array"
+        },
+        "ai_inference_services": {
+          "items": {
+            "$ref": "#/$defs/AIInferenceServiceConfig"
+          },
+          "minItems": 1,
+          "title": "Ai Inference Services",
+          "type": "array"
+        },
+        "modifiers": {
+          "items": {
+            "$ref": "#/$defs/ModifierConfig"
+          },
+          "minItems": 1,
+          "title": "Modifiers",
+          "type": "array"
+        },
+        "pipelines": {
+          "items": {
+            "$ref": "#/$defs/PipelineConfig"
+          },
+          "minItems": 1,
+          "title": "Pipelines",
+          "type": "array"
+        }
+      },
+      "required": [
+        "system",
+        "fetchers",
+        "data_preparers",
+        "ai_inference_services",
+        "modifiers",
+        "pipelines"
+      ],
+      "title": "OpenTicketAIConfig",
+      "type": "object"
+    },
+    "PipelineConfig": {
+      "description": "Configuration for a single pipeline workflow.",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "schedule": {
+          "$ref": "#/$defs/SchedulerConfig"
+        },
+        "pipes": {
+          "description": "Ordered list of all pipe component IDs to execute, starting with a fetcher.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Pipes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "schedule",
+        "pipes"
+      ],
+      "title": "PipelineConfig",
+      "type": "object"
+    },
+    "PreparerConfig": {
+      "description": "Configuration for data preparers.",
+      "properties": {
+        "provider_key": {
+          "minLength": 1,
+          "title": "Provider Key",
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "provider_key",
+        "id"
+      ],
+      "title": "PreparerConfig",
+      "type": "object"
+    },
+    "SchedulerConfig": {
+      "description": "Configuration for scheduling recurring tasks.",
+      "properties": {
+        "interval": {
+          "minimum": 1,
+          "title": "Interval",
+          "type": "integer"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "interval",
+        "unit"
+      ],
+      "title": "SchedulerConfig",
+      "type": "object"
+    },
+    "SystemConfig": {
+      "description": "Configuration for the ticket system adapter.",
+      "properties": {
+        "provider_key": {
+          "minLength": 1,
+          "title": "Provider Key",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "provider_key"
+      ],
+      "title": "SystemConfig",
+      "type": "object"
+    }
+  },
+  "description": "Wrapper model used for schema generation.",
+  "properties": {
+    "open_ticket_ai": {
+      "$ref": "#/$defs/OpenTicketAIConfig"
+    }
+  },
+  "required": [
+    "open_ticket_ai"
+  ],
+  "title": "RootConfig",
+  "type": "object"
+}

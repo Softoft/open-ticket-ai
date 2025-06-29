@@ -1,7 +1,9 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipeline\context.py
-from typing import Any
+from typing import Any, Optional
 
 from pydantic import BaseModel
+
+from open_ticket_ai.src.ce.run.pipeline.status import PipelineStatus
 
 
 class PipelineContext(BaseModel):
@@ -19,3 +21,10 @@ class PipelineContext(BaseModel):
 
     ticket_id: str
     data: dict[str, Any] = {}
+    status: PipelineStatus = PipelineStatus.RUNNING
+    error_message: Optional[str] = None
+    failed_pipe: Optional[str] = None
+
+    def stop_pipeline(self):
+        """A convenience method for pipes to signal a controlled stop."""
+        self.status = PipelineStatus.STOPPED

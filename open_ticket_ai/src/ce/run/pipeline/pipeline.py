@@ -1,61 +1,62 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipeline\pipeline.py
 from __future__ import annotations
 
+import logging  # Use logging for errors
 from typing import List
 
-from ...core.config.config_models import PipelineConfig
 from .context import PipelineContext
 from .pipe import Pipe
+from .status import PipelineStatus  # Import the status enum
+from ...core.config.config_models import PipelineConfig
+
+# It's good practice to have a logger
+logger = logging.getLogger(__name__)
 
 
 class Pipeline(Pipe):
-    """Composite pipe executing a sequence of pipes.
-
-    The Pipeline class represents a composite pipe that executes a sequence of
-    individual pipes in a defined order. It implements the Pipe interface and
-    processes data by sequentially passing a context object through each
-    component pipe.
-
-    Attributes:
-        pipes: An ordered list of Pipe instances to execute sequentially.
-    """
-
     def __init__(self, config: PipelineConfig, pipes: List[Pipe]):
-        """Initializes the Pipeline with configuration and component pipes.
-
-        Args:
-            config: Configuration settings for the pipeline.
-            pipes: Ordered list of Pipe instances to execute sequentially.
-        """
         super().__init__(config)
         self.pipes = pipes
 
     def execute(self, context: PipelineContext) -> PipelineContext:
-        """Executes all pipes in the pipeline sequentially.
+        """Executes all pipes sequentially, with error and stop handling."""
 
-        Processes the context through each pipe in the defined order, passing
-        the output of one pipe as input to the next.
+        # Ensure the context starts in a runnable state.
+        if context.status not in [PipelineStatus.RUNNING, PipelineStatus.SUCCESS]:
+            logger.warning(
+                f"Pipeline for ticket {context.ticket_id} started with non-runnable status: {context.status.name}",
+            )
+            return context
 
-        Args:
-            context: The initial pipeline context containing data to process.
+        context.status = PipelineStatus.RUNNING
 
-        Returns:
-            The final context after processing through all pipes.
-        """
-        current = context
         for pipe in self.pipes:
-            current = pipe.process(current)
-        return current
+            try:
+                # Process the context with the current pipe
+                context = pipe.process(context)
+
+                # After processing, check if the pipe requested a stop
+                if context.status == PipelineStatus.STOPPED:
+                    logger.info(f"Pipeline stopped by '{pipe.__class__.__name__}' for ticket {context.ticket_id}.")
+                    break  # Exit the loop for a controlled stop
+
+            except Exception as e:
+                # An unexpected error occurred in the pipe
+                logger.error(
+                    f"Pipeline failed at pipe '{pipe.__class__.__name__}' for ticket {context.ticket_id}.",
+                    exc_info=True,
+                )
+                context.status = PipelineStatus.FAILED
+                context.error_message = str(e)
+                context.failed_pipe = pipe.__class__.__name__
+                break  # Exit the loop on failure
+
+        # If the loop completed without being stopped or failing, mark it as successful
+        if context.status == PipelineStatus.RUNNING:
+            context.status = PipelineStatus.SUCCESS
+
+        return context
 
     def process(self, context: PipelineContext) -> PipelineContext:
-        """Processes context through the entire pipeline.
-
-        This method implements the Pipe interface by delegating to execute().
-
-        Args:
-            context: The pipeline context to process.
-
-        Returns:
-            The modified context after pipeline execution.
-        """
+        """Processes context through the entire pipeline."""
         return self.execute(context)

@@ -2,8 +2,16 @@
 import fs from 'fs';
 import path from 'path';
 
-interface NavbarItem { text: string; link: string; }
-interface NavbarItemGroup { text: string; items: (NavbarItem | NavbarItemGroup)[]; }
+interface NavbarItem {
+    text: string;
+    link: string;
+}
+
+interface NavbarItemGroup {
+    text: string;
+    items: (NavbarItem | NavbarItemGroup)[];
+}
+
 type NavItem = NavbarItem | NavbarItemGroup;
 
 function formatTitle(name: string): string {
@@ -13,9 +21,13 @@ function formatTitle(name: string): string {
 
 function generateNavItemsRecursive(currentPath: string, docsRootPath: string): NavItem[] {
     try {
-        const entries = fs.readdirSync(currentPath, { withFileTypes: true });
+        const entries = fs.readdirSync(currentPath, {withFileTypes: true});
         return entries
-            .filter(dirent => !dirent.name.startsWith('.') && dirent.name !== 'index.md')
+            .filter(dirent => {
+                !dirent.name.startsWith('.')
+                && !dirent.name.startsWith('_')
+                && dirent.name !== 'index.md'
+            })
             .map((dirent): NavItem | null => {
                 const fullPath = path.join(currentPath, dirent.name);
                 const title = formatTitle(dirent.name);
@@ -27,7 +39,7 @@ function generateNavItemsRecursive(currentPath: string, docsRootPath: string): N
                 } else if (dirent.isFile() && dirent.name.endsWith('.md')) {
                     const relativePath = path.relative(docsRootPath, fullPath);
                     const link = `${relativePath.replace(/\\/g, '/')}`;
-                    return { text: title, link };
+                    return {text: title, link};
                 }
                 return null;
             })
