@@ -6,7 +6,7 @@ from typing import Any, Self
 from pydantic import BaseModel, Field, model_validator
 
 
-class RegistryInstanceConfig(BaseModel):
+class ProvidableConfig(BaseModel):
     """Base configuration for registry instances.
 
     This class defines the core configuration structure required for initializing
@@ -24,19 +24,25 @@ class RegistryInstanceConfig(BaseModel):
 
     Example:
         ```python
-        config = RegistryInstanceConfig(
+        config = ProvidableConfig(
             id="docker-registry-1",
             provider_key="dockerhub",
-            params={"base_url": "https://index.docker.io/v1/"}
         )
         ```
     """
     id: str = Field(..., min_length=1, description="The unique identifier for the registry instance.")
-    params: dict[str, Any] = Field(default_factory=dict, description="Additional parameters for the registry instance configuration.")
-    provider_key: str = Field(..., min_length=1, description="The key identifying the provider for the registry instance.")
+    params: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Additional parameters for the registry instance configuration.",
+    )
+    provider_key: str = Field(
+        ...,
+        min_length=1,
+        description="The key identifying the provider for the registry instance.",
+    )
 
 
-class SystemConfig(RegistryInstanceConfig):
+class SystemConfig(ProvidableConfig):
     """Configuration for the ticket system adapter.
 
     Attributes:
@@ -45,19 +51,19 @@ class SystemConfig(RegistryInstanceConfig):
     params: dict[str, Any] = Field(default_factory=dict)
 
 
-class FetcherConfig(RegistryInstanceConfig):
+class FetcherConfig(ProvidableConfig):
     """Configuration for data fetchers."""
 
 
-class PreparerConfig(RegistryInstanceConfig):
+class PreparerConfig(ProvidableConfig):
     """Configuration for data preparers."""
 
 
-class ModifierConfig(RegistryInstanceConfig):
+class ModifierConfig(ProvidableConfig):
     """Configuration for modifiers."""
 
 
-class AIInferenceServiceConfig(RegistryInstanceConfig):
+class AIInferenceServiceConfig(ProvidableConfig):
     """Configuration for AI inference services."""
 
 
@@ -73,7 +79,7 @@ class SchedulerConfig(BaseModel):
 
 
 # NEW: This class replaces AttributePredictorConfig
-class PipelineConfig(RegistryInstanceConfig):
+class PipelineConfig(ProvidableConfig):
     """Configuration for a single pipeline workflow.
 
     Attributes:
@@ -86,7 +92,7 @@ class PipelineConfig(RegistryInstanceConfig):
     pipes: list[str] = Field(
         ...,
         min_length=1,
-        description="Ordered list of all pipe component IDs to execute, starting with a fetcher."
+        description="Ordered list of all pipe component IDs to execute, starting with a fetcher.",
     )
 
     def validate_pipe_ids_are_registered(self, all_pipe_ids: set[str]) -> None:
@@ -101,7 +107,7 @@ class PipelineConfig(RegistryInstanceConfig):
         for pipe_id in self.pipes:
             if pipe_id not in all_pipe_ids:
                 raise ValueError(
-                    f"Pipeline '{self.id}' references unknown pipe component '{pipe_id}'"
+                    f"Pipeline '{self.id}' references unknown pipe component '{pipe_id}'",
                 )
 
 
@@ -144,14 +150,14 @@ class OpenTicketAIConfig(BaseModel):
             pipeline.validate_pipe_ids_are_registered(all_pipe_ids)
         return self
 
-    def get_all_register_instance_configs(self) -> list[RegistryInstanceConfig]:
+    def get_all_register_instance_configs(self) -> list[ProvidableConfig]:
         """Return all registered instances in the configuration.
 
         The returned list includes all instances of fetchers, data preparers, AI inference services,
         modifiers, and pipelines.
 
         Returns:
-            list[RegistryInstanceConfig]: A list of all registered instance configurations.
+            list[ProvidableConfig]: A list of all registered instance configurations.
         """
         return (
             self.fetchers +

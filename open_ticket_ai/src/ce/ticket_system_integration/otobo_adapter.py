@@ -14,12 +14,11 @@ ensuring flexibility and testability.
 """
 
 from injector import inject
-
+from otobo import OTOBOClient, TicketSearchParams, TicketUpdateParams
 from open_ticket_ai.src.ce.core.config.config_models import SystemConfig
 from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import (
     TicketSystemAdapter,
 )
-from otobo import OTOBOClient, TicketSearchParams, TicketUpdateParams
 
 
 class OTOBOAdapter(TicketSystemAdapter):
@@ -69,7 +68,9 @@ class OTOBOAdapter(TicketSystemAdapter):
                 if no tickets match.
 
         Example:
-            >>> await adapter.find_tickets({"Title": "Server Issue"})
+            ```python
+            await adapter.find_tickets({"Title": "Server Issue"})
+            ```
             [{"TicketID": 123, "Title": "Server Issue", ...}, ...]
         """
         result = await self.otobo_client.search_and_get(query=TicketSearchParams(**query))
@@ -88,7 +89,9 @@ class OTOBOAdapter(TicketSystemAdapter):
                 if no tickets match the query.
 
         Example:
-            >>> await adapter.find_first_ticket({"State": "open"})
+            ```python
+            await adapter.find_first_ticket({"State": "open"})
+            ```
             {"TicketID": 456, "State": "open", ...}
         """
         result = await self.find_tickets(query)
@@ -111,12 +114,16 @@ class OTOBOAdapter(TicketSystemAdapter):
             ValidationError: If `data` contains invalid fields or values for ticket update.
 
         Example:
-            >>> await adapter.update_ticket("789", {"Priority": "high"})
+            ```python
+            await adapter.update_ticket("789", {"Priority": "high"})
+            ```
             {"TicketID": "789", "Priority": "high", ...}
         """
-        update_params: TicketUpdateParams = TicketUpdateParams.model_validate({
-            "TicketID": ticket_id,
-            **data
-        })
+        update_params: TicketUpdateParams = TicketUpdateParams.model_validate(
+            {
+                "TicketID": ticket_id,
+                **data
+            },
+        )
         result = await self.otobo_client.update_ticket(payload=update_params)
         return result.model_dump()

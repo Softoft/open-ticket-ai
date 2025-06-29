@@ -1,5 +1,5 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\generic_ticket_updater.py
-from open_ticket_ai.src.ce.core.config.config_models import RegistryInstanceConfig
+from open_ticket_ai.src.ce.core.config.config_models import ProvidableConfig
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import (
@@ -20,7 +20,7 @@ class GenericTicketUpdater(Pipe):
         ticket_system: Adapter instance for interacting with the external ticket system.
     """
 
-    def __init__(self, config: RegistryInstanceConfig, ticket_system: TicketSystemAdapter):
+    def __init__(self, config: ProvidableConfig, ticket_system: TicketSystemAdapter):
         """Initializes the `GenericTicketUpdater` with configuration and ticket system adapter.
 
         Args:

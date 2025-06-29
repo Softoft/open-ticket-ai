@@ -1,10 +1,10 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\hf_local_ai_inference_service.py
-from open_ticket_ai.src.ce.core.config.config_models import RegistryInstanceConfig
+from open_ticket_ai.src.ce.core.config.config_models import ProvidableConfig
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 
 
-class HFAIInferenceService(Pipe):
+class HFLocalAIInferenceService(Pipe):
     """
     A class representing a Hugging Face AI model.
 
@@ -12,12 +12,12 @@ class HFAIInferenceService(Pipe):
     Currently, it does not contain any methods or properties.
     """
 
-    def __init__(self, config: RegistryInstanceConfig):
+    def __init__(self, config: ProvidableConfig):
         """
-        Initializes the HFAIInferenceService with configuration.
+        Initializes the HFLocalAIInferenceService with configuration.
 
         Args:
-            config (RegistryInstanceConfig): Configuration instance for the service.
+            config (ProvidableConfig): Configuration instance for the service.
         """
         super().__init__(config)
         self.ai_inference_config = config

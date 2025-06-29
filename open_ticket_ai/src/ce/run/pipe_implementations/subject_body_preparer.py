@@ -1,5 +1,5 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\subject_body_preparer.py
-from open_ticket_ai.src.ce.core.config.config_models import RegistryInstanceConfig
+from open_ticket_ai.src.ce.core.config.config_models import ProvidableConfig
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 
@@ -12,14 +12,14 @@ class SubjectBodyPreparer(Pipe):
     data is stored in the pipeline context for downstream processing.
 
     Attributes:
-        preparer_config (RegistryInstanceConfig): Configuration parameters for the preparer.
+        preparer_config (ProvidableConfig): Configuration parameters for the preparer.
     """
 
-    def __init__(self, config: RegistryInstanceConfig):
+    def __init__(self, config: ProvidableConfig):
         """Initializes the SubjectBodyPreparer with configuration.
 
         Args:
-            config (RegistryInstanceConfig): Configuration parameters for the preparer.
+            config (ProvidableConfig): Configuration parameters for the preparer.
         """
         super().__init__(config)
         self.preparer_config = config

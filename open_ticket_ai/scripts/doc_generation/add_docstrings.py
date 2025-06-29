@@ -84,6 +84,8 @@ class DocstringGenerator:
         1.  **Style:** All docstrings MUST strictly follow the **Google Python Style Guide**.
         2.  **Formatting:** Use **Markdown** for rich text formatting within the docstrings
         (e.g., for `Args`, `Returns`, `Raises` sections). Do **not** use HTML tags.
+        Wrap Code blocks in triple backticks with the language specified as `python`.
+        Do not write >>>
         3.  **Detail Level:** The length and detail of your descriptions should be proportional to
         the complexity of the code.
             -   A simple, self-explanatory attribute may only need a brief phrase.
@@ -97,7 +99,7 @@ class DocstringGenerator:
          or remove any part of the Python logic. Your only job is to add documentation.
         -   **RAW PYTHON CODE ONLY.** Your response MUST be only the raw Python code.
          Do not include any surrounding text, explanations, notes, or commentary. Most importantly,
-          **DO NOT wrap the code in Markdown code fences** (i.e., no ```python or ```).
+          **DO NOT wrap the full file code in Markdown code fences** (i.e., no ```python or ```).
            The output must be immediately ready to be saved as a `.py` file.
 
         Here is the file content:

@@ -3,7 +3,7 @@ description: Explore the Python pipeline components for AI-powered ticket proces
   within `open_ticket_ai`. This documentation details the classes responsible for
   fetching ticket data (`BasicTicketFetcher`), preparing text content from subjects
   and bodies (`SubjectBodyPreparer`), running AI model inference with a Hugging Face
-  service (`HFAIInferenceService`), and applying updates back to the ticket system
+  service (`HFLocalAIInferenceService`), and applying updates back to the ticket system
   (`GenericTicketUpdater`).
 ---
 # Documentation for `**/ce/run/pipe_implementations/*.py`

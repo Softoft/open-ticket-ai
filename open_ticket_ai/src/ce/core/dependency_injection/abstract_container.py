@@ -2,7 +2,7 @@
 import abc
 
 from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import (
-    RegistryProvidableInstance,
+    Providable,
 )
 
 
@@ -18,8 +18,8 @@ class AbstractContainer(abc.ABC):
     """
 
     @abc.abstractmethod
-    def get_instance[T: RegistryProvidableInstance](self, provider_key: str,
-                                                    subclass_of: type[T]) -> T:
+    def get_instance[T: Providable](self, provider_key: str,
+                                    subclass_of: type[T]) -> T:
         """Retrieve an instance from the container.
 
         The instance is retrieved based on the provider key and must be a subclass of the given type.
@@ -27,7 +27,7 @@ class AbstractContainer(abc.ABC):
         Args:
             provider_key: The key identifying the provider for the instance.
             subclass_of: The class (or type) of the instance to be retrieved. The type T must be a subclass of
-                `RegistryProvidableInstance`.
+                `Providable`.
 
         Returns:
             An instance of the type specified by `subclass_of` ( subclass).
