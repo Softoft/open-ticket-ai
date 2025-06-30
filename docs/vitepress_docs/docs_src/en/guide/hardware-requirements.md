@@ -1,8 +1,8 @@
 ---
+description: Ensure peak performance for Open Ticket AI with the right hardware. This
+  guide details CPU, NVIDIA GPU, and RAM requirements for any ticket volume and deployment.
 title: Hardware Recommendations for Open Ticket AI
-description: Guidance on hardware for running Open Ticket AI.
 ---
-
 # Hardware Recommendations
 
 Choosing the right hardware is important for the performance of Open Ticket AI, especially when dealing with a large volume of tickets or using more complex models.

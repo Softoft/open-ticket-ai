@@ -1,7 +1,8 @@
 ---
-description: Discover the core configuration system of the Open Ticket AI project.
-  This guide details the Python data models (`config_models.py`) and validation logic
-  (`config_validator.py`) that define and manage all application settings.
+description: Explore the core configuration system for the Open Ticket AI project.
+  This documentation details the `config_models.py` module for structuring application
+  settings and `config_validator.py` for robust validation, ensuring a stable and
+  reliable deployment.
 ---
 # Documentation for `**/ce/core/config/**/*.py`
 

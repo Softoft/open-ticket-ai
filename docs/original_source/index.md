@@ -1,7 +1,7 @@
 ---
-description: Save time and money with Open Ticket AI. Automate support ticket classification
-  with our secure, on-premise AI solution for OTOBO. Features easy Docker installation,
-  a powerful REST API, and seamless integration. Get started today.
+description: Save time and money with Open Ticket AI, the secure, on-premise AI solution
+  for automating OTOBO support ticket classification. Features easy Docker installation,
+  a powerful REST API, and seamless integration to boost your helpdesk efficiency.
 features:
 - details: Installieren Sie ATC einfach mit Docker auf Ihrem Server.
   icon:

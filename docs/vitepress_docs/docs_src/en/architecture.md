@@ -1,8 +1,9 @@
 ---
+description: Explore the technical architecture of Open Ticket AI. Learn how its modular
+  data pipeline and Hugging Face models enable intelligent ticket classification and
+  routing.
 title: Open Ticket AI Architecture Overview
-description: High-level look at the components and data flow in Open Ticket AI.
 ---
-
 # Architecture Overview
 
 Open Ticket AI is built around a modular pipeline that processes each ticket through a series of well-defined stages. The system relies on dependency injection and configuration files to assemble these stages, making it easy to extend or replace individual pieces.
@@ -43,10 +44,10 @@ All components are registered in a central dependency injection container and co
 ## Diagrams
 
 ### Application Class Diagram
-![Anwendungs-Klassendiagramm](../../public/images/application_class_diagram.png)
+![Application Class Diagram](../../public/images/application_class_diagram.png)
 
 ### Overview Diagram
-![Übersichtsdiagramm](../../public/images/overview.png)
+![Overview DIagram](../../public/images/overview.png)
 
 These diagrams illustrate how the pipeline is orchestrated and how each component interacts with the others.
 

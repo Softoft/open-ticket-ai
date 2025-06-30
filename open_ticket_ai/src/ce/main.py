@@ -14,6 +14,10 @@ from open_ticket_ai.src.ce.app import App
 from open_ticket_ai.src.ce.core.dependency_injection.container import DIContainer
 
 cli = typer.Typer()
+"""The main Typer CLI application instance.
+
+This instance is used to register commands and callbacks for the command-line interface.
+"""
 
 @cli.callback()
 def main(

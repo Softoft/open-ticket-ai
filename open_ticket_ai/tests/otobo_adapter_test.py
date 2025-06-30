@@ -70,12 +70,22 @@ class MockedOTOBOClient(OTOBOClient):
 
     @staticmethod
     def get_description() -> str:
+        """Returns a static description string for the mocked client.
+
+        Returns:
+            str: The description string.
+        """
         return "Mocked OTOBO adapter for testing purposes."
 
     def __init__(
         self,
         ticket_data: list[MockedTicket]
     ):
+        """Initializes the mocked OTOBO client.
+
+        Args:
+            ticket_data (list[MockedTicket]): A list of mocked tickets to be used for testing.
+        """
         super().__init__(
             OTOBOClientConfig(
                 base_url="https://mocked.otobo.example.com",
@@ -91,9 +101,24 @@ class MockedOTOBOClient(OTOBOClient):
         self.ticket_data = ticket_data
 
     async def search_and_get(self, query):
+        """Mocks the search_and_get operation.
+
+        This method is a placeholder and does nothing.
+
+        Args:
+            query: The search query.
+        """
         return
 
     async def update_ticket(self, payload):
+        """Updates a ticket by delegating to the parent class method.
+
+        Args:
+            payload (dict): The ticket update payload.
+
+        Returns:
+            The result of the update operation from the parent class.
+        """
         return await super().update_ticket(payload)
 
 
@@ -113,11 +138,20 @@ def adapter_and_client():
 
 
 def test_config_str_and_password(monkeypatch):
-    """Test OTOBOAdapterConfig string representation and password retrieval from environment.
+    """Test the string representation and password retrieval of OTOBOAdapterConfig.
 
-    Verifies:
-        1. The __str__ method excludes the password value
-        2. Password is correctly retrieved from environment variable
+    This test verifies two aspects of the OTOBOAdapterConfig:
+      1. The `__str__` method returns a string that excludes the password value.
+      2. The password property correctly retrieves the password from an environment variable.
+
+    Args:
+        monkeypatch: Pytest fixture for safely patching environment variables.
+
+    Steps:
+        - Set an environment variable for the password.
+        - Create an instance of OTOBOAdapterConfig with the environment variable name for the password.
+        - Check that the string representation of the config does not include the password.
+        - Check that the password property returns the value from the environment variable.
     """
     monkeypatch.setenv("OTOBO_PASS", "s3cret")
     cfg = OTOBOAdapterConfig(
@@ -139,10 +173,18 @@ def test_config_str_and_password(monkeypatch):
 
 
 def test_config_password_missing_env(monkeypatch):
-    """Test OTOBOAdapterConfig raises error when password environment variable is missing.
+    """Test that OTOBOAdapterConfig raises an error when the password environment variable is missing.
 
-    Verifies:
-        Accessing password property raises ValueError when env var doesn't exist
+    This test ensures that when the environment variable specified for the password is not set,
+    accessing the password property of OTOBOAdapterConfig raises a ValueError.
+
+    Args:
+        monkeypatch: Pytest fixture for safely patching environment variables.
+
+    Steps:
+        - Ensure the environment variable (which is set to a non-existent one) is deleted.
+        - Create an instance of OTOBOAdapterConfig with the non-existent environment variable for the password.
+        - Attempt to access the password property and expect a ValueError.
     """
     monkeypatch.delenv("MISSING_ENV", raising=False)
     cfg = OTOBOAdapterConfig(

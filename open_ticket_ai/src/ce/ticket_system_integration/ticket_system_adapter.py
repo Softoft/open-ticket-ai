@@ -99,10 +99,37 @@ class TicketSystemAdapter(Providable, ABC):
 
     @abstractmethod
     async def create_ticket(self, ticket_data: UnifiedTicket) -> UnifiedTicket:
-        """Create a new ticket in the system."""
+        """Create a new ticket in the system.
+
+        This method must be implemented by concrete adapters to handle ticket creation
+        in the target ticketing system. The ticket data is provided in a unified format.
+
+        Args:
+            ticket_data (UnifiedTicket): 
+                The ticket data to create. Contains all necessary fields in a 
+                system-agnostic format.
+
+        Returns:
+            UnifiedTicket: 
+                The created ticket object with system-generated identifiers and fields.
+        """
         pass
 
     @abstractmethod
     async def add_note(self, ticket_id: str, note: UnifiedNote) -> UnifiedNote:
-        """Add a note to an existing ticket."""
+        """Add a note to an existing ticket.
+
+        This method must be implemented by concrete adapters to attach notes/comments
+        to tickets in the target system. The note content is provided in a unified format.
+
+        Args:
+            ticket_id (str): 
+                Unique identifier of the target ticket.
+            note (UnifiedNote): 
+                The note content and metadata to add.
+
+        Returns:
+            UnifiedNote: 
+                The added note object with system-generated metadata (e.g., timestamp, ID).
+        """
         pass

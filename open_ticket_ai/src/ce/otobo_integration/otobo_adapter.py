@@ -1,4 +1,3 @@
-# FILE_PATH: open_ticket_ai\src\ce\ticket_system_integration\otobo_adapter.py
 """
 This module provides an adapter for integrating with the OTOBO ticket system.
 
@@ -143,13 +142,13 @@ class OTOBOAdapter(TicketSystemAdapter):
             bool: ``True`` if the update was successful.
 
         Raises:
-            ValidationError: If `data` contains invalid fields or values for ticket update.
+            ValidationError: If `updates` contains invalid fields or values for ticket update.
 
         Example:
             ```python
-            await adapter.update_ticket("789", {"Priority": "high"})
+            success = await adapter.update_ticket("789", {"Priority": "high"})
+            # success will be True if the update was successful
             ```
-            {"TicketID": "789", "Priority": "high", ...}
         """
         update_params: TicketUpdateParams = TicketUpdateParams.model_validate(
             {
@@ -161,7 +160,24 @@ class OTOBOAdapter(TicketSystemAdapter):
         return True
 
     async def create_ticket(self, ticket_data: UnifiedTicket) -> UnifiedTicket:
-        """Create a ticket in OTOBO from a :class:`UnifiedTicket`."""
+        """Create a ticket in OTOBO from a UnifiedTicket instance.
+
+        Converts the provided `UnifiedTicket` into `TicketCreateParams` and sends the creation request
+        to the OTOBO API. The returned ticket will have the `id` field updated to the ID assigned by OTOBO.
+
+        Args:
+            ticket_data (UnifiedTicket): The ticket data to create.
+
+        Returns:
+            UnifiedTicket: The created ticket data with the `id` field updated to the new ticket ID.
+
+        Example:
+            ```python
+            ticket = UnifiedTicket(subject="New Issue", ...)
+            created_ticket = await adapter.create_ticket(ticket)
+            print(created_ticket.id)  # Outputs the new ticket ID
+            ```
+        """
         payload = TicketCreateParams(
             Title=ticket_data.subject,
             Queue=ticket_data.queue.name,
@@ -172,7 +188,25 @@ class OTOBOAdapter(TicketSystemAdapter):
         return ticket_data.model_copy(update={"id": str(result.TicketID)})
 
     async def add_note(self, ticket_id: str, note: UnifiedNote) -> UnifiedNote:
-        """Add a note to a ticket."""
+        """Add a note to a ticket.
+
+        Note: The public OTOBO client does not currently expose an endpoint for creating articles (notes).
+        Therefore, this method does not actually create a note in OTOBO and instead returns the provided note.
+
+        Args:
+            ticket_id (str): The ID of the ticket to which the note should be added.
+            note (UnifiedNote): The note to add.
+
+        Returns:
+            UnifiedNote: The same note that was passed in.
+
+        Example:
+            ```python
+            note = UnifiedNote(content="This is a note.")
+            result = await adapter.add_note("123", note)
+            # `result` is the same as `note`
+            ```
+        """
         # The public OTOBO client does not currently expose an article creation
         # endpoint, so this implementation simply returns the provided note.
         return note

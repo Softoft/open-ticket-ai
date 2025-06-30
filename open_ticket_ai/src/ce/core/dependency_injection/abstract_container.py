@@ -1,4 +1,3 @@
-# FILE_PATH: open_ticket_ai\src\ce\core\dependency_injection\abstract_container.py
 import abc
 
 from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import (
@@ -30,7 +29,7 @@ class AbstractContainer(abc.ABC):
                 `Providable`.
 
         Returns:
-            An instance of the type specified by `subclass_of` ( subclass).
+            An instance of the type specified by `subclass_of`.
 
         Raises:
             InstanceNotFoundError: If no instance matching the provider key is found.

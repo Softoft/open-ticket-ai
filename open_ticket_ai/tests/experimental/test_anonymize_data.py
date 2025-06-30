@@ -1,4 +1,3 @@
-# FILE_PATH: open_ticket_ai\tests\experimental\test_anonymize_data.py
 """Tests for the anonymize_text function.
 
 This module contains a suite of tests that verify the functionality of the `anonymize_text`

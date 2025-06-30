@@ -1,4 +1,3 @@
-# FILE_PATH: open_ticket_ai\src\ce\app.py
 """Main application module for OpenTicketAI.
 
 This module contains the `App` class which serves as the primary entry point

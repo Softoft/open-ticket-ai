@@ -95,7 +95,26 @@ def test_hf_service_description():
 
 
 def test_hf_service_process_returns_context(example_config, monkeypatch):
-    """Service should run inference and store result using configured fields."""
+    """Tests the process method of the Hugging Face AI inference service.
+
+    This test verifies that:
+        - The service correctly processes input context using Hugging Face transformers
+        - Required dependencies (tokenizer, model) are initialized properly
+        - The Hugging Face pipeline is called with expected parameters
+        - Inference results are stored in the context at the configured field
+
+    Steps:
+        1. Mock Hugging Face components (tokenizer, model, pipeline)
+        2. Set environment variable for Hugging Face token
+        3. Initialize service with example configuration
+        4. Process sample context through service
+        5. Verify tokenizer/model initialization and pipeline calls
+        6. Assert results are stored in context
+
+    Args:
+        example_config: Pytest fixture providing AI service configuration
+        monkeypatch: Pytest fixture for modifying environment and attributes
+    """
     fake_pipeline = MagicMock(return_value=[{"label": "A", "score": 0.9}])
     import types, importlib.machinery
     stub = types.ModuleType("openai")

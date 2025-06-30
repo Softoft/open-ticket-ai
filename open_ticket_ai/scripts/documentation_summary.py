@@ -23,9 +23,19 @@ class DocumentationSummarizer:
     async def summarize_file(self, path: Path, model: str) -> str:
         """Return a summary for a single markdown file.
 
+        Reads the file content and sends it to the OpenAI API for summarization.
+        Uses a system prompt optimized for Meta SEO descriptions.
+
         Args:
             path: Path to the markdown file.
-            model: OpenAI model identifier.
+            model: OpenAI model identifier (e.g., "gpt-3.5-turbo").
+
+        Returns:
+            str: The generated summary text.
+
+        Raises:
+            OSError: If the file cannot be read (e.g., file not found or permission issues).
+            openai.OpenAIError: For any errors from the OpenAI API request.
         """
         text = path.read_text(encoding="utf-8")
         response: Any = await self.client.chat.completions.create(
@@ -51,10 +61,14 @@ class DocumentationSummarizer:
     async def create_summary_dict(self, model: str) -> dict[str, str]:
         """Create a mapping of relative file paths to summaries.
 
-        Walks ``docs_dir`` recursively, summarizing all ``.md`` files.
+        Walks ``docs_dir`` recursively, summarizing all ``.md`` files concurrently.
 
         Args:
             model: OpenAI model identifier used for summarization.
+
+        Returns:
+            dict[str, str]: Dictionary mapping relative file paths (as strings) to their summaries.
+                Paths are relative to ``docs_dir``.
         """
         tasks = []
         paths: list[Path] = []

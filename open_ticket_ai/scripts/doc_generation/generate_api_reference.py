@@ -1,4 +1,3 @@
-# FILE_PATH: open_ticket_ai\scripts\doc_generation\generate_api_reference.py
 #!/usr/bin/env python3
 """
 A script to generate beautiful Markdown documentation from Python source code.
@@ -28,7 +27,15 @@ class DocstringStyler:
 
     @staticmethod
     def style_params(params: list[DocstringParam] | list[DocstringRaises], title: str) -> str:
-        """Styles a list of parameters into a Markdown list."""
+        """Styles a list of parameters into a Markdown list.
+        
+        Args:
+            params: List of parameter objects to style.
+            title: Section title to display (e.g., "Parameters" or "Raises").
+            
+        Returns:
+            Formatted Markdown string for the parameter section.
+        """
         if not params:
             return ""
         parts = [f"\n**{title}:**\n"]
@@ -43,7 +50,14 @@ class DocstringStyler:
 
     @staticmethod
     def style_returns(returns: Optional[DocstringReturns]) -> str:
-        """Styles the returns section into Markdown."""
+        """Styles the returns section into Markdown.
+        
+        Args:
+            returns: Return object containing type and description.
+            
+        Returns:
+            Formatted Markdown string for the returns section.
+        """
         if not returns:
             return ""
         type_name = f"`{returns.type_name}`" if returns.type_name else ""
@@ -169,8 +183,8 @@ class MarkdownVisitor(ast.NodeVisitor):
         The output is appended to the visitor's markdown_parts.
 
         Args:
-            node: The AST function node to process.
-            is_async: Flag indicating whether the function is async.
+            node (Union[ast.FunctionDef, ast.AsyncFunctionDef]): The AST function node to process.
+            is_async (bool, optional): Flag indicating whether the function is async. Defaults to False.
         """
         func_name = node.name
         if func_name.startswith("_") and not func_name.startswith("__"):
@@ -197,7 +211,13 @@ class MarkdownVisitor(ast.NodeVisitor):
             self.markdown_parts.append(f"\n{summary}\n\n{doc_md}\n")
 
     def get_markdown(self) -> str:
-        """Returns the accumulated Markdown content."""
+        """Returns the accumulated Markdown content.
+
+        Combines the module-level docstring with the collected documentation for classes and functions.
+
+        Returns:
+            str: The complete Markdown documentation string.
+        """
         module_docstring = self._process_docstring(
             ast.get_docstring(ast.parse(self.file_path.read_text(encoding="utf-8"))),
         )
@@ -205,7 +225,22 @@ class MarkdownVisitor(ast.NodeVisitor):
 
 
 def parse_python_file(file_path: Path) -> str:
-    """Parses a Python file and returns its documentation in Markdown."""
+    """Parses a Python file and returns its documentation in Markdown.
+
+    This function uses the `MarkdownVisitor` to traverse the AST of the Python file
+    and generate Markdown-formatted documentation. If parsing fails, an error message
+    is printed and an empty string is returned.
+
+    Args:
+        file_path: Path to the Python file to parse.
+
+    Returns:
+        str: The Markdown string containing the documentation. Returns an empty string
+        if an error occurs during parsing.
+
+    Note:
+        Any exceptions during parsing are caught and printed, and an empty string is returned.
+    """
     try:
         source_code = file_path.read_text(encoding="utf-8")
         tree = ast.parse(source_code)
@@ -227,10 +262,13 @@ def generate_markdown_for_pattern(
     Generates Markdown documentation for all Python files matching a glob pattern.
 
     Args:
-        excluded:
         src_path (Path): The source directory to search for Python files.
         pattern (str): The glob pattern to match Python files.
+        excluded (list[str]): List of glob patterns to exclude from processing.
         output_path (Path): The path where the generated Markdown file will be saved.
+
+    Raises:
+        ValueError: If the provided source path is not a directory.
     """
     src_path = Path(src_path)
     if not src_path.is_dir():
@@ -271,7 +309,7 @@ def generate_markdown(
     Generates Markdown documentation for a project based on specified patterns.
 
     Args:
-        src_path:
+        src_path (Path): The source directory to search for Python files.
         patterns_to_output_map (dict[str, Path]): A dictionary mapping glob patterns to output paths.
         excluded (list[str]): List of glob patterns to exclude from processing.
     """

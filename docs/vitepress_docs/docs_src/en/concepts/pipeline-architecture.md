@@ -1,8 +1,9 @@
 ---
+description: Discover the Open Ticket AI architecture, a modular pipeline that uses
+  transformer models to automatically process and classify support tickets by queue
+  and priority, streamlining help desk workflows.
 title: Open Ticket AI Architecture
-description: Learn about the architecture of Open Ticket AI.
 ---
-
 # Architecture
 
 ## Pipeline & Value Objects
@@ -30,5 +31,7 @@ Each stage in this pipeline consumes and produces **Value Objects** (e.g., `subj
 ## System Diagrams
 
 ### Application Class Diagram
+![Application Class Diagram](/images/application_class_diagram.png)
 
 ### Overview Diagram
+![Overview Diagram](/images/overview.png)

@@ -1,3 +1,9 @@
+---
+description: Official documentation for OpenTicketAI's core Python utility modules.
+  Learn how to generate a JSON schema for configuration validation with Pydantic and
+  pretty-print settings in a syntax-highlighted YAML format using the `rich` library.
+  This guide details essential tools for managing and visualizing system configuration.
+---
 # Documentation for `**/ce/core/util/**/*.py`
 
 ## Module: `open_ticket_ai\src\ce\core\util\create_json_config_schema.py`

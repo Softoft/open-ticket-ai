@@ -1,8 +1,8 @@
 ---
+description: Install Open Ticket AI with our official guide. Learn to clone the repository,
+  create a configuration file, and launch the application using Docker Compose.
 title: Installing Open Ticket AI
-description: Step-by-step guide to install Open Ticket AI.
 ---
-
 # Installation
 
 Follow these steps to install Open Ticket AI:
@@ -14,7 +14,7 @@ Follow these steps to install Open Ticket AI:
     ```
 
 2.  **Create a `config.yml`**
-    Refer to the  documentation for details on setting up this file.
+    Refer to the [Configuration](../reference/configuration-reference.md) documentation for details on setting up this file.
 
 3.  **Start with Docker Compose**
     This command will build the necessary Docker images and start the application services in detached mode.

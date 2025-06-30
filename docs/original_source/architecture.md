@@ -1,7 +1,7 @@
 ---
-description: Explore the technical architecture of Open Ticket AI, detailing its modular
-  data processing pipeline, key components, and use of Hugging Face models for intelligent
-  ticket classification and routing.
+description: Explore the technical architecture of Open Ticket AI. Learn how its modular
+  data pipeline and Hugging Face models enable intelligent ticket classification and
+  routing.
 title: Open Ticket AI Architecture Overview
 ---
 # Architecture Overview

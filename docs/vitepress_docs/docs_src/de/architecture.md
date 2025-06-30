@@ -1,61 +1,52 @@
 ---
-title: Architekturübersicht von Open Ticket AI
-description: Ein allgemeiner Überblick über die Komponenten und den Datenfluss in Open Ticket AI.
+description: Erkunden Sie die technische Architektur von Open Ticket AI. Erfahren Sie, wie die modulare Daten-Pipeline und die Hugging Face-Modelle eine intelligente Ticket-Klassifizierung und -Weiterleitung ermöglichen.
+title: Open Ticket AI Architekturübersicht
 ---
-
 # Architekturübersicht
 
-Open Ticket AI basiert auf einer modularen Pipeline, die jedes Ticket in einer Reihe von klar
-definierten Stufen verarbeitet. Das System nutzt Dependency Injection und Konfigurationsdateien, um
-diese Stufen zusammenzusetzen, was die Erweiterung oder den Austausch einzelner Teile erleichtert.
+Open Ticket AI basiert auf einer modularen Pipeline, die jedes Ticket durch eine Reihe klar definierter Stufen verarbeitet. Das System nutzt Dependency Injection und Konfigurationsdateien, um diese Stufen zusammenzusetzen, was es einfach macht, einzelne Teile zu erweitern oder zu ersetzen.
 
 ## Verarbeitungs-Pipeline
 
-Die Pipeline zur Ticketverarbeitung sieht wie folgt aus:
+Die Ticket-Verarbeitungs-Pipeline sieht wie folgt aus:
 
 ```
 [ Eingehendes Ticket ]
        ↓
-[ Preprocessor ] — bereinigt & führt Betreff+Text zusammen
+[ Präprozessor ] — bereinigt & verbindet subject+body
        ↓
 [ Transformer Tokenizer ]
        ↓
-[ Queue Classifier ] → Queue-ID + Konfidenz
+[ Queue-Klassifikator ] → Queue-ID + Konfidenz
        ↓
-[ Priority Classifier ] → Prioritätswert + Konfidenz
+[ Prioritäts-Klassifikator ] → Prioritäts-Score + Konfidenz
        ↓
-[ Postprocessor ] — wendet Schwellenwerte an, leitet weiter oder markiert
+[ Postprozessor ] — wendet Schwellenwerte an, leitet weiter oder markiert
        ↓
-[ Ticket System Adapter ] — aktualisiert Ticket über REST API
+[ Ticketsystem-Adapter ] — aktualisiert Ticket über REST API
 ```
 
-Jeder Schritt konsumiert und produziert **Werteobjekte** (Value Objects) wie `subject`, `body`,
-`queue_id` und `priority`. Dieser Ansatz hält die Pipeline modular und ermöglicht das Hinzufügen
-neuer Schritte oder Werteobjekte mit minimalen Änderungen am restlichen System.
+Jeder Schritt konsumiert und produziert **Value Objects** wie `subject`, `body`, `queue_id` und `priority`. Dieser Ansatz hält die Pipeline modular und ermöglicht das Hinzufügen neuer Schritte oder Value Objects mit minimalen Änderungen am Rest des Systems.
 
 ## Hauptkomponenten
 
-- **App & Orchestrator** – Validieren die Konfiguration, planen Jobs und verwalten die
-  Gesamtschleife.
-- **Fetchers** – Rufen neue Tickets von externen Systemen ab.
-- **Preparers** – Wandeln rohe Ticketdaten in eine für KI-Modelle geeignete Form um.
-- **AI Inference Services** – Laden Hugging Face-Modelle und erzeugen Vorhersagen für Queue oder
-  Priorität.
-- **Modifiers** – Übertragen die Vorhersagen über Adapter zurück in das Ticketsystem.
-- **Ticket System Adapters** – Stellen REST-Integrationen mit Systemen wie OTOBO bereit.
+- **App & Orchestrator** – Validieren die Konfiguration, planen Jobs und verwalten die Gesamtschleife.
+- **Fetcher** – Rufen neue Tickets von externen Systemen ab.
+- **Preparer** – Transformieren rohe Ticketdaten in eine für KI-Modelle geeignete Form.
+- **AI Inference Services** – Laden Hugging Face-Modelle und erzeugen Queue- oder Prioritätsvorhersagen.
+- **Modifier** – Wenden die Vorhersagen über Adapter wieder auf das Ticketsystem an.
+- **Ticketsystem-Adapter** – Stellen REST-Integrationen mit Systemen wie OTOBO bereit.
 
-Alle Komponenten werden in einem zentralen Dependency-Injection-Container registriert und über
-`config.yml` konfiguriert.
+Alle Komponenten werden in einem zentralen Dependency-Injection-Container registriert und über `config.yml` konfiguriert.
 
 ## Diagramme
 
 ### Anwendungs-Klassendiagramm
-
 ![Anwendungs-Klassendiagramm](../../public/images/application_class_diagram.png)
 
 ### Übersichtsdiagramm
-
 ![Übersichtsdiagramm](../../public/images/overview.png)
 
-Diese Diagramme veranschaulichen, wie die Pipeline orchestriert wird und wie die einzelnen
-Komponenten miteinander interagieren.
+Diese Diagramme veranschaulichen, wie die Pipeline orchestriert wird und wie die einzelnen Komponenten miteinander interagieren.
+
+---

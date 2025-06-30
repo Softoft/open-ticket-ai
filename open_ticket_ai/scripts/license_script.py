@@ -23,11 +23,15 @@ new_license_notice = f"""# Copyright (c) {current_year} by Softoft, Tobias Bueck
 def find_start_of_code(lines):
     """Return the index of the first non-comment line.
 
+    Scans through lines until it finds the first line that contains non-whitespace
+    characters and doesn't start with a '#' comment marker.
+
     Args:
         lines (list): List of strings representing lines in a file.
 
     Returns:
         int: Index of the first line that is not a comment or whitespace.
+            Returns len(lines) if no such line exists.
     """
     for i, line in enumerate(lines):
         if line.strip() and not line.strip().startswith('#'):
@@ -37,6 +41,8 @@ def find_start_of_code(lines):
 
 def read_file(filepath):
     """Read all lines from ``filepath``.
+
+    Opens the specified file in read mode and returns all lines as a list of strings.
 
     Args:
         filepath (str): Path to the file to read.
@@ -50,6 +56,8 @@ def read_file(filepath):
 
 def write_file(filepath, lines):
     """Write ``lines`` to ``filepath``.
+
+    Opens the specified file in write mode and writes all lines to it.
 
     Args:
         filepath (str): Path to the file to write.

@@ -170,7 +170,7 @@ class TestOpenTicketAIConfig:
         minimal_config_dict[list_name_to_alter][0]["id"] = original_id
         minimal_config_dict["pipelines"][0]["pipes"][pipe_index] = original_id
 
-    def test_duplicate_ids_in_component_list_allowed_by_basemodel_but_picked_by_set_logic(self,
+    def test_duplicate_ids_in_component_list_allowed_by_b_but_picked_by_set_logic(self,
                                                                                           minimal_config_dict):
         """Tests behavior when duplicate component IDs exist in a component list.
 

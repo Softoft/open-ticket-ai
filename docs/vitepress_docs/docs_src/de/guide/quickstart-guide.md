@@ -1,7 +1,13 @@
 ---
+description: Entdecken Sie, wie Sie ATC einfach mit Docker installieren und die REST-API
+  für die automatisierte Klassifizierung von Support-Tickets nutzen können. Diese
+  Anleitung bietet schrittweise Anweisungen zum Senden von Trainingsdaten, zum Starten
+  des Model-Trainings und zum Klassifizieren neuer Tickets, um Ihren Support-Workflow
+  zu optimieren.
 title: Installation und Nutzung von ATC
-description: Installieren Sie ATC auf Ihrem Server und nutzen Sie die API zur automatisierten Klassifizierung von Support-Tickets.
 ---
+-----------------------------------------------------------------------------------------------------
+
 # Installation von ATC
 
 ATC kann einfach mit Docker auf Ihrem Server installiert werden. Führen Sie die folgenden Schritte aus, um die Installation durchzuführen:
@@ -25,9 +31,9 @@ docker run -d -p 8080:80 your-docker-repo/atc:latest
 
 Dieser Befehl lädt das neueste ATC Docker-Image aus Ihrem Repository und startet es auf Port 8080.
 
-# Nutzung der ATC-API
+# Verwendung der ATC-API
 
-Nach der Installation haben Sie HTTP-REST-Zugriff auf die ATC-API. Hier sind einige grundlegende Befehle zur Nutzung der API:
+Nach der Installation haben Sie HTTP-REST-Zugriff auf die ATC-API. Hier sind einige grundlegende Befehle zur Verwendung der API:
 
 ## Senden von Trainingsdaten
 
@@ -39,11 +45,11 @@ curl -X POST http://your-server:8080/api/train \
      --data-binary @yourfile.csv
 ```
 
-Dieser Befehl sendet die Datei `yourfile.csv` an die API, um sie für das Training zu verwenden.
+Dieser Befehl sendet die Datei `yourfile.csv` zur Verwendung im Training an die API.
 
 ## Starten des Trainings
 
-Um das Training des Modells zu starten, verwenden Sie diesen Befehl:
+Um das Model-Training zu starten, verwenden Sie diesen Befehl:
 
 ```bash
 curl -X POST http://your-server:8080/api/start-training
@@ -61,7 +67,7 @@ curl -X POST http://your-server:8080/api/classify \
      -d '{"ticket_data": "Your ticket content"}'
 ```
 
-Dieser Befehl sendet den Ticketinhalt zur Klassifizierung und gibt die Klassifizierungs-Labels zurück.
+Dieser Befehl sendet den Ticketinhalt zur Klassifizierung und gibt die Klassifizierungslabels zurück.
 
 # Zusammenfassung
 

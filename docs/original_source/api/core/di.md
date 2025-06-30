@@ -1,7 +1,8 @@
 ---
-description: Explore the open_ticket_ai dependency injection system. Learn how the
-  Registry, Container, and create_registry function establish a flexible architecture
-  for managing core services like the OTOBOAdapter and HFLocalAIInferenceService.
+description: Discover the Dependency Injection (DI) architecture of Open Ticket AI.
+  This documentation explains how to create and use a Python class registry to manage
+  core services like OTOBO integration, data preparation, and local Hugging Face AI
+  inference.
 ---
 # Documentation for `**/ce/core/dependency_injection/**/*.py`
 
@@ -31,7 +32,7 @@ include integration adapters, data preparers, and AI inference services.
 The following classes are registered:
 - `OTOBOAdapter`: Handles integration with the OTOBO ticket system.
 - `SubjectBodyPreparer`: Prepares subject and body content for ticket processing.
-- `HFAIInferenceService`: Provides local AI inference using Hugging Face models.
+- `HFLocalAIInferenceService`: Provides local AI inference using Hugging Face models.
 
 **Returns:** (`Registry`) - A configured registry instance with all necessary classes registered.
 

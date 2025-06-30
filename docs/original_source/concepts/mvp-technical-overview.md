@@ -1,7 +1,7 @@
 ---
 description: A technical overview of the Automated Ticket Classification (ATC) MVP,
-  detailing its core architecture, use of Hugging Face models for queue and priority
-  classification, and specific integration steps for the OTOBO ticket system.
+  detailing its architecture, use of Hugging Face models for queue and priority classification,
+  and specific integration steps for the OTOBO ticket system.
 title: Technical Overview (MVP)
 ---
 # Technical Overview (MVP)

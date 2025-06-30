@@ -1,7 +1,7 @@
 ---
-description: Automate ticket classification with Open Ticket AI and Docker Compose.
-  Learn to run queue and priority workers to intelligently route and prioritize support
-  tickets.
+description: Learn how to use Open Ticket AI with Docker Compose to automate ticket
+  classification. This guide explains how to run queue and priority workers to intelligently
+  route and prioritize support tickets based on AI predictions.
 title: Using Open Ticket AI
 ---
 # Usage

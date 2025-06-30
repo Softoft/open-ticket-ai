@@ -1,13 +1,16 @@
 # FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\generic_ticket_updater.py
 from open_ticket_ai.src.ce.core.config.config_models import ProvidableConfig
+
+from open_ticket_ai.src.ce.run.pipe_implementations.empty_data_model import EmptyDataModel
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import (
     TicketSystemAdapter,
 )
+from open_ticket_ai.src.ce.ticket_system_integration.unified_models import UnifiedTicket
 
 
-class GenericTicketUpdater(Pipe):
+class GenericTicketUpdater(Pipe[UnifiedTicket, EmptyDataModel]):
     """Update a ticket in the ticket system using data from the context.
 
     This pipe component is responsible for updating tickets in an external ticket tracking
@@ -31,20 +34,21 @@ class GenericTicketUpdater(Pipe):
         self.modifier_config = config
         self.ticket_system = ticket_system
 
-    def process(self, context: PipelineContext) -> PipelineContext:
+    def process(self, context: PipelineContext[UnifiedTicket]) -> PipelineContext[EmptyDataModel]:
         """Processes the pipeline context to update the ticket if update data exists.
 
-        Retrieves update data from the context (specifically from the key `"update_data"` in
-        `context.data`) and updates the ticket in the ticket system if update data is present.
-        Returns the context unchanged.
+        Retrieves update data from `context.data` (of type `UnifiedTicket`) and updates the ticket
+        in the ticket system if update data is present (truthy). Returns the context unchanged.
 
         Args:
-            context: The pipeline context containing data and ticket information.
+            context (PipelineContext[UnifiedTicket]): The pipeline context containing data and
+                ticket information.
 
         Returns:
-            The original pipeline context after processing (unchanged).
+            PipelineContext[EmptyDataModel]: The original pipeline context after processing
+                (unchanged).
         """
-        update_data = context.data.get("update_data")
+        update_data: UnifiedTicket = context.data
         if update_data:
             self.ticket_system.update_ticket(context.ticket_id, update_data)
         return context
@@ -54,6 +58,6 @@ class GenericTicketUpdater(Pipe):
         """Provides a description of the pipe's purpose.
 
         Returns:
-            A string describing the pipe's functionality.
+            str: A string describing the pipe's functionality.
         """
         return "Updates the ticket in the ticket system using data stored in the context."

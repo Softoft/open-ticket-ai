@@ -1,9 +1,13 @@
-# FILE_PATH: open_ticket_ai\tests\src\run\test_preparers\test_data_preparer.py
+"""Unit tests for the DummyPreparer pipeline component.
+
+This module tests the functionality of the DummyPreparer, which is a dummy implementation
+of a Pipe used for testing the preparer step in the pipeline.
+"""
 from unittest.mock import patch
 
-from open_ticket_ai.src.ce.core.config.config_models import PreparerConfig
-from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
-from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
+from open_ticket\_ai.src.ce.core.config.config\_models import PreparerConfig
+from open_ticket\_ai.src.ce.run.pipeline.context import PipelineContext
+from open_ticket\_ai.src.ce.run.pipeline.pipe import Pipe
 
 
 class DummyPreparer(Pipe):
@@ -49,11 +53,11 @@ def test_preparer_process_updates_context():
     """
     cfg = PreparerConfig(id="p1", provider_key="dummy")
     with patch(
-        "open_ticket_ai.src.ce.core.mixins.registry_providable_instance.pretty_print_config"
+        "open_ticket\_ai.src.ce.core.mixins.registry_providable_instance.pretty_print_config"
     ) as pp:
         preparer = DummyPreparer(cfg)
         pp.assert_called_once()
-        assert pp.call_args.args[0] is cfg
+        assert pp.call_args.args\[0] is cfg
     ctx = PipelineContext(ticket_id="1", data={"key": "value"})
     out = preparer.process(ctx)
     assert out.data["prepared_data"] == "value"

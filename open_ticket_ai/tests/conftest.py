@@ -11,8 +11,10 @@ def pytest_collection_modifyitems(config, items):
     If either is missing, it marks all tests in 'test_anonymize_data.py' to be skipped.
 
     Args:
-        config (pytest.Config): The pytest configuration object.
-        items (list[pytest.Item]): List of test items collected by pytest.
+        config (pytest.Config): 
+            The pytest configuration object.
+        items (list[pytest.Item]): 
+            List of test items collected by pytest.
     """
     try:
         importlib.import_module("spacy")

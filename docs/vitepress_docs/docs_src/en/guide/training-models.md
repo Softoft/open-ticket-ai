@@ -1,8 +1,10 @@
 ---
+description: Learn to train and fine-tune custom AI models for Open Ticket AI. This
+  guide covers essential steps from data collection and cleaning to hyperparameter
+  tuning and model evaluation to improve ticket queue and priority classification
+  accuracy.
 title: Training AI Models for Open Ticket AI
-description: Guide on how to train or fine-tune models for Open Ticket AI.
 ---
-
 # Training the Model
 
 :::note

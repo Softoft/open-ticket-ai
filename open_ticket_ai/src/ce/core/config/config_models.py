@@ -52,19 +52,35 @@ class SystemConfig(ProvidableConfig):
 
 
 class FetcherConfig(ProvidableConfig):
-    """Configuration for data fetchers."""
+    """Configuration for data fetchers.
+
+    This class represents the configuration for a data fetcher component. It inherits all attributes
+    from `ProvidableConfig`.
+    """
 
 
 class PreparerConfig(ProvidableConfig):
-    """Configuration for data preparers."""
+    """Configuration for data preparers.
+
+    This class represents the configuration for a data preparer component. It inherits all attributes
+    from `ProvidableConfig`.
+    """
 
 
 class ModifierConfig(ProvidableConfig):
-    """Configuration for modifiers."""
+    """Configuration for modifiers.
+
+    This class represents the configuration for a modifier component. It inherits all attributes
+    from `ProvidableConfig`.
+    """
 
 
 class AIInferenceServiceConfig(ProvidableConfig):
-    """Configuration for AI inference services."""
+    """Configuration for AI inference services.
+
+    This class represents the configuration for an AI inference service component. It inherits all attributes
+    from `ProvidableConfig`.
+    """
 
 
 class SchedulerConfig(BaseModel):

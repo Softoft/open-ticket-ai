@@ -1,7 +1,6 @@
 ---
-description: Easily install Open Ticket AI with our official step-by-step guide. Learn
-  to clone the repository, create your configuration, and launch the app with Docker
-  Compose.
+description: Install Open Ticket AI with our official guide. Learn to clone the repository,
+  create a configuration file, and launch the application using Docker Compose.
 title: Installing Open Ticket AI
 ---
 # Installation

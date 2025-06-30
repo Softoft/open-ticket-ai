@@ -1,4 +1,3 @@
-# FILE_PATH: open_ticket_ai\src\ce\run\managers\orchestrator.py
 """Top level orchestration utilities."""
 
 from __future__ import annotations
@@ -49,12 +48,12 @@ class Orchestrator:
         the given ticket. This is the core method for individual ticket processing.
 
         Args:
-            ticket_id: Unique identifier of the ticket to process
-            pipeline: Pipeline instance to execute
+            ticket_id: Unique identifier of the ticket to process.
+            pipeline: Pipeline instance to execute.
 
         Returns:
             PipelineContext: The execution context containing results and state
-                after pipeline execution
+                after pipeline execution.
         """
         return pipeline.execute(PipelineContext(ticket_id=ticket_id))
 

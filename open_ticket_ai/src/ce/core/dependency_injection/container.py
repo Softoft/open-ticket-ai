@@ -1,4 +1,16 @@
 # FILE_PATH: open_ticket_ai\src\ce\core\dependency_injection\container.py
+"""Dependency injection container setup for Open Ticket AI.
+
+This module defines the `DIContainer` class which is the central dependency injection
+container for the application. It also includes the `AppModule` which configures
+the core bindings for the application.
+
+The container is responsible for:
+    - Loading and validating the application configuration
+    - Creating a registry of available components
+    - Binding core services (like the ticket system client)
+    - Providing methods to retrieve configured instances and pipelines
+"""
 import os
 
 from injector import Binder, Injector, Module, provider, singleton

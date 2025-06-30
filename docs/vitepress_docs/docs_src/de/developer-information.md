@@ -1,14 +1,16 @@
 ---
+description: Entwicklerhandbuch für die ATC Community Edition, ein On-Premise-Tool zur Ticket-Klassifizierung.
+  Lernen Sie, das System mit YAML zu konfigurieren, es über die CLI auszuführen und seine
+  Architektur mit benutzerdefinierten Python-Komponenten zu erweitern.
 title: Entwicklerinformationen
-description: Entwicklerinformationen für die ATC Community Edition
 ---
 # Entwicklerinformationen für die ATC Community Edition
 
 ## Überblick
 
-Die ATC Community Edition ist eine On-Premise-Lösung zur automatisierten Klassifizierung von Support-Tickets. Die aktuelle MVP-Version wird über eine YAML-Konfigurationsdatei gesteuert und per CLI gestartet. Es gibt keine REST API zum Hochladen von Trainingsdaten oder zum Auslösen eines Trainingslaufs.
+Die ATC Community Edition ist eine On-Premise-Lösung zur automatisierten Klassifizierung von Support-Tickets. Die aktuelle MVP-Version wird über eine YAML-Konfigurationsdatei gesteuert und per CLI gestartet. Es gibt keine REST-API zum Hochladen von Trainingsdaten oder zum Auslösen eines Trainingslaufs.
 
-## Softwarearchitektur
+## Software-Architektur
 
 Die Anwendung besteht im Wesentlichen aus den folgenden Paketen:
 
@@ -25,7 +27,7 @@ Ein Beispielbefehl zum Starten der Anwendung:
 python -m open_ticket_ai.src.ce.main start
 ```
 
-## Training eigener Modelle
+## Training benutzerdefinierter Modelle
 
 Ein direktes Training über die Anwendung ist im MVP nicht vorgesehen. Vortrainierte Modelle können in der Konfiguration angegeben und verwendet werden. Wenn ein Modell angepasst oder neu erstellt werden muss, muss dies außerhalb der Anwendung geschehen.
 
@@ -35,4 +37,4 @@ Benutzerdefinierte Fetcher, Preparer, KI-Services oder Modifier können als Pyth
 
 ## Zusammenfassung
 
-Die ATC Community Edition bietet in ihrer MVP-Version einen lokal ausgeführten Workflow zur automatischen Ticket-Klassifizierung. Alle Einstellungen werden über YAML-Dateien verwaltet; es ist keine REST API verfügbar. Für das Training müssen externe Prozesse oder Skripte verwendet werden.
+Die ATC Community Edition bietet in ihrer MVP-Version einen lokal ausgeführten Workflow zur automatischen Ticket-Klassifizierung. Alle Einstellungen werden über YAML-Dateien verwaltet; es ist keine REST-API verfügbar. Für das Training müssen externe Prozesse oder Skripte verwendet werden.

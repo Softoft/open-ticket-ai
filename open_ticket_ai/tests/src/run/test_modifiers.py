@@ -1,4 +1,10 @@
 # FILE_PATH: open_ticket_ai\tests\src\run\test_modifiers.py
+"""Unit tests for ticket modifier implementations.
+
+This module contains tests for:
+1. Modifier initialization behavior
+2. Generic ticket updater functionality
+"""
 from unittest.mock import MagicMock, patch
 
 from open_ticket_ai.src.ce.core.config.config_models import ModifierConfig
@@ -64,6 +70,12 @@ def test_generic_ticket_updater_calls_update():
 
     Verifies that when processing a context with update data, the adapter's
     update_ticket method is called with the correct ticket ID and data.
+
+    Steps:
+    1. Creates mock adapter and modifier config
+    2. Processes pipeline context containing update data
+    3. Asserts adapter was called with correct parameters
+    4. Verifies original context is returned unchanged
     """
     adapter = MagicMock()
     cfg = ModifierConfig(id="u1", provider_key="generic")

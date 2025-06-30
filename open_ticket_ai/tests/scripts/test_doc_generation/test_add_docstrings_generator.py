@@ -10,7 +10,6 @@ if "openai" not in sys.modules:
     sys.modules["openai"] = dummy
 
 
-
 class MockClient:
     """Mock client for testing OpenAI API interactions.
 

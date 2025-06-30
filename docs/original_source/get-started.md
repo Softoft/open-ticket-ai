@@ -1,7 +1,7 @@
 ---
-description: Learn how to quickly install Open Ticket AI using Docker. This getting
-  started guide provides easy setup instructions for integrating with your OTRS, OTOBO,
-  or Znuny helpdesk via Web Services.
+description: Learn how to quickly install Open Ticket AI using Docker. This guide
+  provides easy setup instructions for integrating with your OTRS, OTOBO, or Znuny
+  helpdesk via Web Services.
 title: Getting Started
 ---
 # Installation

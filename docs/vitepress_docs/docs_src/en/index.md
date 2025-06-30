@@ -1,73 +1,73 @@
 ---
-layout: home
-
-hero:
-    name: "Open Ticket AI"
-    text: ""
-    tagline: Save time and money by automating
-    image:
-        light: https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=300&q=100
-        dark: https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=300&q=100
-        alt: VitePress
-    actions:
-        -   theme: brand
-            text: Get Started
-            link: /get-started
-        -   theme: alt
-            text: Feature Overview
-            link: /concepts/community-edition-overview
-
+description: Save time and money with Open Ticket AI, the secure, on-premise AI solution
+  for automating OTOBO support ticket classification. Features easy Docker installation,
+  a powerful REST API, and seamless integration to boost your helpdesk efficiency.
 features:
-    -   title: Einfache Installation
-        details: Installieren Sie ATC einfach mit Docker auf Ihrem Server.
-        icon:
-            light: "https://softoft.sirv.com/Images/otobo/docs/custom/icons/server-solid.png?h=48&q=100"
-            dark: "https://softoft.sirv.com/Images/otobo/docs/custom/icons/server-solid.png?h=48&q=100&colorlevel.white=0"
-            height: 48
-            width: "auto"
-            alt: "OTOBO ATC AI Icon"
-    -   title: Leistungsstarke API
-        details: Nutzen Sie die HTTP REST API für die Datenübertragung und Modellverwaltung.
-        icon:
-            light: "https://softoft.sirv.com/Images/otobo/docs/custom/icons/code-solid.png?h=48&q=100"
-            dark: "https://softoft.sirv.com/Images/otobo/docs/custom/icons/code-solid.png?h=48&q=100&colorlevel.white=0"
-            height: 48
-            width: "auto"
-            alt: "OTOBO ATC AI Icon"
-    -   title: OTOBO Integration
-        details: Verwenden Sie das ATC Add-On für nahtlose Integration in OTOBO.
-        icon:
-            light: "https://softoft.sirv.com/Images/otobo/docs/custom/icons/plug-solid.png?h=48&q=100"
-            dark: "https://softoft.sirv.com/Images/otobo/docs/custom/icons/plug-solid.png?h=48&q=100&colorlevel.white=0"
-            height: 48
-            width: "auto"
-            alt: "OTOBO ATC AI Icon"
-    -   title: Automatisierte Klassifizierung
-        details: Automatisieren Sie die Klassifizierung von Support-Tickets.
-        icon:
-            light: "https://softoft.sirv.com/Images/otobo/docs/custom/icons/robot-solid.png?h=48&q=100"
-            dark: "https://softoft.sirv.com/Images/otobo/docs/custom/icons/robot-solid.png?h=48&q=100&colorlevel.white=0"
-            height: 48
-            width: "auto"
-            alt: "OTOBO ATC AI Icon"
-    -   title: Hohe Sicherheit
-        details: Alle Daten werden lokal verarbeitet, um Datenschutz zu gewährleisten.
-        icon:
-            light: "https://softoft.sirv.com/Images/otobo/docs/custom/icons/lock-solid.png?h=48&q=100"
-            dark: "https://softoft.sirv.com/Images/otobo/docs/custom/icons/lock-solid.png?h=48&q=100&colorlevel.white=0"
-            height: 48
-            width: "auto"
-            alt: "OTOBO ATC AI Icon"
-    -   title: Flexibilität
-        details: Passen Sie die Konfiguration nach Ihren Bedürfnissen an.
-        icon:
-            light: "https://softoft.sirv.com/Images/otobo/docs/custom/icons/gear-solid.png?h=48&q=100"
-            dark: "https://softoft.sirv.com/Images/otobo/docs/custom/icons/gear-solid.png?h=48&q=100&colorlevel.white=0"
-            height: 48
-            width: "auto"
-            alt: "OTOBO ATC AI Icon"
+- details: Installieren Sie ATC einfach mit Docker auf Ihrem Server.
+  icon:
+    alt: OTOBO ATC AI Icon
+    dark: https://softoft.sirv.com/Images/otobo/docs/custom/icons/server-solid.png?h=48&q=100&colorlevel.white=0
+    height: 48
+    light: https://softoft.sirv.com/Images/otobo/docs/custom/icons/server-solid.png?h=48&q=100
+    width: auto
+  title: Einfache Installation
+- details: "Nutzen Sie die HTTP REST API f\xFCr die Daten\xFCbertragung und Modellverwaltung."
+  icon:
+    alt: OTOBO ATC AI Icon
+    dark: https://softoft.sirv.com/Images/otobo/docs/custom/icons/code-solid.png?h=48&q=100&colorlevel.white=0
+    height: 48
+    light: https://softoft.sirv.com/Images/otobo/docs/custom/icons/code-solid.png?h=48&q=100
+    width: auto
+  title: Leistungsstarke API
+- details: "Verwenden Sie das ATC Add-On f\xFCr nahtlose Integration in OTOBO."
+  icon:
+    alt: OTOBO ATC AI Icon
+    dark: https://softoft.sirv.com/Images/otobo/docs/custom/icons/plug-solid.png?h=48&q=100&colorlevel.white=0
+    height: 48
+    light: https://softoft.sirv.com/Images/otobo/docs/custom/icons/plug-solid.png?h=48&q=100
+    width: auto
+  title: OTOBO Integration
+- details: Automatisieren Sie die Klassifizierung von Support-Tickets.
+  icon:
+    alt: OTOBO ATC AI Icon
+    dark: https://softoft.sirv.com/Images/otobo/docs/custom/icons/robot-solid.png?h=48&q=100&colorlevel.white=0
+    height: 48
+    light: https://softoft.sirv.com/Images/otobo/docs/custom/icons/robot-solid.png?h=48&q=100
+    width: auto
+  title: Automatisierte Klassifizierung
+- details: "Alle Daten werden lokal verarbeitet, um Datenschutz zu gew\xE4hrleisten."
+  icon:
+    alt: OTOBO ATC AI Icon
+    dark: https://softoft.sirv.com/Images/otobo/docs/custom/icons/lock-solid.png?h=48&q=100&colorlevel.white=0
+    height: 48
+    light: https://softoft.sirv.com/Images/otobo/docs/custom/icons/lock-solid.png?h=48&q=100
+    width: auto
+  title: Hohe Sicherheit
+- details: "Passen Sie die Konfiguration nach Ihren Bed\xFCrfnissen an."
+  icon:
+    alt: OTOBO ATC AI Icon
+    dark: https://softoft.sirv.com/Images/otobo/docs/custom/icons/gear-solid.png?h=48&q=100&colorlevel.white=0
+    height: 48
+    light: https://softoft.sirv.com/Images/otobo/docs/custom/icons/gear-solid.png?h=48&q=100
+    width: auto
+  title: "Flexibilit\xE4t"
+hero:
+  actions:
+  - link: /get-started
+    text: Get Started
+    theme: brand
+  - link: /concepts/community-edition-overview
+    text: Feature Overview
+    theme: alt
+  image:
+    alt: VitePress
+    dark: https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=300&q=100
+    light: https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=300&q=100
+  name: Open Ticket AI
+  tagline: Save time and money by automating
+  text: ''
+layout: home
 ---
-
 <OTAIPredictionDemo/>
 
 <ServicePackagesComponent/>

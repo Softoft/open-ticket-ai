@@ -1,6 +1,8 @@
 ---
-description: Learn the simple Docker installation for ATC and use its REST API to
-  train a model for automated support ticket classification.
+description: Discover how to easily install ATC using Docker and utilize its REST
+  API for automated support ticket classification. This guide provides step-by-step
+  instructions on sending training data, initiating model training, and classifying
+  new tickets to streamline your support workflow.
 title: Installation and Usage of ATC
 ---
 -----------------------------------------------------------------------------------------------------

@@ -37,8 +37,10 @@ class OTOBOAdapterConfig(BaseModel):
     def __str__(self):
         """Return a string representation of the configuration.
 
+        The representation excludes the password for security reasons.
+
         Returns:
-            str: A formatted string containing the configuration details (excluding password).
+            `str`: A formatted string containing the configuration details (excluding password).
         """
         return f"OTOBOServerConfig(server_address={self.server_address}, " \
                f"webservice_name={self.webservice_name}, " \
@@ -52,10 +54,10 @@ class OTOBOAdapterConfig(BaseModel):
         """Retrieves the password from the environment variable specified in the configuration.
 
         Returns:
-            str: The password for authentication.
+            `str`: The password for authentication.
 
         Raises:
-            ValueError: If the specified environment variable is not set.
+            `ValueError`: If the specified environment variable is not set.
         """
         password = os.getenv(self.password_env_var)
         if not password:

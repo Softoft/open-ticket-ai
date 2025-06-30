@@ -1,3 +1,10 @@
+---
+description: Discover the Open Ticket AI Orchestrator, the core component responsible
+  for managing and executing automated ticket processing pipelines. This documentation
+  explains how the Orchestrator class uses dependency injection to build pipelines,
+  process individual tickets on-demand, and configure scheduled runs for continuous
+  workflow automation.
+---
 # Documentation for `**/ce/run/managers/*.py`
 
 ## Module: `open_ticket_ai\src\ce\run\managers\orchestrator.py`
@@ -38,11 +45,11 @@ the given ticket. This is the core method for individual ticket processing.
 
 **Parameters:**
 
-- **`ticket_id`** () - Unique identifier of the ticket to process
-- **`pipeline`** () - Pipeline instance to execute
+- **`ticket_id`** () - Unique identifier of the ticket to process.
+- **`pipeline`** () - Pipeline instance to execute.
 
 **Returns:** (`PipelineContext`) - The execution context containing results and state
-after pipeline execution
+after pipeline execution.
 
 :::
 

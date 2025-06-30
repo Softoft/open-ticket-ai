@@ -1,4 +1,3 @@
-# FILE_PATH: open_ticket_ai\tests\src\core\util_test.py
 """Tests for the `core.util` module.
 
 This module contains unit tests for the utility functions and configuration handling
@@ -105,4 +104,3 @@ def test_root_config_schema_contains_open_ticket_ai():
     """
     schema = create_json_config_schema.RootConfig.model_json_schema()
     assert "open_ticket_ai" in schema.get("properties", {})
-

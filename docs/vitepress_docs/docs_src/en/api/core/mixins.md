@@ -1,32 +1,14 @@
-# Documentation for `**/ce/core/mixins/**/*.py`
-
-## Module: `open_ticket_ai\src\ce\core\mixins\registry_instance_config.py`
-
-
-### <span style='text-info'>class</span> `RegistryInstanceConfig`
-
-Base configuration for registry instances.
-This class defines the core configuration structure required for initializing
-and managing registry instances. Each registry instance must have a unique
-identifier, a provider key, and can include additional provider-specific
-parameters.
-
-**Parameters:**
-
-- **`id`** () - A unique string identifier for the registry instance. Must be at least
-1 character long.
-- **`params`** () - A dictionary of additional configuration parameters specific to the
-registry provider. Defaults to an empty dictionary.
-- **`provider_key`** () - A string key identifying the provider implementation for this
-registry instance. Must be at least 1 character long.
-
-
 ---
+description: Official documentation for the `Providable` base class in `open_ticket_ai.ce.core.mixins`.
+  Learn how this class facilitates creating registry-managed objects, handling configuration,
+  and implementing provider registration with methods like `get_provider_key`.
+---
+# Documentation for `**/ce/core/mixins/**/*.py`
 
 ## Module: `open_ticket_ai\src\ce\core\mixins\registry_providable_instance.py`
 
 
-### <span style='text-info'>class</span> `RegistryProvidableInstance`
+### <span style='text-info'>class</span> `Providable`
 
 Base class for objects that can be provided by a registry.
 This class provides common functionality for registry-managed objects including
@@ -35,10 +17,10 @@ configuration storage, pretty printing of configuration, and provider registrati
 **Parameters:**
 
 - **`console`** (`Console`) - Rich console instance for output formatting.
-- **`config`** (`RegistryInstanceConfig`) - Configuration object for this instance.
+- **`config`** (`ProvidableConfig`) - Configuration object for this instance.
 
 
-::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `__init__(self, config: RegistryInstanceConfig, console: Console | None)`
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `__init__(self, config: ProvidableConfig, console: Console | None)`
 Initializes the instance with configuration and console.
 Stores the provided configuration and initializes a Rich Console instance if not provided.
 Logs the initialization event and pretty-prints the configuration.

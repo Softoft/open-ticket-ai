@@ -3,10 +3,11 @@ from typing import Any, Optional
 
 from pydantic import BaseModel
 
+from open_ticket_ai.src.ce.run.pipeline.meta_info import MetaInfo
 from open_ticket_ai.src.ce.run.pipeline.status import PipelineStatus
 
 
-class PipelineContext(BaseModel):
+class PipelineContext[DataT: BaseModel](BaseModel):
     """Context object passed between pipeline stages.
 
     This class serves as a container for sharing state and data across different stages
@@ -19,12 +20,9 @@ class PipelineContext(BaseModel):
             between pipeline stages. Defaults to an empty dictionary.
     """
 
-    ticket_id: str
-    data: dict[str, Any] = {}
-    status: PipelineStatus = PipelineStatus.RUNNING
-    error_message: Optional[str] = None
-    failed_pipe: Optional[str] = None
+    data: DataT
+    meta_info: MetaInfo
 
     def stop_pipeline(self):
         """A convenience method for pipes to signal a controlled stop."""
-        self.status = PipelineStatus.STOPPED
+        self.meta_info.status = PipelineStatus.STOPPED

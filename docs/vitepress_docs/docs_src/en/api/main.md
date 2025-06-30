@@ -1,3 +1,10 @@
+---
+description: Explore the documentation for the OpenTicketAI core engine. This guide
+  details the main `App` class in `app.py`, which orchestrates configuration validation
+  and job scheduling. It also covers `main.py`, the command-line interface (CLI) entry
+  point that initializes the application, configures logging, and launches the system
+  using dependency injection.
+---
 # Documentation for `**/ce/*.py`
 
 ## Module: `open_ticket_ai\src\ce\app.py`
@@ -72,7 +79,7 @@ It configures logging levels and launches the main application.
 
 Configure logging based on CLI options.
 This function sets the logging level for the application based on the provided command-line flags.
-It supports two levels of verbosity: 
+It supports two levels of verbosity:
 - `--verbose` for INFO level logging
 - `--debug` for DEBUG level logging
 

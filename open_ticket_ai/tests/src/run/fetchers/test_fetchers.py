@@ -45,7 +45,7 @@ def test_dummy_fetcher_process_populates_context():
     1. Initialize a `DummyFetcher` with mock configuration and ticket system
     2. Create a pipeline context with a dummy ticket ID
     3. Process the context through the fetcher
-    4. Verify the context contains the expected 'dummy' flag with True value
+    4. Verify the context contains the expected `dummy` flag with True value
 
     This ensures the dummy fetcher behaves as expected for testing purposes.
     """
@@ -64,11 +64,11 @@ def test_basic_ticket_fetcher_fetches_ticket():
     - Populates the pipeline context with ticket information
 
     Steps:
-    1. Create a mock adapter that returns predefined ticket data
-    2. Initialize the fetcher with configuration and mock adapter
+    1. Create a mock `adapter` that returns predefined ticket data
+    2. Initialize the `fetcher` with configuration and mock adapter
     3. Create pipeline context with a ticket ID
     4. Process context through the fetcher
-    5. Verify adapter was called with correct parameters
+    5. Verify `adapter` was called with correct parameters
     6. Verify context contains expected ticket data
 
     This ensures the basic ticket fetcher properly integrates with the ticket system adapter.
@@ -89,8 +89,8 @@ def test_basic_ticket_fetcher_description():
     This test verifies that the fetcher provides an appropriate description string.
 
     Steps:
-    1. Initialize the fetcher with mock configuration and adapter
-    2. Retrieve the description string
+    1. Initialize the `fetcher` with mock configuration and adapter
+    2. Retrieve the description string by calling the `get_description` method
     3. Verify the description contains expected keywords
 
     This ensures the fetcher correctly identifies itself in pipeline documentation.

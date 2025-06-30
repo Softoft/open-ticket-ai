@@ -13,7 +13,6 @@ The classes included are:
 """
 
 
-
 class DummyPreparer:
     """A dummy implementation of a data preparer for testing purposes.
 
