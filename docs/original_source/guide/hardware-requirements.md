@@ -1,25 +1,27 @@
 ---
-description: Ensure peak performance for Open Ticket AI with the right hardware. This
-  guide details CPU, NVIDIA GPU, and RAM requirements for any ticket volume and deployment.
+description: Ensure peak performance for Open Ticket AI with the right hardware. This guide details CPU, GPU, and RAM recommendations for common deployment scenarios.
 title: Hardware Recommendations for Open Ticket AI
 ---
+
 # Hardware Recommendations
 
-Choosing the right hardware is important for the performance of Open Ticket AI, especially when dealing with a large volume of tickets or using more complex models.
+Selecting appropriate hardware ensures smooth operation of Open Ticket AI.
 
-*   **CPU-only**: Sufficient for small volumes of tickets (e.g., < 50 tickets per minute). Most modern server CPUs should handle this workload.
-*   **GPU (Graphics Processing Unit)**: Recommended for higher volumes (e.g., > 100 tickets per minute) or when using larger, more computationally intensive models. NVIDIA RTX series GPUs are a common choice.
-    *   **Examples**:
-        *   Hetzner Matrix GPU (which typically comes with ample vRAM)
-        *   AWS `g4ad.xlarge` instance or similar cloud GPU instances.
+* **CPU-only**: Adequate for small ticket volumes and models such as DistilBERT.
+* **GPU**: Recommended for high volumes or when using larger models. NVIDIA RTX series cards or comparable cloud instances (e.g., Hetzner Matrix GPU, AWS `g4ad.xlarge`) work well.
 
 ## Memory (RAM)
 
-Ensure you have enough RAM available for the models you intend to use. Refer to the [Training the Model](./training-models.md#4-model-selection-hardware) section for examples of RAM requirements for specific models.
+Approximate RAM requirements for the bundled models:
 
-*   For the default BERT models, you will generally need at least 4GB of RAM dedicated to the model, plus additional RAM for the operating system and the ticket system itself if they are running on the same host.
+| Model                | RAM |
+| -------------------- | --- |
+| DistilBERT           | ~2 GB |
+| BERT-base            | ~4 GB |
+
+Ensure additional RAM is available for the operating system and ticket system if they run on the same host.
 
 ## Deployment Considerations
 
-*   **Co-location vs. Separate Devices**: You can run Open Ticket AI on the same server as your ticket system or on a separate machine.
-*   **Network Configuration**: If running on separate devices, ensure your network configuration allows communication between Open Ticket AI and your ticket system. You will need to adjust the `rest_settings` (specifically the `base_url`) in your `config.yml` to point to the correct network address of your ticket system's API.
+* **Co-location vs. Separate Devices**: You can run Open Ticket AI on the same server as your ticket system or on a separate machine.
+* **Network Configuration**: If running on separate devices, adjust the `rest_settings.base_url` in `config.yml` so your ticket system can reach the application.
