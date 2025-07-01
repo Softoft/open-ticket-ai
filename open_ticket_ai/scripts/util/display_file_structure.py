@@ -23,7 +23,7 @@ def build_tree(base_path: Path, spec: PathSpec, tree: Tree, relative_path=""):
         if spec.match_file(rel_path):
             continue
         if path.is_dir():
-            branch = tree.add(f"[bold]{path.name}/[/]")
+            branch = tree.add(f"{path.name}")
             build_tree(path, spec, branch, rel_path)
         else:
             tree.add(path.name)
@@ -37,7 +37,7 @@ def get_tree_str(tree: Tree) -> str:
 def display_dir_tree(path_str: str):
     base_path = Path(path_str).resolve()
     spec = load_gitignore(base_path)
-    tree = Tree(f"[bold magenta]{base_path.name}[/]")
+    tree = Tree(f"{base_path.name}")
     build_tree(base_path, spec, tree)
     return get_tree_str(tree)
 
