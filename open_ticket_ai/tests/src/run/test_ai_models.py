@@ -96,6 +96,7 @@ def test_hf_service_description():
 
 def test_hf_service_process_returns_context(example_config, monkeypatch):
     """Service should run inference and store result using configured fields."""
+    pytest.importorskip("torch", reason="requires PyTorch for transformers")
     fake_pipeline = MagicMock(return_value=[{"label": "A", "score": 0.9}])
     import types, importlib.machinery
     stub = types.ModuleType("openai")

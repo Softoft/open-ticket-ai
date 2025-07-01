@@ -5,6 +5,8 @@ from open_ticket_ai.src.ce.core.config.config_models import FetcherConfig
 from open_ticket_ai.src.ce.run.pipe_implementations.basic_ticket_fetcher import BasicTicketFetcher
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
+from open_ticket_ai.src.ce.run.pipeline.status import PipelineStatus
+from open_ticket_ai.src.ce.ticket_system_integration.unified_models import SearchCriteria
 
 
 class DummyFetcher(Pipe):
@@ -74,12 +76,15 @@ def test_basic_ticket_fetcher_fetches_ticket():
     This ensures the basic ticket fetcher properly integrates with the ticket system adapter.
     """
     adapter = MagicMock()
-    adapter.find_first_ticket.return_value = {"TicketID": "42", "subject": "Hello"}
+    ticket_obj = {"TicketID": "42", "subject": "Hello"}
+    adapter.find_first_ticket.return_value = ticket_obj
     cfg = FetcherConfig(id="b1", provider_key="basic")
     fetcher = BasicTicketFetcher(cfg, adapter)
     ctx = PipelineContext(ticket_id="42")
     out = fetcher.process(ctx)
-    adapter.find_first_ticket.assert_called_once_with({"TicketID": "42"})
+    called_args = adapter.find_first_ticket.call_args.args[0]
+    assert isinstance(called_args, SearchCriteria)
+    assert called_args.id == "42"
     assert out.data["TicketID"] == "42"
 
 
@@ -98,3 +103,33 @@ def test_basic_ticket_fetcher_description():
     cfg = FetcherConfig(id="b1", provider_key="basic")
     fetcher = BasicTicketFetcher(cfg, MagicMock())
     assert "Basic ticket fetcher" in fetcher.get_description()
+
+
+def test_fetcher_with_invalid_filter_stops_pipeline():
+    """Unsupported filter attributes should stop the pipeline."""
+    adapter = MagicMock()
+    cfg = FetcherConfig(
+        id="b2",
+        provider_key="basic",
+        params={"filters": [{"attribute": "unknown", "value": "x"}]},
+    )
+    fetcher = BasicTicketFetcher(cfg, adapter)
+    ctx = PipelineContext(ticket_id="1")
+    out = fetcher.process(ctx)
+    assert out.status == PipelineStatus.STOPPED
+    adapter.find_first_ticket.assert_not_called()
+
+
+def test_fetcher_stops_when_no_ticket_found():
+    """Pipeline should stop if no ticket is returned."""
+    adapter = MagicMock()
+    adapter.find_first_ticket.return_value = None
+    cfg = FetcherConfig(
+        id="b3",
+        provider_key="basic",
+        params={"filters": [{"attribute": "queue", "value": "incoming"}]},
+    )
+    fetcher = BasicTicketFetcher(cfg, adapter)
+    ctx = PipelineContext(ticket_id="1")
+    out = fetcher.process(ctx)
+    assert out.status == PipelineStatus.STOPPED
