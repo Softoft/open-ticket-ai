@@ -6,7 +6,33 @@ title: Open Ticket AI Architecture Overview
 ---
 # Architecture Overview
 
-Open Ticket AI is built around a modular pipeline that processes each ticket through a series of well-defined stages. The system relies on dependency injection and configuration files to assemble these stages, making it easy to extend or replace individual pieces.
+Open Ticket AI runs as a background service that is started from the command
+line.  Its architecture is built around a modular pipeline that processes each
+ticket through a series of well‑defined stages.  Dependency injection and a
+central configuration file (`config.yml`) control which components are used,
+making it easy to extend or replace individual pieces.
+
+## Application Entry Point
+
+Start the application with:
+
+```bash
+python -m open_ticket_ai.src.ce.main start
+```
+
+This command initializes the dependency injection container, constructs the
+`App` object and begins the main processing loop.
+
+## Execution Flow
+
+1. `main.py` configures logging and builds a `DIContainer`.
+2. The container loads `config.yml`, creating all configured components.
+3. The `App` validates the configuration and delegates to the
+   `Orchestrator`.
+4. The `Orchestrator` reads the pipeline definitions and schedules them using
+   the `schedule` library.
+5. Each scheduled pipeline periodically polls the help desk for new tickets and
+   processes them.
 
 ## Processing Pipeline
 

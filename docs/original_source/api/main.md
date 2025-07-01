@@ -7,6 +7,17 @@ description: Explore the documentation for the OpenTicketAI core engine. This gu
 ---
 # Documentation for `**/ce/*.py`
 
+## Starting the application
+
+Run the service from the command line:
+
+```bash
+python -m open_ticket_ai.src.ce.main start
+```
+
+This command initializes the dependency injection container and launches the
+configured pipelines.
+
 ## Module: `open_ticket_ai\src\ce\app.py`
 
 Main application module for OpenTicketAI.
