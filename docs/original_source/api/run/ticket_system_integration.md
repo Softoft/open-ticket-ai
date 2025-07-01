@@ -1,9 +1,8 @@
 ---
-description: Explore the documentation for the Python `ticket_system_integration`
-  module. Learn how to use the `TicketSystemAdapter` abstract base class to create,
-  update, find, and manage tickets across different systems. This guide covers the
-  unified data models like `UnifiedTicket` and `UnifiedNote`, enabling a system-agnostic
-  approach to ticket management and integration.
+description: Explore the Python `ticket_system_integration` module.
+  The developer guide's "How to Integrate a New Ticket System" section
+  explains how to subclass `TicketSystemAdapter` and register new adapters.
+  This API reference documents the adapter base class and unified data models.
 ---
 # Documentation for `**/ce/ticket_system_integration/*.py`
 
