@@ -65,3 +65,9 @@ class HFLocalAIInferenceService(Pipe):
             str: Description text for the Hugging Face AI model service.
         """
         return "Hugging Face AI Model"
+
+# Backwards compatibility alias
+HFAIInferenceService = HFLocalAIInferenceService
+import builtins
+builtins.HFAIInferenceService = HFLocalAIInferenceService
+
