@@ -83,17 +83,18 @@ open_ticket_ai:
                 interval: 10
                 unit: "seconds"
             pipes:
-                - "basic_ticket_fetcher"
+                - "basic_ticket"
                 - "subject_body_preparer"
                 - "queue_ai_inference"
                 - "queue_updater"
 
         -   id: "priority_classification"
+            provider_key: "PriorityPredictor"
             schedule:
                 interval: 10
                 unit: "seconds"
             pipes:
-                - "basic_ticket_fetcher"
+                - "basic_ticket"
                 - "subject_body_preparer"
                 - "priority_ai_inference"
                 - "priority_updater"

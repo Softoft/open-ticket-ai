@@ -1,8 +1,7 @@
 ---
-description: Review the documentation for Python data models in `pipe_implementations`.
-  This guide details the `TextAIModelInput` class, used for structuring inputs for
-  AI text model inference, and the `EmptyDataModel`, a versatile Pydantic placeholder
-  for pipeline operations.
+description: Review the API for pipe implementations. See
+  the developer guide's "How to Add a Custom Pipe" section for
+  step-by-step instructions on creating your own pipe classes.
 ---
 # Documentation for `**/ce/run/pipe_implementations/*.py`
 
