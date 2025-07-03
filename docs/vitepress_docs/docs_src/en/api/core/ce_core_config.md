@@ -6,4 +6,4 @@ description: Learn about the core configuration system for the open_ticket_ai pr
 ---
 # Documentation for `**/ce/core/config/**/*.py`
 
-<CodeDocumentation package-id="experimental.anonymize_data" show-all-classes show-all-functions />
+<CodeDocumentation parentPackageId="experimental" show-all-classes show-all-functions />

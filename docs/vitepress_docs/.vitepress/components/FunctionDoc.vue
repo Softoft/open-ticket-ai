@@ -1,6 +1,6 @@
 <template>
     <div class="accordion-item">
-        <h2 :id="`heading-${uniqueId}`" class="accordion-header">
+        <span :id="`heading-${uniqueId}`" class="accordion-header">
             <button
                 :aria-controls="`#collapse-${uniqueId}`"
                 :data-bs-target="`#collapse-${uniqueId}`"
@@ -9,15 +9,15 @@
                 data-bs-toggle="collapse"
                 type="button"
             >
-                <div class="d-flex align-items-center w-100">
+                <span class="d-flex align-items-center w-100">
                     <CodeBadge v-if="func.is_async" text="async" type="info"/>
                     <span class="font-monospace text-nowrap">
-            <span class="function-name fw-bold me-1">{{ func.name }}</span>
-            <span class="signature-text">{{ func.signature }}</span>
-          </span>
-                </div>
+                        <span class="function-name fw-bold me-1">{{ func.name }}</span>
+                        <span class="signature-text">{{ func.signature }}</span>
+                    </span>
+                </span>
             </button>
-        </h2>
+        </span>
         <div :id="`collapse-${uniqueId}`" :aria-labelledby="`heading-${uniqueId}`" class="accordion-collapse collapse">
             <div class="accordion-body">
                 <Docstring :doc="func.docstring"/>
