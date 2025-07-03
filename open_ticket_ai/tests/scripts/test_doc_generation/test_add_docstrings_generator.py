@@ -1,4 +1,11 @@
-# FILE_PATH: open_ticket_ai\tests\scripts\test_doc_generation\test_add_docstrings_generator.py
+"""Unit tests for the DocstringGenerator functionality.
+
+This module contains tests that verify the behavior of the DocstringGenerator class,
+particularly its interaction with the OpenAI API and its ability to generate and insert
+docstrings into Python code.
+
+Note: This test module uses a mock OpenAI client to avoid making real API calls during testing.
+"""
 import sys
 from pathlib import Path
 from types import ModuleType, SimpleNamespace

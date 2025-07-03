@@ -62,10 +62,10 @@ def start():
     1. Configures the dependency injection container
     2. Retrieves the main application instance from the container
     3. Runs the application
-    4. Displays a stylized startup banner using pyfiglet
+    4. Displays a stylized startup banner using `pyfiglet`
 
     The application follows a dependency injection pattern where all required
-    dependencies are resolved through the DIContainer.
+    dependencies are resolved through the `DIContainer`.
     """
     logger = logging.getLogger(__name__)
     f = Figlet(font="slant")

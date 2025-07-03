@@ -11,14 +11,13 @@ from open_ticket_ai.src.ce.ticket_system_integration.unified_models import Unifi
 
 
 class GenericTicketUpdater(Pipe[UnifiedTicket, EmptyDataModel]):
-    """Update a ticket in the ticket system using data from the context.
+    """Updates tickets in external systems using pipeline-generated data.
 
-    This pipe component is responsible for updating tickets in an external ticket tracking
-    system (like Jira, ServiceNow, etc.) using data generated during the pipeline execution.
-    It checks the pipeline context for update instructions and delegates the actual update
-    operation to the configured ticket system adapter.
+    This component updates tickets in external ticket tracking systems (e.g., Jira, ServiceNow)
+    using data generated during pipeline execution. It checks the pipeline context for update
+    instructions and delegates the update operation to the configured ticket system adapter.
 
-    Attributes:
+    `Attributes`:
         modifier_config: Configuration settings for the ticket updater.
         ticket_system: Adapter instance for interacting with the external ticket system.
     """
@@ -26,7 +25,7 @@ class GenericTicketUpdater(Pipe[UnifiedTicket, EmptyDataModel]):
     def __init__(self, config: ProvidableConfig, ticket_system: TicketSystemAdapter):
         """Initializes the `GenericTicketUpdater` with configuration and ticket system adapter.
 
-        Args:
+        `Args`:
             config: Configuration instance containing settings for the pipeline component.
             ticket_system: Adapter object that handles communication with the external ticket system.
         """
@@ -35,18 +34,22 @@ class GenericTicketUpdater(Pipe[UnifiedTicket, EmptyDataModel]):
         self.ticket_system = ticket_system
 
     def process(self, context: PipelineContext[UnifiedTicket]) -> PipelineContext[EmptyDataModel]:
-        """Processes the pipeline context to update the ticket if update data exists.
+        """Updates the ticket in the external system if update data exists.
 
         Retrieves update data from `context.data` (of type `UnifiedTicket`) and updates the ticket
-        in the ticket system if update data is present (truthy). Returns the context unchanged.
+        in the ticket system when update data is present. Returns the context unchanged after processing.
 
-        Args:
-            context (PipelineContext[UnifiedTicket]): The pipeline context containing data and
-                ticket information.
+        `Args`:
+            context: Pipeline context containing data and ticket information.
 
-        Returns:
-            PipelineContext[EmptyDataModel]: The original pipeline context after processing
-                (unchanged).
+        `Returns`:
+            The original pipeline context after processing (unchanged).
+
+        `Example`:
+            ```python
+            context = PipelineContext(ticket_id="TICKET-123", data=update_data)
+            updater.process(context)  # Updates ticket if update_data exists
+            ```
         """
         update_data: UnifiedTicket = context.data
         if update_data:
@@ -57,7 +60,7 @@ class GenericTicketUpdater(Pipe[UnifiedTicket, EmptyDataModel]):
     def get_description() -> str:
         """Provides a description of the pipe's purpose.
 
-        Returns:
-            str: A string describing the pipe's functionality.
+        `Returns`:
+            A string describing the pipe's functionality.
         """
         return "Updates the ticket in the ticket system using data stored in the context."

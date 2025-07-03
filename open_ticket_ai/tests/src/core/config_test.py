@@ -99,12 +99,16 @@ class TestSchedulerConfig:
 
     @pytest.mark.parametrize("interval", [0, -5])
     def test_scheduler_config_invalid_interval_raises_validation_error(self, interval):
-        """Tests that invalid interval values raise a ValidationError."""
+        """Tests validation error when scheduler interval is non-positive.
+
+        Args:
+            interval (int): Invalid interval value to test.
+        """
         with pytest.raises(ValidationError):
             config_models.SchedulerConfig(interval=interval, unit="minutes")
 
     def test_scheduler_config_invalid_unit_raises_validation_error(self):
-        """Tests that an invalid time unit raises a ValidationError."""
+        """Tests validation error when scheduler unit is invalid."""
         with pytest.raises(ValidationError):
             config_models.SchedulerConfig(interval=5, unit="")
 
@@ -123,13 +127,22 @@ class TestOpenTicketAIConfig:
     ])
     def test_empty_list_for_core_components_raises_validation_error(self, list_name,
                                                                     minimal_config_dict):
-        """Tests that empty lists for required components raise ValidationError."""
+        """Tests validation error when core component lists are empty.
+
+        Args:
+            list_name (str): Name of the component list to empty.
+            minimal_config_dict (dict): Minimal valid configuration fixture.
+        """
         minimal_config_dict[list_name] = []
         with pytest.raises(ValidationError):
             config_models.OpenTicketAIConfig(**minimal_config_dict)
 
     def test_valid_open_ticket_ai_config_parses_correctly(self, minimal_config_dict):
-        """Tests that a valid configuration is parsed correctly with all components."""
+        """Tests successful parsing of a valid configuration.
+
+        Args:
+            minimal_config_dict (dict): Minimal valid configuration fixture.
+        """
         cfg = config_models.OpenTicketAIConfig(**minimal_config_dict)
         assert cfg.system.provider_key == "dummy_sys"
         assert len(cfg.fetchers) == 1
@@ -149,7 +162,14 @@ class TestOpenTicketAIConfig:
         self, list_name_to_alter, pipe_index, expected_error_message_part,
         minimal_config_dict
     ):
-        """Tests that invalid component references in pipelines raise ValueError."""
+        """Tests validation error when pipeline references invalid components.
+
+        Args:
+            list_name_to_alter (str): Component list to modify.
+            pipe_index (int): Index in pipeline's pipes to modify.
+            expected_error_message_part (str): Expected substring in error message.
+            minimal_config_dict (dict): Minimal valid configuration fixture.
+        """
         # Make the reference invalid by changing the ID in the referenced list
         original_id = minimal_config_dict[list_name_to_alter][0]["id"]
         minimal_config_dict[list_name_to_alter][0]["id"] = "invalid_id_for_ref"
@@ -172,16 +192,14 @@ class TestOpenTicketAIConfig:
 
     def test_duplicate_ids_in_component_list_allowed_by_b_but_picked_by_set_logic(self,
                                                                                           minimal_config_dict):
-        """Tests behavior when duplicate component IDs exist in a component list.
+        """Tests behavior when duplicate component IDs exist in component lists.
 
-        This test verifies that:
-        1. Pydantic allows duplicate IDs within component lists (e.g., two fetchers with same ID)
-        2. The configuration model correctly parses with duplicate IDs
-        3. Pipeline references to duplicate IDs still resolve correctly using set logic
+        Verifies:
+          1. Duplicate IDs are allowed during parsing.
+          2. Pipeline references resolve correctly using set-based lookup.
 
-        The test ensures that while duplicate IDs are technically allowed by the model,
-        the cross-reference resolution uses set-based lookups which will match any component
-        with the referenced ID regardless of duplicates.
+        Args:
+            minimal_config_dict (dict): Minimal valid configuration fixture.
         """
         # This test clarifies behavior rather than strictly enforcing a "fail" for duplicates,
         # as Pydantic itself doesn't prevent duplicate dicts in a list by default.
@@ -211,7 +229,11 @@ class TestLoadConfig:
     """Test cases for the load_config function."""
 
     def test_load_config_missing_root_key_raises_key_error(self, tmp_path):
-        """Tests that missing root key 'open_ticket_ai' raises KeyError."""
+        """Tests KeyError when configuration file lacks root key.
+
+        Args:
+            tmp_path (pathlib.Path): Temporary directory fixture.
+        """
         p = tmp_path / "c.yaml"
         p.write_text("something_else: {}")
         with pytest.raises(KeyError) as exc:

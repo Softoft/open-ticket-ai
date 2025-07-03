@@ -1,4 +1,11 @@
-# FILE_PATH: open_ticket_ai\tests\otobo_adapter_test.py
+"""This module contains unit tests for the OTOBOAdapter.
+
+The tests include:
+    - Testing the configuration of the OTOBOAdapterConfig
+    - Testing the behavior of the OTOBOAdapter using a mocked OTOBO client
+
+The tests are designed to run without requiring a real OTOBO server connection.
+"""
 import dataclasses
 from unittest.mock import AsyncMock
 
@@ -16,6 +23,14 @@ class MockedTicket:
 
     This class is used to simulate a ticket object with essential attributes.
     It is primarily used in unit tests to verify the behavior of the OTOBOAdapter.
+
+    Attributes:
+        id (str): Unique identifier for the ticket.
+        title (str): Title of the ticket.
+        description (str): Detailed description of the ticket.
+        status (str): Current status of the ticket (e.g., 'open', 'closed').
+        priority (str): Priority level of the ticket.
+        queue (str): Queue to which the ticket belongs.
     """
     id: str
     title: str
@@ -25,6 +40,13 @@ class MockedTicket:
     queue: str
 
 
+# List of mocked tickets used for testing
+"""List of mocked tickets used for testing.
+
+This list contains several instances of `MockedTicket` that simulate
+tickets in an OTOBO system. They are used in unit tests to verify the
+behavior of the OTOBOAdapter and its interactions with the OTOBO client.
+"""
 TICKETS = [
     MockedTicket(
         id="1",
@@ -66,6 +88,9 @@ class MockedOTOBOClient(OTOBOClient):
 
     This class is used to create an instance of OTOBOAdapter with a mocked OTOBOClient.
     It allows testing without requiring a real OTOBO server connection.
+
+    Attributes:
+        ticket_data (list[MockedTicket]): List of mocked tickets used for testing.
     """
 
     @staticmethod

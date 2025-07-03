@@ -45,10 +45,10 @@ def adapter():
 
 
 def test_adapter_is_abstract():
-    """Tests that TicketSystemAdapter is properly defined as an abstract class.
+    """Tests that `TicketSystemAdapter` is properly defined as an abstract class.
 
     Verifies:
-        1. The class is marked as abstract
+        1. The class is marked as abstract (using `inspect.isabstract`)
         2. All required abstract methods exist in the class
     """
     assert inspect.isabstract(TicketSystemAdapter)
@@ -58,12 +58,17 @@ def test_adapter_is_abstract():
 
 
 def test_otobo_adapter_implements_interface(adapter):
-    """Tests that OTOBOAdapter implements all required TicketSystemAdapter methods.
+    """Tests that `OTOBOAdapter` implements all required `TicketSystemAdapter` methods.
 
     Args:
-        adapter: OTOBOAdapter instance provided by fixture
+        adapter: The `OTOBOAdapter` instance to test
 
-    Verifies that all interface methods are implemented and callable.
+    Verifies that the following methods are implemented and callable:
+        - `find_tickets`
+        - `find_first_ticket`
+        - `create_ticket`
+        - `update_ticket`
+        - `add_note`
     """
     for m in [
         "find_tickets",

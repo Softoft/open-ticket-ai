@@ -28,11 +28,11 @@ class DocstringStyler:
     @staticmethod
     def style_params(params: list[DocstringParam] | list[DocstringRaises], title: str) -> str:
         """Styles a list of parameters into a Markdown list.
-        
+
         Args:
             params: List of parameter objects to style.
             title: Section title to display (e.g., "Parameters" or "Raises").
-            
+
         Returns:
             Formatted Markdown string for the parameter section.
         """
@@ -51,10 +51,10 @@ class DocstringStyler:
     @staticmethod
     def style_returns(returns: Optional[DocstringReturns]) -> str:
         """Styles the returns section into Markdown.
-        
+
         Args:
             returns: Return object containing type and description.
-            
+
         Returns:
             Formatted Markdown string for the returns section.
         """

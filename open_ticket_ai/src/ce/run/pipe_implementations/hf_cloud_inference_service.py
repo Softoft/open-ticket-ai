@@ -13,7 +13,23 @@ from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
 class HFCloudInferenceService(Pipe):
     """Run inference on a Hugging Face Inference Endpoint."""
 
-    def __init__(self, config: ProvidableConfig) -> None:
+    def __init__(self__(self, config: ProvidableConfig) -> None:
+        """Initializes the Hugging Face Inference Endpoint service.
+
+        Args:
+            config (ProvidableConfig): Configuration object containing parameters for the service.
+                Expected parameters in `config.params`:
+                - `input_field` (str, optional): Key in context data containing input text.
+                    Defaults to "prepared_data".
+                - `result_field` (str, optional): Key to store inference results in context data.
+                    Defaults to "model_result".
+                - `hf_endpoint_name` (str): Name or identifier of the Hugging Face endpoint.
+                - `hf_token_env_var` (str, optional): Environment variable name containing
+                    Hugging Face token. If not provided, no token will be used.
+
+        Raises:
+            ValueError: If `hf_endpoint_name` is not provided in config params.
+        """
         super().__init__(config)
         params = config.params
         self.input_field: str = params.get("input_field", "prepared_data")
@@ -31,6 +47,19 @@ class HFCloudInferenceService(Pipe):
         self._client = endpoint.client
 
     def process(self, context: PipelineContext) -> PipelineContext:
+        """Runs text classification on input data and stores results.
+
+        Args:
+            context (PipelineContext): Pipeline context containing input data.
+
+        Returns:
+            PipelineContext: Updated context with inference results stored under `result_field`.
+
+        Steps:
+            1. Extracts text from context using `input_field`
+            2. Runs Hugging Face text classification
+            3. Stores results in context under `result_field`
+        """
         text = context.data.get(self.input_field, "")
         result = self._client.text_classification(text)
         context.data[self.result_field] = result
@@ -38,4 +67,9 @@ class HFCloudInferenceService(Pipe):
 
     @staticmethod
     def get_description() -> str:
+        """Provides a description of this pipeline component.
+
+        Returns:
+            str: Fixed description string "Hugging Face Inference Endpoint".
+        """
         return "Hugging Face Inference Endpoint"

@@ -1,8 +1,9 @@
 ---
-description: Entdecken Sie die Dependency Injection (DI) Architektur von Open Ticket AI.
-  Diese Dokumentation erklärt, wie man eine Python-Klassenregistrierung erstellt und verwendet,
-  um Kerndienste wie die OTOBO-Integration, die Datenaufbereitung und die lokale Hugging Face AI-Inferenz
-  zu verwalten.
+description: Erkunden Sie das Python Dependency Injection (DI) System, das den Kern von Open
+  Ticket AI bildet. Diese Dokumentation behandelt die Erstellung einer zentralen Registry,
+  die wichtige Dienste konfiguriert und bereitstellt, einschließlich eines OTOBO-Adapters,
+  Datenaufbereitern und einem lokalen Hugging Face AI-Inferenzdienst für die automatisierte
+  Ticketverarbeitung.
 ---
 # Dokumentation für `**/ce/core/dependency_injection/**/*.py`
 
@@ -24,17 +25,17 @@ description: Entdecken Sie die Dependency Injection (DI) Architektur von Open Ti
 
 ### <span class='text-warning'>def</span> `create_registry() -> Registry`
 
-Erstellt und konfiguriert die standardmäßige Klassenregistrierung.
+Erstellt und konfiguriert die standardmäßige Klassen-Registry.
 Diese Funktion initialisiert eine `Registry`-Instanz und registriert wesentliche Klassen,
 die für das Dependency-Injection-System der Anwendung erforderlich sind. Die registrierten Klassen
-umfassen Integrationsadapter, Datenaufbereiter und KI-Inferenzdienste.
+umfassen Integrationsadapter, Datenaufbereiter und AI-Inferenzdienste.
 
 Die folgenden Klassen werden registriert:
 - `OTOBOAdapter`: Kümmert sich um die Integration mit dem OTOBO-Ticketsystem.
 - `SubjectBodyPreparer`: Bereitet Betreff- und Textinhalte für die Ticketverarbeitung auf.
-- `HFLocalAIInferenceService`: Stellt lokale KI-Inferenz mithilfe von Hugging Face-Modellen bereit.
+- `HFLocalAIInferenceService`: Stellt lokale AI-Inferenz mithilfe von Hugging Face-Modellen bereit.
 
-**Rückgabewert:** (`Registry`) - Eine konfigurierte Registry-Instanz, bei der alle notwendigen Klassen registriert sind.
+**Rückgabe:** (`Registry`) - Eine konfigurierte Registry-Instanz, bei der alle notwendigen Klassen registriert sind.
 
 
 

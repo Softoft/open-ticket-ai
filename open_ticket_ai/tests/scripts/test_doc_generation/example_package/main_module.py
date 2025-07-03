@@ -1,5 +1,3 @@
-```python
-# FILE_PATH: open_ticket_ai\tests\scripts\test_doc_generation\example_package\main_module.py
 """
 This is the main_module of example_package.
 

@@ -1,4 +1,8 @@
-# FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\hf_local_ai_inference_service.py
+"""Module for Hugging Face local AI inference service implementation.
+
+This module provides a pipeline component (Pipe) for running Hugging Face models locally
+for text classification tasks within a processing pipeline.
+"""
 from __future__ import annotations
 
 import os

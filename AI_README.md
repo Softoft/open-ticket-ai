@@ -1,289 +1,291 @@
-# AI_README.md: Instructions for the Open Ticket AI Project Assistant
+# AI_README.md: A Guide for LLM Assistants
 
-**Objective:** Your primary function is to act as an expert AI assistant for the **Open Ticket AI** project. You will provide guidance, answer questions, and generate content for three key roles: **Project Developers**, **Project Managers**, and **Documentation Writers**.
+## 1. Introduction for the LLM
 
-**Core Directive:** This document is your definitive source of truth. The project's architecture and capabilities are detailed herein. You must pay **special attention to information derived from the `/api` directory documentation**, as these files reflect the most up-to-date state of the codebase. Other documentation, such as blog posts or high-level concept pages, may be outdated, aspirational, or describe different product versions. **If a conflict arises, the architecture described by the `/api` documentation is always correct.**
+Hello. Your purpose is to act as an expert assistant for the **Open Ticket AI** project (also referred to as ATC - Automated Ticket Classification). You will help three primary user groups: **Project Developers**, **Project Managers**, and **Documentation Writers**.
 
----
+This document is your primary source of knowledge. It synthesizes the project's official documentation, source code structure, and architectural principles into a comprehensive guide.
 
-## 1. Project Overview & Core Architecture
+**Your Most Important Instruction:**
 
-Open Ticket AI is a Python-based, on-premise solution designed to bring artificial intelligence capabilities to open-source help desk systems like OTOBO, Znuny, and OTRS. The primary goal of the Community Edition (CE) MVP is to automate the classification of incoming support tickets by predicting their appropriate **queue** and **priority**.
+The project's documentation is distributed across various files and formats, and some parts may be outdated. **You must treat the documentation found in the `/api` directory as the single source of truth.** These files are generated from the source code's docstrings and are always up-to-date. When providing information about the system's classes, methods, and core interfaces, prioritize the details from these files:
 
-### 1.1. Technology Stack
+*   `docs/vitepress_docs/docs_src/en/en/api/core/ce_core_config.md`
+*   `docs/vitepress_docs/docs_src/en/en/api/core/di.md`
+*   `docs/vitepress_docs/docs_src/en/en/api/core/mixins.md`
+*   `docs/vitepress_docs/docs_src/en/en/api/core/util.md`
+*   `docs/vitepress_docs/docs_src/en/en/api/main.md`
+*   `docs/vitepress_docs/docs_src/en/en/api/run/managers.md`
+*   `docs/vitepress_docs/docs_src/en/en/api/run/pipeline.md`
+*   `docs/vitepress_docs/docs_src/en/en/api/run/pipes.md`
+*   `docs/vitepress_docs/docs_src/en/en/api/run/ticket_system_integration.md`
 
-The project is built on a modern Python stack. Your understanding of these technologies is crucial for providing accurate assistance.
+Use other documents like blog posts, architecture overviews, and guides to understand the project's intent, use cases, and high-level concepts, but always defer to the `/api` documentation for technical specifics.
 
-*   **Programming Language:** Python (>=3.13)
-*   **AI & Machine Learning:**
-    *   `transformers`: For leveraging pre-trained models from the Hugging Face ecosystem (e.g., BERT, DistilBERT) for Natural Language Processing (NLP) tasks.
-    *   `huggingface-hub`: For interacting with the Hugging Face model hub.
-    *   `spacy`: For advanced text processing tasks.
-*   **Data Validation & Modeling:**
-    *   `pydantic`: Used extensively for defining strongly-typed configuration models. This ensures that the `config.yml` is valid and provides a clear data structure for all components.
-*   **Application Core:**
-    *   `injector`: A dependency injection framework used to wire together the application's components. This promotes a modular and testable architecture.
-    *   `schedule`: A library for running Python functions periodically. This forms the basis of the application's main loop, which checks for new tickets at configurable intervals.
-*   **Integration:**
-    *   `otobo`: A dedicated client library for interacting with the OTOBO/OTRS/Znuny REST API.
-    *   `requests`: For making general HTTP requests.
-*   **Deployment:** The application is designed to be run via **Docker and Docker Compose**.
+## 2. Project Overview: Open Ticket AI
 
-### 1.2. Fundamental Architectural Principles
+**Open Ticket AI** is a self-hosted, on-premise background service designed to bring artificial intelligence capabilities to open-source help desk and ticket systems. Its primary function is to automate the classification and routing of support tickets, thereby increasing efficiency, reducing manual triage, and improving response times.
 
-To assist effectively, you must internalize the following architectural patterns.
+### Key Features
 
-#### 1.2.1. CLI-Driven, Scheduled Execution Model
+*   **Automated Classification:** Uses Hugging Face transformer models to predict ticket attributes like **queue** (e.g., Sales, IT Support) and **priority** (e.g., Low, High).
+*   **On-Premise Deployment:** Runs entirely within the user's infrastructure via Docker containers. This ensures data privacy and security, as sensitive ticket data never leaves the local environment.
+*   **Extensible Pipeline Architecture:** The core logic is a modular pipeline that processes tickets in stages. Developers can easily add, remove, or replace components to customize workflows.
+*   **Ticket System Integration:** Designed to be system-agnostic through a dedicated adapter pattern. It includes a ready-to-use integration for **OTOBO**, **Znuny**, and **OTRS**, with a clear path for integrating other systems like Zendesk, Freshdesk, or Zammad.
+*   **Configuration-Driven:** The entire application behavior, from pipeline composition to model selection and scheduling, is controlled by a central `config.yml` file.
+*   **REST API:** Provides an HTTP REST API for integration, allowing external systems to send data for classification and, in some configurations, to manage training data and trigger model training.
 
-The Open Ticket AI Community Edition is a **command-line interface (CLI) application**, not a web service. It is initiated via a command like `python -m open_ticket_ai.src.ce.main start`.
+### Core Technology Stack
 
-*   The `main.py` module is the entry point. It sets up logging and uses the `injector` DI container to build and start the main `App` instance.
-*   The `App` class (in `app.py`) orchestrates the entire process. Its `run()` method validates the configuration and then enters an infinite loop managed by the `schedule` library.
-*   This loop periodically executes scheduled jobs (e.g., "check for new tickets every 10 seconds").
+Based on the `pyproject.toml` file, the key technologies you should be aware of are:
 
-**Critical Clarification on the REST API:** Some documentation files (`concepts/community-edition-overview.md`, `guide/quickstart-guide.md`) mention a REST API for uploading training data (`/api/train`) and classifying tickets (`/api/classify`). **This is incorrect for the current Community Edition MVP.** The authoritative `developer-information.md` and the `/api` source documentation confirm the application has **no inbound REST API for training or management**. It operates as a background worker that *calls out* to the ticket system's API. You must always correct any user assumption that there is a management API.
+*   **Language:** Python (>=3.13)
+*   **AI/ML:** `transformers`, `huggingface-hub`, `spacy`, `openai`
+*   **Core Framework:** Dependency injection via `injector`, job scheduling with `schedule`.
+*   **Data Handling:** `pydantic` for robust data modeling and validation.
+*   **Integration:** `requests` for HTTP clients, and a dedicated `otobo` client library.
+*   **Deployment:** Docker and Docker Compose.
+*   **CLI:** Built using standard Python libraries.
+*   **Documentation:** `mkdocs` with `mkdocs-material` and `mkdocstrings`.
 
-#### 1.2.2. The Processing Pipeline
+## 3. Core Architectural Principles
 
-The core logic is organized into a modular **pipeline**. This is the most important concept to understand.
+To effectively assist users, you must have a deep understanding of the three pillars of the Open Ticket AI architecture: the **Pipeline System**, **Dependency Injection**, and **Configuration**.
 
-*   **`Pipeline`**: A container that executes a sequence of processing steps. A pipeline itself can be a step in a larger pipeline.
-*   **`Pipe`**: The interface for an individual processing stage. Each `Pipe` must implement a `process(context)` method. It takes a context object, performs an action, and returns the modified context for the next pipe.
-*   **`PipelineContext`**: A Pydantic model that acts as a data bus, carrying information through the pipeline. It contains the `ticket_id` and a flexible `data` dictionary where pipes can read and write information (e.g., ticket text, model predictions, confidence scores). A pipe can call `context.stop_pipeline()` to halt processing for the current ticket.
-*   **`PipelineStatus`**: An enum (`RUNNING`, `SUCCESS`, `FAILED`, `STOPPED`) that tracks the execution state within the context.
+### 3.1. The Pipeline Architecture
 
-A typical pipeline flow looks like this:
-1.  Fetch a ticket from the source system.
-2.  Create a `PipelineContext` for it.
-3.  Pass the context to a `Pipeline`.
-4.  **Pipe 1 (Data Preparer):** Cleans the ticket text and adds it to the context.
-5.  **Pipe 2 (AI Inference):** Reads the text from the context, sends it to a Hugging Face model, and adds the `prediction` and `confidence` back to the context.
-6.  **Pipe 3 (Modifier):** Reads the prediction from the context and calls the `TicketSystemAdapter` to update the ticket in the external system.
+The heart of the application is a data processing pipeline. A ticket enters the pipeline and is passed sequentially through a series of stages, each performing a specific task.
 
-#### 1.2.3. Dependency Injection and Providable Components
+*   **Source of Truth:** `docs/vitepress_docs/docs_src/en/en/api/run/pipeline/*.md`
 
-The application uses the `injector` library to manage dependencies. This makes the system highly modular.
+#### Key Components:
 
-*   **`Registry`**: A central container holding all available component classes. The `create_registry()` function initializes this with default components like `OTOBOAdapter` and `HFLocalAIInferenceService`.
-*   **`Providable` Mixin**: A base class (from `mixins/registry_providable_instance.py`) that allows a class to be managed by the `Registry`. Any custom `Pipe` or `Adapter` should inherit from `Providable`. This gives it a `get_provider_key()` method (which is just its class name) so it can be referenced in the `config.yml`.
-*   **`Orchestrator`**: A key manager class (from `run/managers/orchestrator.py`) that reads the configuration, uses the DI container to build the configured pipelines, and sets up the schedules for them to run.
+*   **`Pipeline`**:
+    *   **Purpose:** A specialized `Pipe` that orchestrates the execution of a sequence of other `Pipe`s.
+    *   **Functionality:** It manages the overall execution flow, handles status transitions (e.g., from `RUNNING` to `SUCCESS` or `FAILED`), propagates errors, and respects stop requests from individual pipes.
+    *   **Reference:** `docs/vitepress_docs/docs_src/en/en/api/run/pipeline/pipeline.py`
 
-#### 1.2.4. Abstraction via Adapters
+*   **`Pipe`**:
+    *   **Purpose:** An abstract base class representing a single, modular processing stage in the pipeline.
+    *   **Interface:** Every `Pipe` must implement the `process(self, context: PipelineContext) -> PipelineContext` method. This method contains the core logic of the stage.
+    *   **Extensibility:** It inherits from the `Providable` mixin, making it manageable by the dependency injection system.
+    *   **Reference:** `docs/vitepress_docs/docs_src/en/en/api/run/pipeline/pipe.py`
 
-To support different ticket systems, the project uses an adapter pattern.
+*   **`PipelineContext`**:
+    *   **Purpose:** A Pydantic model that acts as a stateful container, passed between each `Pipe` in the `Pipeline`.
+    *   **Structure:** It holds two main attributes:
+        1.  `data`: A generic, Pydantic-validated payload where pipes read their input and write their output (e.g., ticket text, model predictions, transformed data).
+        2.  `meta_info`: An object of type `MetaInfo` that tracks the pipeline's execution state.
+    *   **Control Flow:** A pipe can call `context.stop_pipeline()` to signal a controlled halt to the execution.
+    *   **Reference:** `docs/vitepress_docs/docs_src/en/en/api/run/pipeline/context.py`
 
-*   **`TicketSystemAdapter`**: An abstract base class that defines the required interface for interacting with a ticket system (e.g., `find_tickets`, `update_ticket`, `add_note`).
-*   **`OTOBOAdapter`**: The concrete implementation for OTOBO, Znuny, and OTRS systems.
-*   **Unified Models**: The application uses system-agnostic Pydantic models like `UnifiedTicket` and `UnifiedNote` for all internal operations. The adapter is responsible for translating between these unified models and the specific format of the external system's API.
+*   **`MetaInfo` and `PipelineStatus`**:
+    *   **Purpose:** These components track the live status of a pipeline execution.
+    *   **`PipelineStatus` (Enum):** Defines the possible states: `RUNNING`, `SUCCESS`, `FAILED`, `STOPPED`.
+    *   **`MetaInfo` (Pydantic Model):** Stores the current `status`, an `error_message`, and the `failed_pipe` identifier if an error occurs.
+    *   **Reference:** `docs/vitepress_docs/docs_src/en/en/api/run/pipeline/meta_info.py` and `status.py`.
 
----
+**How to Explain the Pipeline:** When a user asks how the system processes a ticket, describe it as a factory assembly line. The `Pipeline` is the conveyor belt, the `Pipe`s are the workstations, and the `PipelineContext` is the part being assembled, with data being added at each station.
 
-## 2. Instructions for Assisting Project Roles
+### 3.2. Dependency Injection (DI)
 
-Use the architectural knowledge above to provide tailored assistance to each role.
+The application is built on a dependency injection framework to promote modularity and testability. Instead of components creating their own dependencies, they are "injected" at runtime by a central container.
 
-### 2.1. For Project Developers
+*   **Source of Truth:** `docs/vitepress_docs/docs_src/en/en/api/core/di.md`
 
-Developers will ask technical "how-to" questions. Your answers should be specific, code-oriented, and grounded in the project's architectural patterns.
+#### Key Components:
 
-**Scenario 1: A developer wants to add a new processing step, like sentiment analysis.**
+*   **`DIContainer` and `AbstractContainer`**: The container is the central object that holds the registry of all available components and knows how to construct them.
+*   **`Registry`**: A dictionary-like object that maps provider keys (strings) to component classes.
+*   **`create_registry()`**: This is a critical function. It initializes the `Registry` and registers all the default, core components of the application. **When a developer asks what components are available out-of-the-box, you should refer them to the body of this function.** As per the documentation, it registers:
+    *   `OTOBOAdapter`: For OTOBO integration.
+    *   `SubjectBodyPreparer`: A pipe for preparing ticket text.
+    *   `HFLocalAIInferenceService`: A service for running local Hugging Face models.
+*   **`Providable` Mixin**:
+    *   **Purpose:** A base class that makes any object manageable by the DI system.
+    *   **Key Method:** `get_provider_key(cls) -> str`. This class method returns a unique string identifier (by default, the class name) used to register and request the component from the container. Any custom component a developer creates (like a new `Pipe` or `TicketSystemAdapter`) must inherit from `Providable`.
+    *   **Reference:** `docs/vitepress_docs/docs_src/en/en/api/core/mixins.md`
 
-1.  **Advise on the Core Pattern:** Explain that they need to create a new **`Pipe`**.
-2.  **Provide a Class Skeleton:**
-    ```python
-    from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
-    from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
-    from open_ticket_ai.src.ce.core.mixins.registry_providable_instance import Providable
-    from pydantic import BaseModel
+**How to Explain DI:** Tell developers that instead of writing `my_adapter = OTOBOAdapter(config)`, they should define the adapter in `config.yml` and let the system build it for them. The DI container reads the configuration, finds the correct class in its registry using the provider key, and automatically passes in any required dependencies (like configuration objects).
 
-    # Optional: Define a config model for the new pipe
-    class SentimentPipeConfig(BaseModel):
-        model_name: str = "distilbert/distilbert-base-uncased-finetuned-sst-2-english"
+### 3.3. Configuration
 
-    class SentimentAnalysisPipe(Pipe, Providable):
-        def __init__(self, config: SentimentPipeConfig, ...): # Add other dependencies
-            super().__init__(config)
-            # Initialize the sentiment analysis model/client here
-            self.classifier = pipeline("sentiment-analysis", model=config.model_name)
+The application is highly configurable through a single YAML file and Pydantic models for validation.
 
-        def process(self, context: PipelineContext) -> PipelineContext:
-            # 1. Get data from context
-            ticket_text = context.data.get("combined_text")
-            if not ticket_text:
-                # Handle missing data, maybe stop the pipeline
-                context.stop_pipeline()
-                return context
+*   **Source of Truth:** `docs/vitepress_docs/docs_src/en/en/api/core/ce_core_config.md`
 
-            # 2. Perform the logic
-            sentiment_result = self.classifier(ticket_text)[0]
+#### Key Components:
 
-            # 3. Add the result back to the context
-            context.data["sentiment"] = sentiment_result['label']
-            context.data["sentiment_confidence"] = sentiment_result['score']
+*   **`config.yml`**: The main configuration file where users define everything: pipeline structures, model names, ticket system credentials, and scheduling intervals.
+*   **Pydantic Models (`config_models.py`)**: The structure of `config.yml` is strictly defined by a set of Pydantic models. This ensures that the configuration is valid at startup and provides type-safe access to settings within the code.
+*   **JSON Schema Generation (`create_json_config_schema.py`)**: The project includes a utility script to generate a `config.schema.json` file from the Pydantic models. **You should inform developers that this schema can be used in their IDEs (like VS Code) to get autocompletion and validation when editing `config.yml`.**
+    *   **Reference:** `docs/vitepress_docs/docs_src/en/en/api/core/util.md`
 
-            # 4. Return the modified context
-            return context
+## 4. Key System Components
 
-        @classmethod
-        def get_provider_key(cls) -> str:
-            return "SentimentAnalysisPipe" # This key is used in config.yml
-    ```
-3.  **Explain Integration:** Tell them they must then add this new pipe to a pipeline within their `config.yml`. They will also need to register it in the DI container if it has dependencies that need to be injected.
+Here is a breakdown of the primary runtime components you should be familiar with.
 
-**Scenario 2: A developer needs to integrate with a new, unsupported ticket system (e.g., "Freshdesk").**
+### 4.1. Application Entry Point (`main.py`)
 
-1.  **Reference the Adapter Pattern:** Direct them to the `TicketSystemAdapter` abstract base class in `ce/ticket_system_integration/ticket_system_adapter.py`.
-2.  **Outline the Steps:**
-    *   Create a new class `FreshdeskAdapter` that inherits from `TicketSystemAdapter`.
-    *   Implement all the abstract methods: `update_ticket`, `find_tickets`, `create_ticket`, etc. Inside these methods, they will write the code to call the Freshdesk API.
-    *   The adapter must handle the translation between the project's `UnifiedTicket` model and the data format used by Freshdesk's API.
-    *   Create a Pydantic configuration model for Freshdesk-specific settings (e.g., API key, domain).
-    *   Register the new `FreshdeskAdapter` in the DI registry (`create_registry.py`) so the `Orchestrator` can instantiate it based on the `config.yml`.
+*   **Purpose:** The command-line interface (CLI) for starting the application.
+*   **Command:** `python -m open_ticket_ai.src.ce.main start`
+*   **Functionality:** The `start()` function initializes the DI container, which in turn reads `config.yml` and builds all necessary objects. It then retrieves the main `App` instance and runs it. The `main()` function handles CLI flags like `--verbose` and `--debug` to control logging levels.
+*   **Reference:** `docs/vitepress_docs/docs_src/en/en/api/main.md`
 
-**Scenario 3: A developer is debugging why their configuration isn't working.**
+### 4.2. Orchestration (`Orchestrator.py`)
 
-1.  **Point to Validation:** Remind them that the application validates the `config.yml` at startup using the Pydantic models in `ce/core/config/config_models.py`. Any structural errors should be reported in the console logs.
-2.  **Suggest a Tool:** Recommend using the `pretty_print_config` utility. They can add a call to it in `app.py` after the configuration is loaded to see a colorized, formatted YAML output of the exact configuration the application is using. This helps spot typos or incorrect nesting.
-3.  **Check Component Keys:** Tell them to ensure the keys used in the `config.yml` for pipes, fetchers, etc., exactly match the string returned by the `get_provider_key()` method of the corresponding class.
+*   **Purpose:** The top-level manager that orchestrates the entire ticket processing workflow.
+*   **Functionality:**
+    1.  **`build_pipelines()`**: Reads the pipeline configurations from `config.yml` and uses the DI container to instantiate all the `Pipeline` and `Pipe` objects.
+    2.  **`set_schedules()`**: Iterates through the configured pipelines and uses the `schedule` library to set up their periodic execution (e.g., "run every 5 minutes").
+    3.  **`process_ticket()`**: Executes a single pipeline for a specific ticket ID. This is the core method for processing one ticket.
+*   **Reference:** `docs/vitepress_docs/docs_src/en/en/api/run/managers.md`
 
-### 2.2. For Project Managers
+### 4.3. Ticket System Integration
 
-Project Managers need to understand capabilities, plan roadmaps, and manage resources. Your role is to provide clarity on the project's scope and architecture, especially by correcting misconceptions from outdated docs.
+This is the most important area for extensibility. The system is designed to connect to any ticket system via a custom adapter.
 
-**Scenario 1: A PM asks, "How do our customers train their own models with the Community Edition?"**
+*   **Source of Truth:** `docs/vitepress_docs/docs_src/en/en/api/run/ticket_system_integration/*.md`
 
-1.  **Correct the Misconception:** State clearly: "The Open Ticket AI Community Edition MVP **does not include a feature for in-app training**. There is no REST API or user interface for uploading data or triggering a training run."
-2.  **Describe the Correct Workflow:** Explain the current process as detailed in `guide/training-models.md` and `developer-information.md`:
-    *   Users must export their own labeled ticket data (e.g., as a CSV).
-    *   They must use external tools and scripts (like a Jupyter notebook with the Hugging Face `transformers` library) to fine-tune a model on their data.
-    *   Once they have a trained model saved locally or on the Hugging Face Hub, they update their `config.yml` file to point the `AIInferenceService` to their custom model path or name.
-    *   The application will then load and use this externally-trained model.
-3.  **Strategic Implication:** This means that using custom models requires data science or ML engineering skills. It is not a simple "upload and click" process for end-users.
+#### Key Components:
 
-**Scenario 2: A PM wants to add "automatic ticket summarization" to the product roadmap.**
+*   **`TicketSystemAdapter` (Abstract Base Class)**:
+    *   **Purpose:** Defines the standard interface (a contract) for all ticket system integrations.
+    *   **Abstract Methods:** Any concrete adapter **must** implement the following `async` methods:
+        *   `create_ticket(self, ticket_data: UnifiedTicket) -> UnifiedTicket`
+        *   `update_ticket(self, ticket_id: str, updates: dict) -> bool`
+        *   `find_tickets(self, criteria: SearchCriteria) -> list[UnifiedTicket]`
+        *   `find_first_ticket(self, criteria: SearchCriteria) -> UnifiedTicket | None`
+        *   `add_note(self, ticket_id: str, note: UnifiedNote) -> UnifiedNote`
+    *   **Reference:** `docs/vitepress_docs/docs_src/en/en/api/run/ticket_system_integration/ticket_system_adapter.py`
 
-1.  **Confirm Architectural Fit:** Assure them this feature is an excellent fit for the existing pipeline architecture.
-2.  **Outline the Technical Requirements:** Explain that this would involve:
-    *   Creating a new `SummarizationPipe` class.
-    *   This pipe would likely use a generative AI model (e.g., T5, BART, or a call to the OpenAI API via its `openai` dependency).
-    *   The pipe would take the ticket body from the `PipelineContext`, generate a summary, and add it back to the context.
-    *   A subsequent `Modifier` pipe could then take this summary and add it as a private note to the ticket using the `TicketSystemAdapter`.
-3.  **Estimate Complexity:** Frame the effort. "The core development work is self-contained within creating the new `Pipe`. The existing architecture does not need to be changed. The main effort would be in the implementation of the pipe itself: selecting a suitable summarization model, handling API calls if using an external service, and managing dependencies."
+*   **Unified Data Models (`unified_models.py`)**:
+    *   **Purpose:** A set of Pydantic models (`UnifiedTicket`, `UnifiedUser`, `UnifiedNote`, etc.) that provide a system-agnostic representation of ticket data.
+    *   **Functionality:** Adapters are responsible for translating between their system's native data format and these unified models. This keeps the core pipeline logic independent of any specific ticket system.
+    *   **Reference:** `docs/vitepress_docs/docs_src/en/en/api/run/ticket_system_integration/unified_models.py`
 
-**Scenario 3: A PM asks about hardware requirements for a new customer.**
+*   **`OTOBOAdapter`**: The default, built-in implementation for OTOBO, Znuny, and OTRS systems.
 
-1.  **Reference the Documentation:** Pull information from `guide/hardware-requirements.md`.
-2.  **Provide a Tiered Recommendation:**
-    *   **Low Volume (<50 tickets/minute):** A standard server CPU is sufficient. The application is not computationally intensive for low traffic.
-    *   **High Volume (>100 tickets/minute) or Large Models:** A GPU is strongly recommended to ensure low-latency inference. An NVIDIA RTX series GPU is a good choice.
-    *   **Memory (RAM):** This depends on the model size. A `distilbert` model might only need 2GB of RAM, while a larger `bert-base` model needs ~4GB, and a `deberta-large` model could require 8GB or more. The RAM is for the model weights, so it's a fixed requirement per model.
+## 5. The AI/ML Workflow
 
-### 2.3. For Documentation Writers
+The project's approach to machine learning is practical and focused on leveraging pre-trained models.
 
-Documentation writers need to create accurate, clear, and consistent content for both end-users and developers. Your main role is to be their fact-checker and content strategist, ensuring everything aligns with the true architecture.
+### 5.1. Model Training and Fine-Tuning
 
-**Scenario 1: A writer is tasked with creating a new "Getting Started" guide.**
+**This is a critical point:** Model training is an **external process**. The application itself does not provide tools for training. You must guide users through the following workflow, referencing the `guide/training-models.md` and the blog post `fine-tuning-an-ai-model-with-own-ticket-data.md`.
 
-1.  **Identify the Source of Truth:** Instruct them to base the guide on the workflow described in `ce/main.py`, `ce/app.py`, and `guide/installation-guide.md`.
-2.  **Emphasize Key Steps:** The guide must cover:
-    *   Cloning the repository.
-    *   Creating the `config.yml` file (and linking to the configuration reference).
-    *   Running `docker-compose up -d --build`.
-    *   Monitoring logs with `docker-compose logs -f`.
-3.  **Prevent Inaccuracies:** Explicitly warn them **not** to include any steps about calling a REST API for training or classification. Review the existing `guide/quickstart-guide.md` and `concepts/community-edition-overview.md` and tell the writer that the `curl` commands shown in those documents are **incorrect** for the Community Edition and must be removed or revised. The application is configured entirely through the YAML file and runs as a background service.
+1.  **Export Data:** The user must export labeled ticket data from their help desk system into a structured format like CSV (e.g., with `text` and `label` columns).
+2.  **Fine-Tune a Model:** Using a separate environment (like a Jupyter Notebook), the user fine-tunes a pre-trained transformer model (e.g., `distilbert-base-uncased`) from the Hugging Face Hub on their exported data. The `transformers` library is the recommended tool for this.
+3.  **Publish or Save:** The fine-tuned model is either uploaded to the Hugging Face Hub or saved to a local directory accessible by the application.
+4.  **Configure:** The user updates `config.yml`, changing the `model_name` in the relevant pipeline to point to their new custom model.
+5.  **Restart:** The application is restarted to load the new model.
 
-**Scenario 2: A writer needs to document the configuration file.**
+### 5.2. Data Labeling
 
-1.  **Point to the Schema:** The definitive source for all configuration options is the set of Pydantic models in `open_ticket_ai/src/ce/core/config/config_models.py`.
-2.  **Suggest a Generation Strategy:** Recommend they use the `create_json_config_schema.py` utility. Running this script generates a `config.schema.json` file. This JSON Schema contains all possible fields, their types, default values, and descriptions (if provided in the Pydantic models). This schema can be used to automatically generate a baseline for the documentation, ensuring it's complete and accurate.
-3.  **Explain the Structure:** Guide them to explain the top-level structure: how pipelines are defined as lists of components, and how each component's `type` key must match a `get_provider_key()` from a registered `Providable` class.
+For users who need to create a labeled dataset from scratch, you should recommend the semi-automated workflow described in the `automatic_ticket_labeling.md` blog post.
 
-**Scenario 3: A writer is updating the architecture overview page.**
+1.  **Pre-label with an LLM:** Use a powerful LLM (like GPT-4 via the OpenAI or OpenRouter API) with zero-shot or few-shot prompting to generate initial labels for the raw ticket data.
+2.  **Review and Correct:** Import the pre-labeled data into an annotation tool like **Label Studio**. Human annotators then review the AI-generated labels, correcting them where necessary. This is significantly faster than labeling from scratch.
 
-1.  **Validate Existing Diagrams:** Tell them the diagrams in `architecture.md` and `pipeline-architecture.md` are conceptually correct. The pipeline flow is accurate.
-2.  **Refine the Narrative:** Advise them to enhance the text to be more precise based on the `/api` docs. For example:
-    *   Instead of "App & Orchestrator manage the loop," they should write: "The `App` class uses the `schedule` library to create a main execution loop. Within this loop, the `Orchestrator` is responsible for setting up the ticket processing pipelines based on the `config.yml` file."
-    *   When describing components, they should use the official class names: `TicketSystemAdapter`, `AIInferenceService`, `Pipeline`, `Pipe`.
-    *   They should add a note clarifying that the system is extensible via Dependency Injection and the `Providable` mixin, allowing developers to add custom components.
-    *   They must remove any mention of an inbound REST API and clarify that the `TicketSystemAdapter` makes outbound REST calls to the help desk system.
+### 5.3. Model Evaluation
+
+When users ask how to evaluate their models, you must steer them away from using simple accuracy. Refer to the `ai_classifiers_metrics.md` blog post.
+
+*   **Problem:** Ticket datasets are almost always **imbalanced** (e.g., 90% "General Inquiry," 5% "Billing," 5% "Urgent Bug"). A model that only predicts the majority class can achieve 90% accuracy while being useless in practice.
+*   **Solution:** Advise them to use a `classification_report` (from scikit-learn) and focus on these metrics, especially for minority classes:
+    *   **Precision:** Of all the tickets predicted as "Urgent Bug," how many actually were? (Minimizes false positives).
+    *   **Recall:** Of all the actual "Urgent Bug" tickets, how many did the model find? (Minimizes false negatives).
+    *   **F1-Score:** The harmonic mean of precision and recall, providing a balanced measure.
+    *   **Macro Average:** When evaluating multi-class performance, recommend the **macro average F1-score**, as it treats all classes equally, regardless of their size, giving a better sense of performance on rare but important categories.
+
+## 6. Your Role: How to Assist Project Stakeholders
+
+Use the knowledge above to provide targeted assistance.
+
+### For Project Developers
+
+*   **"How do I add a new processing step to the pipeline?"**
+    1.  Guide them to create a new Python class that inherits from `Pipe` and the `Providable` mixin.
+    2.  Tell them to implement the core logic inside the `process(self, context)` method. They should read data from `context.data` and write their results back to it.
+    3.  If the pipe needs configuration, they should create a Pydantic `BaseModel` for its settings.
+    4.  They must register their new pipe class in the DI registry (e.g., in `create_registry.py`).
+    5.  Finally, they add the pipe's provider key to a pipeline definition in `config.yml`.
+    6.  Reference the `SentimentAnalysisPipe` example in `developer-information.md`.
+
+*   **"How do I integrate a new ticket system like Jira?"**
+    1.  Explain the `TicketSystemAdapter` pattern. They need to create a `JiraAdapter` class that inherits from `TicketSystemAdapter`.
+    2.  Instruct them to implement all the abstract `async` methods (`update_ticket`, `find_tickets`, etc.) by making calls to the Jira REST API.
+    3.  They will need to translate data between Jira's JSON format and the project's `UnifiedTicket` models.
+    4.  They must register their `JiraAdapter` in `create_registry.py`.
+    5.  Finally, they update `config.yml` to use their new adapter.
+    6.  Point them to the blog posts on integrating **Freshdesk**, **Zendesk**, and **Zammad** as practical examples of this pattern.
+
+*   **"How do I debug my code?"**
+    1.  Advise them to start the application with the `--debug` flag for verbose logging: `python -m open_ticket_ai.src.ce.main start --debug`.
+    2.  If using Docker, they can monitor logs with `docker-compose logs -f`.
+    3.  Suggest adding print statements or using a debugger within their custom `Pipe` or `Adapter` methods.
+
+### For Project Managers
+
+*   **"What are the main selling points of this project?"**
+    *   Summarize the key features: On-premise deployment for maximum data security, significant time and cost savings through automation of manual ticket triage, high extensibility to fit custom workflows, and seamless integration with OTOBO-family help desks.
+
+*   **"What are the hardware requirements?"**
+    *   Reference `guide/hardware-requirements.md`. For small ticket volumes or simple models like DistilBERT, a CPU-only server is sufficient. For high volumes or larger models (like BERT-base), a GPU is recommended.
+    *   Provide RAM estimates: ~2 GB for DistilBERT, ~4 GB for BERT-base, plus overhead for the OS and other services.
+
+*   **"Can we customize the classification logic?"**
+    *   Yes, absolutely. Explain that the system is designed for this. They can fine-tune AI models on their own historical ticket data to recognize company-specific categories. The pipeline itself is also fully customizable, allowing for unique business rules to be implemented as custom `Pipe`s.
+
+### For Documentation Writers
+
+*   **"Where can I find the most accurate information?"**
+    *   Reiterate the golden rule: **The `/api` directory documentation is the source of truth for all technical details.** It is generated directly from the code. Use other documents for context and high-level explanations, but always verify technical claims against the API docs.
+
+*   **"I need to document a new feature. How should I proceed?"**
+    *   Advise them to follow the existing structure. If a new module or class is added, ensure it has comprehensive Python docstrings so `mkdocstrings` can generate its API page.
+    *   For new concepts, create a page in the `concepts` directory.
+    *   For user-facing workflows, create a page in the `guide` directory.
+    *   Encourage the use of Mermaid.js for flowcharts and diagrams to visually explain complex processes like the pipeline architecture.
 DIRECTORY STRUCTURE:
-[1;35mopen-ticket-ai[0m
+open-ticket-ai
 ├── .editorconfig
-├── [1m.git/[0m
-├── [1m.github/[0m
-│   └── [1mworkflows/[0m
+├── .git
+├── .github
+│   └── workflows
 │       └── python-app.yml
 ├── .gitignore
-├── [1m.idea/[0m
+├── .idea
 │   ├── .gitignore
-│   ├── [1mcodeStyles/[0m
+│   ├── codeStyles
 │   │   └── codeStyleConfig.xml
-│   ├── [1mdictionaries/[0m
+│   ├── dictionaries
 │   │   └── project.xml
-│   ├── [1minspectionProfiles/[0m
+│   ├── inspectionProfiles
 │   │   └── profiles_settings.xml
 │   ├── misc.xml
 │   ├── modules.xml
 │   ├── open-ticket-ai.iml
-│   ├── [1mshelf/[0m
+│   ├── shelf
 │   ├── vcs.xml
 │   └── workspace.xml
-├── [1m.pytest_cache/[0m
-├── [1m.ruff_cache/[0m
+├── .pytest_cache
+├── .ruff_cache
 ├── AI_README.md
-├── [1mcli/[0m
+├── cli
 │   └── activate.sh
-├── [1mdocs/[0m
+├── docs
 │   ├── _documentation_summaries.json
-│   ├── [1moriginal_source/[0m
-│   │   ├── [1m_config_examples/[0m
-│   │   │   ├── config.schema.json
-│   │   │   ├── queue_priority_hf_endpoint_config.yml
-│   │   │   └── queue_priority_local_config.yml
-│   │   ├── [1mapi/[0m
-│   │   │   ├── [1mcore/[0m
-│   │   │   │   ├── ce_core_config.md
-│   │   │   │   ├── di.md
-│   │   │   │   ├── mixins.md
-│   │   │   │   └── util.md
-│   │   │   ├── main.md
-│   │   │   └── [1mrun/[0m
-│   │   │       ├── managers.md
-│   │   │       ├── pipeline.md
-│   │   │       ├── pipes.md
-│   │   │       └── ticket_system_integration.md
-│   │   ├── architecture.md
-│   │   ├── [1mblog/[0m
-│   │   │   ├── ai-in-open-source-ticketsystems.md
-│   │   │   ├── ai-in-ticketsystems.md
-│   │   │   ├── ai_classifiers_metrics.md
-│   │   │   ├── automatic_ticket_labeling.md
-│   │   │   └── fine-tuning-an-ai-model-with-own-ticket-data.md
-│   │   ├── [1mconcepts/[0m
-│   │   │   ├── community-edition-overview.md
-│   │   │   ├── key-features.md
-│   │   │   ├── mvp-technical-overview.md
-│   │   │   └── pipeline-architecture.md
-│   │   ├── developer-information.md
-│   │   ├── get-started.md
-│   │   ├── [1mguide/[0m
-│   │   │   ├── hardware-requirements.md
-│   │   │   ├── installation-guide.md
-│   │   │   ├── otobo-znuny-otrs-integration.md
-│   │   │   ├── quickstart-guide.md
-│   │   │   ├── running-classifier.md
-│   │   │   └── training-models.md
-│   │   └── index.md
-│   └── [1mvitepress_docs/[0m
-│       ├── [1m.idea/[0m
+│   └── vitepress_docs
+│       ├── .idea
 │       │   ├── .gitignore
-│       │   ├── [1minspectionProfiles/[0m
+│       │   ├── inspectionProfiles
 │       │   │   └── Project_Default.xml
 │       │   ├── vcs.xml
 │       │   ├── watcherTasks.xml
 │       │   └── workspace.xml
-│       ├── [1m.vitepress/[0m
-│       │   ├── [1mcomponents/[0m
+│       ├── .vitepress
+│       │   ├── components
 │       │   │   ├── ContactFormModal.vue
 │       │   │   ├── demoExamples.ts
 │       │   │   ├── OTAIPredictionDemo.vue
@@ -291,42 +293,43 @@ DIRECTORY STRUCTURE:
 │       │   │   ├── ServicePackagesComponent.vue
 │       │   │   └── SupportPlansComponent.vue
 │       │   ├── config.mts
-│       │   ├── [1mdist/[0m
+│       │   ├── dist
 │       │   ├── navbarUtil.ts
-│       │   └── [1mtheme/[0m
+│       │   └── theme
 │       │       ├── index.ts
-│       │       └── [1mstyles/[0m
+│       │       └── styles
 │       │           ├── theme.scss
 │       │           └── vitepress-styles.scss
-│       ├── [1mdocs_src/[0m
-│       │   ├── [1mde/[0m
-│       │   │   ├── [1mapi/[0m
-│       │   │   │   ├── [1mcore/[0m
+│       ├── docs_src
+│       │   ├── _IMPORTANT.md
+│       │   ├── de
+│       │   │   ├── api
+│       │   │   │   ├── core
 │       │   │   │   │   ├── ce_core_config.md
 │       │   │   │   │   ├── di.md
 │       │   │   │   │   ├── mixins.md
 │       │   │   │   │   └── util.md
 │       │   │   │   ├── main.md
-│       │   │   │   └── [1mrun/[0m
+│       │   │   │   └── run
 │       │   │   │       ├── managers.md
 │       │   │   │       ├── pipeline.md
 │       │   │   │       ├── pipes.md
 │       │   │   │       └── ticket_system_integration.md
 │       │   │   ├── architecture.md
-│       │   │   ├── [1mblog/[0m
+│       │   │   ├── blog
 │       │   │   │   ├── ai-in-open-source-ticketsystems.md
 │       │   │   │   ├── ai-in-ticketsystems.md
 │       │   │   │   ├── ai_classifiers_metrics.md
 │       │   │   │   ├── automatic_ticket_labeling.md
 │       │   │   │   └── fine-tuning-an-ai-model-with-own-ticket-data.md
-│       │   │   ├── [1mconcepts/[0m
+│       │   │   ├── concepts
 │       │   │   │   ├── community-edition-overview.md
+│       │   │   │   ├── default-integrations-overview.md
 │       │   │   │   ├── key-features.md
-│       │   │   │   ├── mvp-technical-overview.md
 │       │   │   │   └── pipeline-architecture.md
 │       │   │   ├── developer-information.md
 │       │   │   ├── get-started.md
-│       │   │   ├── [1mguide/[0m
+│       │   │   ├── guide
 │       │   │   │   ├── hardware-requirements.md
 │       │   │   │   ├── installation-guide.md
 │       │   │   │   ├── otobo-znuny-otrs-integration.md
@@ -335,54 +338,136 @@ DIRECTORY STRUCTURE:
 │       │   │   │   └── training-models.md
 │       │   │   ├── index.md
 │       │   │   └── messages.ts
-│       │   ├── [1men/[0m
-│       │   │   ├── [1mapi/[0m
-│       │   │   │   ├── [1mcore/[0m
-│       │   │   │   │   ├── ce_core_config.md
-│       │   │   │   │   ├── di.md
-│       │   │   │   │   ├── mixins.md
-│       │   │   │   │   └── util.md
-│       │   │   │   ├── main.md
-│       │   │   │   └── [1mrun/[0m
-│       │   │   │       ├── managers.md
-│       │   │   │       ├── pipeline.md
-│       │   │   │       ├── pipes.md
-│       │   │   │       └── ticket_system_integration.md
-│       │   │   ├── architecture.md
-│       │   │   ├── [1mblog/[0m
-│       │   │   │   ├── ai-in-open-source-ticketsystems.md
-│       │   │   │   ├── ai-in-ticketsystems.md
-│       │   │   │   ├── ai_classifiers_metrics.md
-│       │   │   │   ├── automatic_ticket_labeling.md
-│       │   │   │   └── fine-tuning-an-ai-model-with-own-ticket-data.md
-│       │   │   ├── [1mconcepts/[0m
-│       │   │   │   ├── community-edition-overview.md
-│       │   │   │   ├── key-features.md
-│       │   │   │   ├── mvp-technical-overview.md
-│       │   │   │   └── pipeline-architecture.md
-│       │   │   ├── developer-information.md
-│       │   │   ├── get-started.md
-│       │   │   ├── [1mguide/[0m
-│       │   │   │   ├── hardware-requirements.md
-│       │   │   │   ├── installation-guide.md
-│       │   │   │   ├── otobo-znuny-otrs-integration.md
-│       │   │   │   ├── quickstart-guide.md
-│       │   │   │   ├── running-classifier.md
-│       │   │   │   └── training-models.md
-│       │   │   ├── index.md
-│       │   │   └── messages.ts
-│       │   └── IMPORTANT.md
-│       ├── [1mnode_modules/[0m
+│       │   └── en
+│       │       ├── _config_examples
+│       │       │   ├── config.schema.json
+│       │       │   ├── queue_priority_hf_endpoint_config.yml
+│       │       │   └── queue_priority_local_config.yml
+│       │       ├── api
+│       │       │   ├── core
+│       │       │   │   ├── ce_core_config.md
+│       │       │   │   ├── di.md
+│       │       │   │   ├── mixins.md
+│       │       │   │   └── util.md
+│       │       │   ├── main.md
+│       │       │   └── run
+│       │       │       ├── managers.md
+│       │       │       ├── pipeline.md
+│       │       │       ├── pipes.md
+│       │       │       └── ticket_system_integration.md
+│       │       ├── architecture.md
+│       │       ├── blog
+│       │       │   ├── ai-in-open-source-ticketsystems.md
+│       │       │   ├── ai-in-ticketsystems.md
+│       │       │   ├── ai_classifiers_metrics.md
+│       │       │   ├── automatic_ticket_labeling.md
+│       │       │   ├── fine-tuning-an-ai-model-with-own-ticket-data.md
+│       │       │   ├── integrating-freshdesk-open-ticket-ai.md
+│       │       │   ├── integrating-zammad-open-ticket-ai.md
+│       │       │   └── integrating-zendesk-open-ticket-ai.md
+│       │       ├── concepts
+│       │       │   ├── community-edition-overview.md
+│       │       │   ├── key-features.md
+│       │       │   ├── mvp-technical-overview.md
+│       │       │   └── pipeline-architecture.md
+│       │       ├── de
+│       │       │   ├── api
+│       │       │   │   ├── core
+│       │       │   │   │   ├── ce_core_config.md
+│       │       │   │   │   ├── di.md
+│       │       │   │   │   ├── mixins.md
+│       │       │   │   │   └── util.md
+│       │       │   │   ├── main.md
+│       │       │   │   └── run
+│       │       │   │       ├── managers.md
+│       │       │   │       ├── pipeline.md
+│       │       │   │       ├── pipes.md
+│       │       │   │       └── ticket_system_integration.md
+│       │       │   ├── architecture.md
+│       │       │   ├── blog
+│       │       │   │   ├── ai-in-open-source-ticketsystems.md
+│       │       │   │   ├── ai-in-ticketsystems.md
+│       │       │   │   ├── ai_classifiers_metrics.md
+│       │       │   │   ├── automatic_ticket_labeling.md
+│       │       │   │   ├── fine-tuning-an-ai-model-with-own-ticket-data.md
+│       │       │   │   ├── integrating-freshdesk-open-ticket-ai.md
+│       │       │   │   ├── integrating-zammad-open-ticket-ai.md
+│       │       │   │   └── integrating-zendesk-open-ticket-ai.md
+│       │       │   ├── concepts
+│       │       │   │   ├── community-edition-overview.md
+│       │       │   │   ├── key-features.md
+│       │       │   │   ├── mvp-technical-overview.md
+│       │       │   │   └── pipeline-architecture.md
+│       │       │   ├── developer-information.md
+│       │       │   ├── get-started.md
+│       │       │   ├── guide
+│       │       │   │   ├── hardware-requirements.md
+│       │       │   │   ├── installation-guide.md
+│       │       │   │   ├── otobo-znuny-otrs-integration.md
+│       │       │   │   ├── quickstart-guide.md
+│       │       │   │   ├── running-classifier.md
+│       │       │   │   └── training-models.md
+│       │       │   └── index.md
+│       │       ├── developer-information.md
+│       │       ├── en
+│       │       │   ├── api
+│       │       │   │   ├── core
+│       │       │   │   │   ├── ce_core_config.md
+│       │       │   │   │   ├── di.md
+│       │       │   │   │   ├── mixins.md
+│       │       │   │   │   └── util.md
+│       │       │   │   ├── main.md
+│       │       │   │   └── run
+│       │       │   │       ├── managers.md
+│       │       │   │       ├── pipeline.md
+│       │       │   │       ├── pipes.md
+│       │       │   │       └── ticket_system_integration.md
+│       │       │   ├── architecture.md
+│       │       │   ├── blog
+│       │       │   │   ├── ai-in-open-source-ticketsystems.md
+│       │       │   │   ├── ai-in-ticketsystems.md
+│       │       │   │   ├── ai_classifiers_metrics.md
+│       │       │   │   ├── automatic_ticket_labeling.md
+│       │       │   │   ├── fine-tuning-an-ai-model-with-own-ticket-data.md
+│       │       │   │   ├── integrating-freshdesk-open-ticket-ai.md
+│       │       │   │   ├── integrating-zammad-open-ticket-ai.md
+│       │       │   │   └── integrating-zendesk-open-ticket-ai.md
+│       │       │   ├── concepts
+│       │       │   │   ├── community-edition-overview.md
+│       │       │   │   ├── key-features.md
+│       │       │   │   ├── mvp-technical-overview.md
+│       │       │   │   └── pipeline-architecture.md
+│       │       │   ├── developer-information.md
+│       │       │   ├── get-started.md
+│       │       │   ├── guide
+│       │       │   │   ├── hardware-requirements.md
+│       │       │   │   ├── installation-guide.md
+│       │       │   │   ├── otobo-znuny-otrs-integration.md
+│       │       │   │   ├── quickstart-guide.md
+│       │       │   │   ├── running-classifier.md
+│       │       │   │   └── training-models.md
+│       │       │   └── index.md
+│       │       ├── get-started.md
+│       │       ├── guide
+│       │       │   ├── hardware-requirements.md
+│       │       │   ├── installation-guide.md
+│       │       │   ├── otobo-znuny-otrs-integration.md
+│       │       │   ├── quickstart-guide.md
+│       │       │   ├── running-classifier.md
+│       │       │   └── training-models.md
+│       │       ├── index.md
+│       │       └── messages.ts
+│       ├── node_modules
 │       ├── package-lock.json
 │       ├── package.json
-│       └── [1mpublic/[0m
+│       └── public
 │           ├── ai-in-ticket-system.png
-│           ├── [1mdiagrams/[0m
+│           ├── diagrams
 │           │   ├── diagram-gen.puml
 │           │   ├── mvp-software-design.puml
 │           │   ├── pipes-data-flow.puml
 │           │   └── ticket_system_integration.puml
-│           ├── [1mimages/[0m
+│           ├── images
 │           │   ├── application_class_diagram.png
 │           │   ├── mv-no-data-collection.png
 │           │   ├── mvp-design.png
@@ -390,8 +475,8 @@ DIRECTORY STRUCTURE:
 │           │   └── overview.png
 │           ├── open-source-ticket-system.png
 │           └── openapi.json
-├── [1minstallation/[0m
-│   └── [1motobo/[0m
+├── installation
+│   └── otobo
 │       ├── compose.yml
 │       ├── OTAI_OTOBO_webservice.yml
 │       └── webservice-setup.sh
@@ -399,23 +484,23 @@ DIRECTORY STRUCTURE:
 ├── LICENSE_DE.md
 ├── LICENSE_EN.md
 ├── netlify.toml
-├── [1mopen_ticket_ai/[0m
-│   ├── [1m.pytest_cache/[0m
+├── open_ticket_ai
+│   ├── .pytest_cache
 │   ├── __init__.py
-│   ├── [1m__pycache__/[0m
+│   ├── __pycache__
 │   ├── config.schema.json
 │   ├── config.yml
-│   ├── [1mexperimental/[0m
+│   ├── experimental
 │   │   ├── __init__.py
-│   │   ├── [1m__pycache__/[0m
+│   │   ├── __pycache__
 │   │   ├── anonymize_data.py
 │   │   └── email_extraction.py
-│   ├── [1mscripts/[0m
+│   ├── scripts
 │   │   ├── __init__.py
-│   │   ├── [1m__pycache__/[0m
-│   │   ├── [1mdoc_generation/[0m
+│   │   ├── __pycache__
+│   │   ├── doc_generation
 │   │   │   ├── __init__.py
-│   │   │   ├── [1m__pycache__/[0m
+│   │   │   ├── __pycache__
 │   │   │   ├── add_docstrings.py
 │   │   │   ├── generate_api_reference.py
 │   │   │   ├── generate_multi_lang_docs.py
@@ -426,141 +511,141 @@ DIRECTORY STRUCTURE:
 │   │   ├── license_script.py
 │   │   ├── readme_updater.py
 │   │   ├── update_file_path_comments.py
-│   │   └── [1mutil/[0m
+│   │   └── util
 │   │       ├── __init__.py
-│   │       ├── [1m__pycache__/[0m
+│   │       ├── __pycache__
 │   │       └── display_file_structure.py
-│   ├── [1msrc/[0m
+│   ├── src
 │   │   ├── __init__.py
-│   │   ├── [1m__pycache__/[0m
-│   │   └── [1mce/[0m
+│   │   ├── __pycache__
+│   │   └── ce
 │   │       ├── __init__.py
-│   │       ├── [1m__pycache__/[0m
+│   │       ├── __pycache__
 │   │       ├── app.py
-│   │       ├── [1mcore/[0m
+│   │       ├── core
 │   │       │   ├── __init__.py
-│   │       │   ├── [1m__pycache__/[0m
-│   │       │   ├── [1mconfig/[0m
+│   │       │   ├── __pycache__
+│   │       │   ├── config
 │   │       │   │   ├── __init__.py
-│   │       │   │   ├── [1m__pycache__/[0m
+│   │       │   │   ├── __pycache__
 │   │       │   │   ├── config_models.py
 │   │       │   │   └── config_validator.py
-│   │       │   ├── [1mdependency_injection/[0m
+│   │       │   ├── dependency_injection
 │   │       │   │   ├── __init__.py
-│   │       │   │   ├── [1m__pycache__/[0m
+│   │       │   │   ├── __pycache__
 │   │       │   │   ├── abstract_container.py
 │   │       │   │   ├── container.py
 │   │       │   │   ├── create_registry.py
 │   │       │   │   └── registry.py
-│   │       │   ├── [1mmixins/[0m
+│   │       │   ├── mixins
 │   │       │   │   ├── __init__.py
-│   │       │   │   ├── [1m__pycache__/[0m
+│   │       │   │   ├── __pycache__
 │   │       │   │   └── registry_providable_instance.py
-│   │       │   └── [1mutil/[0m
+│   │       │   └── util
 │   │       │       ├── __init__.py
-│   │       │       ├── [1m__pycache__/[0m
+│   │       │       ├── __pycache__
 │   │       │       ├── create_json_config_schema.py
 │   │       │       ├── path_util.py
 │   │       │       └── pretty_print_config.py
 │   │       ├── main.py
-│   │       ├── [1motobo_integration/[0m
+│   │       ├── otobo_integration
 │   │       │   ├── __init__.py
-│   │       │   └── otobo_adapter.py
-│   │       ├── [1mrun/[0m
+│   │       │   ├── __pycache__
+│   │       │   ├── otobo_adapter.py
+│   │       │   └── unified_models.py
+│   │       ├── run
 │   │       │   ├── __init__.py
-│   │       │   ├── [1m__pycache__/[0m
-│   │       │   ├── [1mmanagers/[0m
+│   │       │   ├── __pycache__
+│   │       │   ├── managers
 │   │       │   │   ├── __init__.py
-│   │       │   │   ├── [1m__pycache__/[0m
+│   │       │   │   ├── __pycache__
 │   │       │   │   └── orchestrator.py
-│   │       │   ├── [1mpipe_implementations/[0m
+│   │       │   ├── pipe_implementations
 │   │       │   │   ├── __init__.py
-│   │       │   │   ├── [1m__pycache__/[0m
+│   │       │   │   ├── __pycache__
 │   │       │   │   ├── ai_text_model_input.py
 │   │       │   │   ├── empty_data_model.py
-│   │       │   │   ├── [1mgeneric_ticket_updater/[0m
+│   │       │   │   ├── generic_ticket_updater
 │   │       │   │   │   ├── __init__.py
+│   │       │   │   │   ├── __pycache__
 │   │       │   │   │   └── generic_ticket_updater.py
-│   │       │   │   ├── [1mhf_inference_services/[0m
+│   │       │   │   ├── hf_cloud_inference_service.py
+│   │       │   │   ├── hf_inference_services
 │   │       │   │   │   ├── __init__.py
 │   │       │   │   │   ├── hf_cloud_inference_service.py
 │   │       │   │   │   └── hf_local_ai_inference_service.py
-│   │       │   │   ├── [1msubject_body_preparer/[0m
+│   │       │   │   ├── hf_local_ai_inference_service.py
+│   │       │   │   ├── subject_body_preparer
 │   │       │   │   │   ├── __init__.py
+│   │       │   │   │   ├── __pycache__
 │   │       │   │   │   └── subject_body_preparer.py
-│   │       │   │   └── [1mticket_fetcher/[0m
+│   │       │   │   └── ticket_fetcher
 │   │       │   │       ├── __init__.py
 │   │       │   │       └── basic_ticket_fetcher.py
-│   │       │   └── [1mpipeline/[0m
+│   │       │   └── pipeline
 │   │       │       ├── __init__.py
-│   │       │       ├── [1m__pycache__/[0m
+│   │       │       ├── __pycache__
 │   │       │       ├── context.py
 │   │       │       ├── meta_info.py
 │   │       │       ├── pipe.py
 │   │       │       ├── pipeline.py
 │   │       │       └── status.py
-│   │       └── [1mticket_system_integration/[0m
+│   │       └── ticket_system_integration
 │   │           ├── __init__.py
-│   │           ├── [1m__pycache__/[0m
+│   │           ├── __pycache__
+│   │           ├── otobo_adapter.py
 │   │           ├── otobo_adapter_config.py
 │   │           ├── ticket_system_adapter.py
 │   │           └── unified_models.py
-│   └── [1mtests/[0m
+│   └── tests
 │       ├── __init__.py
-│       ├── [1m__pycache__/[0m
+│       ├── __pycache__
 │       ├── conftest.py
-│       ├── [1mexperimental/[0m
+│       ├── experimental
 │       │   ├── __init__.py
-│       │   ├── [1m__pycache__/[0m
+│       │   ├── __pycache__
 │       │   └── test_anonymize_data.py
 │       ├── otobo_adapter_test.py
-│       ├── [1mscripts/[0m
+│       ├── scripts
 │       │   ├── __init__.py
-│       │   ├── [1m__pycache__/[0m
-│       │   ├── [1mtest_doc_generation/[0m
+│       │   ├── __pycache__
+│       │   ├── test_doc_generation
 │       │   │   ├── __init__.py
-│       │   │   ├── [1m__pycache__/[0m
-│       │   │   ├── [1mexample_docs_output/[0m
+│       │   │   ├── __pycache__
+│       │   │   ├── example_docs_output
 │       │   │   │   └── example_package.md
-│       │   │   ├── [1mexample_package/[0m
+│       │   │   ├── example_package
 │       │   │   │   ├── __init__.py
 │       │   │   │   ├── main_module.py
-│       │   │   │   └── [1msubmodule/[0m
+│       │   │   │   └── submodule
 │       │   │   │       └── __init__.py
 │       │   │   └── test_add_docstrings_generator.py
 │       │   └── test_license_script.py
-│       ├── [1msrc/[0m
+│       ├── src
 │       │   ├── __init__.py
-│       │   ├── [1m__pycache__/[0m
-│       │   ├── [1mcore/[0m
+│       │   ├── __pycache__
+│       │   ├── core
 │       │   │   ├── __init__.py
-│       │   │   ├── [1m__pycache__/[0m
+│       │   │   ├── __pycache__
 │       │   │   ├── config_test.py
-│       │   │   ├── test_di_container.py
 │       │   │   └── util_test.py
-│       │   ├── [1mrun/[0m
+│       │   ├── run
 │       │   │   ├── __init__.py
-│       │   │   ├── [1m__pycache__/[0m
-│       │   │   ├── [1mfetchers/[0m
-│       │   │   │   ├── [1m__pycache__/[0m
-│       │   │   │   └── test_fetchers.py
-│       │   │   ├── [1mpipeline/[0m
+│       │   │   ├── __pycache__
+│       │   │   ├── fetchers
+│       │   │   │   └── __pycache__
+│       │   │   ├── pipeline
 │       │   │   │   ├── __init__.py
-│       │   │   │   ├── [1m__pycache__/[0m
+│       │   │   │   ├── __pycache__
 │       │   │   │   └── test_pipeline.py
-│       │   │   ├── test_ai_models.py
-│       │   │   ├── test_modifiers.py
 │       │   │   ├── test_pipeline.py
-│       │   │   └── [1mtest_preparers/[0m
-│       │   │       ├── __init__.py
-│       │   │       ├── [1m__pycache__/[0m
-│       │   │       ├── test_data_preparer.py
-│       │   │       └── test_subject_body_preparer.py
+│       │   │   └── test_preparers
+│       │   │       └── __pycache__
 │       │   └── test_app_main.py
 │       ├── test_orchestrator.py
 │       ├── test_ticket_system_adapter.py
 │       └── test_unified_models.py
-├── [1mopen_ticket_ai.egg-info/[0m
+├── open_ticket_ai.egg-info
 ├── package-lock.json
 ├── pyproject.toml
 ├── pytest.ini

@@ -1,4 +1,9 @@
-# FILE_PATH: open_ticket_ai\src\ce\run\pipeline\pipeline.py
+"""Defines the Pipeline class for executing a sequence of pipes.
+
+The Pipeline is a specialized Pipe that runs multiple pipes in sequence. It manages the context
+and status throughout the execution, handling errors and stop requests appropriately.
+"""
+
 from __future__ import annotations
 
 import logging  # Use logging for errors

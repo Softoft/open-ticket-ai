@@ -69,8 +69,12 @@ class OTOBOAdapter(TicketSystemAdapter):
     async def find_tickets(self, criteria: SearchCriteria) -> list[UnifiedTicket]:
         """Search for tickets matching the provided criteria.
 
-        Converts the query dictionary into `TicketSearchParams` and uses the OTOBO client
-        to retrieve matching tickets. Returns ticket data as dictionaries.
+        Builds a search query from the criteria and uses the OTOBO client
+        to retrieve matching tickets. Returns a list of UnifiedTicket objects.
+
+        Currently, the following criteria attributes are supported:
+          - id: The ticket ID.
+          - subject: The subject of the ticket.
 
         Args:
             criteria: Search parameters describing the desired tickets.
@@ -80,9 +84,11 @@ class OTOBOAdapter(TicketSystemAdapter):
 
         Example:
             ```python
-            await adapter.find_tickets({"Title": "Server Issue"})
+            criteria = SearchCriteria(subject="Server Issue")
+            tickets = await adapter.find_tickets(criteria)
+            # Returns list of UnifiedTicket objects. Access attributes like:
+            #   tickets[0].id, tickets[0].subject, etc.
             ```
-            [{"TicketID": 123, "Title": "Server Issue", ...}, ...]
         """
         query: dict = {}
         if criteria.id:
@@ -121,9 +127,11 @@ class OTOBOAdapter(TicketSystemAdapter):
 
         Example:
             ```python
-            await adapter.find_first_ticket({"State": "open"})
+            criteria = SearchCriteria(subject="Server Issue")
+            ticket = await adapter.find_first_ticket(criteria)
+            if ticket:
+                print(f"Found ticket: {ticket.id}")
             ```
-            {"TicketID": 456, "State": "open", ...}
         """
         result = await self.find_tickets(criteria)
         return result[0] if len(result) >= 1 else None

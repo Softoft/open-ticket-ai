@@ -1,10 +1,9 @@
 ---
-description: This documentation outlines a modular Python framework for building sequential
-  data processing pipelines. It details core components such as `Pipeline` for managing
-  execution flow, the `Pipe` interface for creating individual processing stages,
-  and `PipelineContext` for passing state and data between pipes. The system includes
-  robust features for status tracking, error handling, and controlled pipeline termination,
-  enabling the creation of resilient and maintainable data workflows.
+description: 'Discover a modular Python pipeline framework for building robust data
+  processing workflows. This documentation covers the core components: the `Pipeline`
+  orchestrator, individual `Pipe` stages, and the `PipelineContext` for state management.
+  Learn to implement sequential processing, handle errors gracefully, manage execution
+  status (RUNNING, SUCCESS, FAILED, STOPPED), and ensure type safety with Pydantic.'
 ---
 # Documentation for `**/ce/run/pipeline/*.py`
 
@@ -14,19 +13,29 @@ description: This documentation outlines a modular Python framework for building
 ### <span style='text-info'>class</span> `PipelineContext`
 
 Context object passed between pipeline stages.
-This class serves as a container for sharing state and data across different stages
-of a processing pipeline. It uses Pydantic for data validation and serialization.
+This generic class serves as a container for sharing state and data across
+different stages of a processing pipeline. It leverages Pydantic for data
+validation and serialization.
+
+The generic type parameter `DataT` must be a subclass of `BaseModel`,
+ensuring type safety for the main data payload.
 
 **Parameters:**
 
-- **`ticket_id`** (`str`) - The unique identifier of the ticket being processed through
-the pipeline stages.
-- **`data`** (`dict[str, Any]`) - A flexible dictionary for storing arbitrary data exchanged
-between pipeline stages. Defaults to an empty dictionary.
+- **`data`** (`DataT`) - The main data payload being processed through the pipeline.
+Must be a Pydantic model instance matching the generic type.
+- **`meta_info`** (`MetaInfo`) - Metadata about the pipeline execution, including
+status information and operational details.
 
 
 ::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `stop_pipeline(self)`
-A convenience method for pipes to signal a controlled stop.
+Signals the pipeline to halt processing.
+This method provides a controlled way for pipeline stages to indicate
+that processing should stop. It updates the context's status metadata
+to `STOPPED`, which subsequent stages can check to terminate early.
+
+Note:
+    This method modifies the context's state but does not return any value.
 
 :::
 
@@ -97,6 +106,9 @@ Raises:
 
 ## Module: `open_ticket_ai\src\ce\run\pipeline\pipeline.py`
 
+Defines the Pipeline class for executing a sequence of pipes.
+The Pipeline is a specialized Pipe that runs multiple pipes in sequence. It manages the context
+and status throughout the execution, handling errors and stop requests appropriately.
 
 ### <span style='text-info'>class</span> `Pipeline`
 

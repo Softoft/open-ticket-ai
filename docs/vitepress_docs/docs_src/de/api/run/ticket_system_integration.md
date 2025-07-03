@@ -1,12 +1,24 @@
 ---
-description: Erkunden Sie die Dokumentation für das Python-Modul `ticket_system_integration`.
-  Erfahren Sie, wie Sie die abstrakte Basisklasse `TicketSystemAdapter` verwenden,
-  um Tickets über verschiedene Systeme hinweg zu erstellen, zu aktualisieren, zu finden
-  und zu verwalten. Diese Anleitung behandelt die einheitlichen Datenmodelle wie `UnifiedTicket`
-  und `UnifiedNote`, die einen systemunabhängigen Ansatz für die Ticketverwaltung
-  und -integration ermöglichen.
+description: Entdecken Sie unsere Python-Bibliothek für die nahtlose Integration von Ticketsystemen.
+  Diese Dokumentation beschreibt den `TicketSystemAdapter`, eine abstrakte Basisklasse
+  zur Erstellung benutzerdefinierter Konnektoren, und stellt einen einsatzbereiten
+  `OTOBOAdapter` zur Verfügung. Lernen Sie, wie Sie Tickets über verschiedene Plattformen
+  hinweg verwalten, indem Sie einheitliche Modelle wie `UnifiedTicket`, `UnifiedNote`
+  und `SearchCriteria` zum Erstellen, Aktualisieren und Suchen von Support-Tickets
+  verwenden.
 ---
 # Dokumentation für `**/ce/ticket_system_integration/*.py`
+
+## Modul: `open_ticket_ai\src\ce\ticket_system_integration\otobo_adapter.py`
+
+Paket zur Integration mit OTOBO-Systemen.
+Dieses Modul stellt die primäre Schnittstelle für die OTOBO-Integration bereit, indem es
+die `OTOBOAdapter`-Klasse verfügbar macht. Es dient als öffentlicher API-Einstiegspunkt für
+die Interaktion mit OTOBO-Diensten.
+
+
+
+---
 
 ## Modul: `open_ticket_ai\src\ce\ticket_system_integration\otobo_adapter_config.py`
 
@@ -53,26 +65,26 @@ unterstützen und die aktualisierte Ticket-Darstellung zurückgeben.
 
 **Parameter:**
 
-- **`ticket_id`** () - Eindeutiger Bezeichner des zu aktualisierenden Tickets.
-- **`updates`** () - Dictionary mit den Attributen, die am Ticket aktualisiert werden sollen.
+- **`ticket_id`** () - Eindeutiger Identifikator des zu aktualisierenden Tickets.
+- **`updates`** () - Dictionary mit Attributen, die am Ticket aktualisiert werden sollen.
 
-**Rückgabewert:** (`bool`) - ``True``, wenn die Aktualisierung erfolgreich war, andernfalls ``False``.
+**Rückgabe:** (`bool`) - ``True``, wenn die Aktualisierung erfolgreich war, andernfalls ``False``.
 
 :::
 
 
 ::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `find_tickets(self, criteria: SearchCriteria) -> list[UnifiedTicket]`
 Sucht nach Tickets, die den ``criteria`` entsprechen.
-Diese Methode muss von konkreten Adaptern implementiert werden, um komplexe
-Suchen im Ziel-Ticketsystem durchzuführen. Die Abfragestruktur
-ist adapterspezifisch, sollte aber gängige Filter- und Suchoperationen
-unterstützen.
+Diese Methode muss von konkreten Adaptern implementiert werden, um
+komplexe Suchen im Ziel-Ticketsystem durchzuführen. Die Abfragestruktur
+ist adapterspezifisch, sollte aber gängige Filter- und
+Suchoperationen unterstützen.
 
 **Parameter:**
 
 - **`criteria`** () - Parameter, die definieren, nach welchen Tickets gesucht werden soll.
 
-**Rückgabewert:** (`list[UnifiedTicket]`) - Eine Liste von Tickets, die den Kriterien entsprechen.
+**Rückgabe:** (`list[UnifiedTicket]`) - Eine Liste von Tickets, die den Kriterien entsprechen.
 Gibt eine leere Liste zurück, wenn keine Übereinstimmungen gefunden werden.
 
 :::
@@ -80,15 +92,15 @@ Gibt eine leere Liste zurück, wenn keine Übereinstimmungen gefunden werden.
 
 ::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `find_first_ticket(self, criteria: SearchCriteria) -> UnifiedTicket | None`
 Gibt das erste Ticket zurück, das den ``criteria`` entspricht, falls vorhanden.
-Dies ist eine Hilfsmethode, die das erste passende Ticket
-aus einer Suchoperation zurückgeben sollte. Sie sollte die Leistung optimieren,
+Dies ist eine Hilfsmethode, die das erste passende
+Ticket aus einer Suchoperation zurückgeben sollte. Sie sollte die Leistung optimieren,
 indem sie die Ergebnisse intern begrenzt.
 
 **Parameter:**
 
 - **`criteria`** () - Parameter, die definieren, nach welchem Ticket gesucht werden soll.
 
-**Rückgabewert:** (`Optional[UnifiedTicket]`) - Das erste passende Ticket oder ``None``, wenn keine Tickets übereinstimmen.
+**Rückgabe:** (`Optional[UnifiedTicket]`) - Das erste passende Ticket oder ``None``, wenn keine Tickets übereinstimmen.
 
 :::
 
@@ -100,10 +112,10 @@ im Ziel-Ticketsystem zu handhaben. Die Ticketdaten werden in einem einheitlichen
 
 **Parameter:**
 
-- **`ticket_data`** (`UnifiedTicket`) - Die Daten des zu erstellenden Tickets. Enthält alle notwendigen Felder in einem 
+- **`ticket_data`** (`UnifiedTicket`) - Die zu erstellenden Ticketdaten. Enthält alle notwendigen Felder in einem 
 systemunabhängigen Format.
 
-**Rückgabewert:** (`UnifiedTicket`) - Das erstellte Ticket-Objekt mit systemgenerierten Bezeichnern und Feldern.
+**Rückgabe:** (`UnifiedTicket`) - Das erstellte Ticketobjekt mit systemgenerierten Identifikatoren und Feldern.
 
 :::
 
@@ -115,10 +127,10 @@ an Tickets im Zielsystem anzuhängen. Der Notizinhalt wird in einem einheitliche
 
 **Parameter:**
 
-- **`ticket_id`** (`str`) - Eindeutiger Bezeichner des Ziel-Tickets.
+- **`ticket_id`** (`str`) - Eindeutiger Identifikator des Ziel-Tickets.
 - **`note`** (`UnifiedNote`) - Der hinzuzufügende Notizinhalt und die Metadaten.
 
-**Rückgabewert:** (`UnifiedNote`) - Das hinzugefügte Notiz-Objekt mit systemgenerierten Metadaten (z. B. Zeitstempel, ID).
+**Rückgabe:** (`UnifiedNote`) - Das hinzugefügte Notizobjekt mit systemgenerierten Metadaten (z. B. Zeitstempel, ID).
 
 :::
 
@@ -132,33 +144,73 @@ an Tickets im Zielsystem anzuhängen. Der Notizinhalt wird in einem einheitliche
 
 Basis-Entität mit optionaler ID und optionalem Namen.
 
+**Parameter:**
+
+- **`id`** (`Optional[int]`) (default: `None`) - Eindeutiger Identifikator für die Entität. Standardwert ist None.
+- **`name`** (`Optional[str]`) (default: `None`) - Anzeigename der Entität. Standardwert ist None.
+
 ### <span style='text-info'>class</span> `UnifiedUser`
 
-Benutzerdarstellung.
+Repräsentiert einen Benutzer innerhalb des Systems.
+Erbt Attribute von `UnifiedEntity` und fügt hinzu:
+
+**Parameter:**
+
+- **`email`** (`Optional[str]`) (default: `None`) - E-Mail-Adresse des Benutzers. Standardwert ist None.
 
 ### <span style='text-info'>class</span> `UnifiedQueue`
 
-Ticket-Warteschlange.
+Repräsentiert eine Ticket-Warteschlange.
+Erbt Attribute von `UnifiedEntity`.
 
 ### <span style='text-info'>class</span> `UnifiedPriority`
 
-Ticket-Priorität.
+Repräsentiert eine Ticket-Prioritätsstufe.
+Erbt Attribute von `UnifiedEntity`.
 
 ### <span style='text-info'>class</span> `UnifiedStatus`
 
-Ticket-Status.
+Repräsentiert einen Ticket-Status.
+Erbt Attribute von `UnifiedEntity`.
 
 ### <span style='text-info'>class</span> `UnifiedNote`
 
-Darstellung einer Ticket-Notiz.
+Repräsentiert eine an ein Ticket angehängte Notiz.
+
+**Parameter:**
+
+- **`id`** (`Optional[str]`) (default: `None`) - Eindeutiger Identifikator für die Notiz. Standardwert ist None.
+- **`body`** (`str`) - Inhalt der Notiz.
+- **`created_at`** (`datetime`) - Zeitstempel, wann die Notiz erstellt wurde.
+- **`is_internal`** (`bool`) - Gibt an, ob die Notiz intern ist (für Kunden nicht sichtbar).
+- **`author`** (`UnifiedUser`) - Benutzer, der die Notiz erstellt hat.
 
 ### <span style='text-info'>class</span> `UnifiedTicket`
 
-Einheitliches Ticket-Modell, das in der gesamten Anwendung verwendet wird.
+Einheitliche Darstellung eines Support-Tickets.
+
+**Parameter:**
+
+- **`id`** (`str`) - Eindeutiger Identifikator für das Ticket.
+- **`subject`** (`str`) - Betreffzeile des Tickets.
+- **`body`** (`str`) - Hauptinhalt/Beschreibung des Tickets.
+- **`custom_fields`** (`Dict`) - Zusätzliche benutzerdefinierte Felddaten, die mit dem Ticket verknüpft sind.
+- **`queue`** (`UnifiedQueue`) - Warteschlange, zu der das Ticket gehört.
+- **`priority`** (`UnifiedPriority`) - Prioritätsstufe des Tickets.
+- **`status`** (`UnifiedStatus`) - Aktueller Status des Tickets.
+- **`owner`** (`UnifiedUser`) - Benutzer, dem das Ticket aktuell zugewiesen ist.
+- **`notes`** (`List[UnifiedNote]`) (default: `empty list`) - Liste der an das Ticket angehängten Notizen. Standardwert ist eine leere Liste.
 
 ### <span style='text-info'>class</span> `SearchCriteria`
 
-Kriterien für die Ticketsuche.
+Kriterien zum Suchen/Filtern von Tickets.
+
+**Parameter:**
+
+- **`id`** (`Optional[str]`) (default: `None`) - Ticket-ID, nach der gesucht werden soll. Standardwert ist None.
+- **`subject`** (`Optional[str]`) (default: `None`) - Text, der im Ticket-Betreff gesucht werden soll. Standardwert ist None.
+- **`queue`** (`Optional[UnifiedQueue]`) (default: `None`) - Warteschlange, nach der gefiltert werden soll. Standardwert ist None.
+- **`user`** (`Optional[UnifiedUser]`) (default: `None`) - Benutzer, nach dem gefiltert werden soll (z. B. Besitzer). Standardwert ist None.
 
 
 ---

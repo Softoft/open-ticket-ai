@@ -1,8 +1,6 @@
-# FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\hf_local_ai_inference_service.py
 from __future__ import annotations
 
 import os
-
 
 from open_ticket_ai.src.ce.core.config.config_models import ProvidableConfig
 from open_ticket_ai.src.ce.run.pipe_implementations.ai_text_model_input import TextAIModelInput
@@ -62,8 +60,7 @@ class HFLocalAIInferenceService(Pipe[TextAIModelInput,]):
 
     @staticmethod
     def get_description() -> str:
-        """
-        Provides a description of the service.
+        """Provides a description of the service.
 
         Returns:
             str: Description text for the Hugging Face AI model service.

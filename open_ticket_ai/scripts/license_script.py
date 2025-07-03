@@ -1,19 +1,21 @@
-# FILE_PATH: open_ticket_ai\scripts\license_script.py
-import datetime
-import os
-
 """Script to update license notices in Python files within a specified directory.
 
 This script walks through all Python files in a given directory and replaces
 any existing license notice at the top of the file with a new license notice.
 Non-comment code and empty/whitespace-only files are handled appropriately.
 """
+import datetime
+import os
 
 # Path to the directory containing Python files to update
 directory_path = 'src'
+"""str: Path to the directory containing Python files to update."""
 
 # The new license notice text to insert at the top of files
 current_year = datetime.datetime.now().year
+"""int: The current year used in the license notice."""
+
+#: str: The new license notice text to insert at the top of files.
 new_license_notice = f"""# Copyright (c) {current_year} by Softoft, Tobias Bueck Einzelunternehmen
 # This code is part of the Open Ticket AI and is governed
 # by its license agreement. Full license in LICENSE_DE.md / LICENSE_EN.md.

@@ -1,8 +1,7 @@
 ---
-description: Official documentation for OpenTicketAI's core Python utility modules.
-  Learn how to generate a JSON schema for configuration validation with Pydantic and
-  pretty-print settings in a syntax-highlighted YAML format using the `rich` library.
-  This guide details essential tools for managing and visualizing system configuration.
+description: Official documentation for OpenTicketAI's core utility modules. Learn
+  how to generate a `config.schema.json` for configuration validation and autocompletion,
+  and discover other Python utilities for managing project settings.
 ---
 # Documentation for `**/ce/core/util/**/*.py`
 
@@ -28,7 +27,7 @@ It is designed to be used for generating JSON schema representations of the conf
 
 **Parameters:**
 
-- **`open_ticket_ai`** (`OpenTicketAIConfig`) - The main configuration object containing all
+- **``open_ticket_ai``** (``OpenTicketAIConfig``) - The main configuration object containing all
 settings and parameters for the OpenTicketAI system.
 
 
@@ -41,39 +40,6 @@ settings and parameters for the OpenTicketAI system.
 ---
 
 ## Module: `open_ticket_ai\src\ce\core\util\pretty_print_config.py`
-
-Module for pretty printing configuration objects.
-This module provides functionality to display Pydantic configuration models in a
-nicely formatted and syntax highlighted way using the `rich` library. It converts
-Pydantic models to YAML format and applies syntax highlighting for improved readability.
-
-Features:
-- Converts Pydantic `BaseModel` instances to dictionaries
-- Serializes configuration data to YAML format
-- Applies YAML syntax highlighting using `rich`
-- Prints highlighted output to console
-
-
-### <span class='text-warning'>def</span> `pretty_print_config(config: BaseModel, console: Console)`
-
-Pretty print a pydantic model using `rich`.
-This function converts a Pydantic `BaseModel` to a dictionary, serializes it to YAML,
-and prints it to the console using `rich`'s syntax highlighting. The output is formatted
-with YAML syntax highlighting for improved readability.
-
-The process involves:
-    1. Converting the Pydantic model to a dictionary using `model_dump()`
-    2. Serializing the dictionary to a YAML string
-    3. Creating a rich `Syntax` object with YAML highlighting
-    4. Printing the highlighted YAML to the console
-
-Note that this function bypasses standard logging and outputs directly to the console
-using `rich`'s printing capabilities for optimal formatting.
-
-**Parameters:**
-
-- **`config`** (``BaseModel``) - The Pydantic model configuration to display.
-- **`console`** (``Console``) - The rich console instance for output rendering.
 
 
 

@@ -1,9 +1,8 @@
 ---
-description: Discover the Open Ticket AI Orchestrator, the core component responsible
-  for managing and executing automated ticket processing pipelines. This documentation
-  explains how the Orchestrator class uses dependency injection to build pipelines,
-  process individual tickets on-demand, and configure scheduled runs for continuous
-  workflow automation.
+description: Explore the OpenTicketAI `Orchestrator` class, a core component for automating
+  ticket processing workflows. This Python module manages the complete lifecycle of
+  pipelines, including instantiation via dependency injection, individual ticket processing,
+  and scheduled execution for continuous automation.
 ---
 # Documentation for `**/ce/run/managers/*.py`
 
@@ -73,6 +72,10 @@ Performs the following operations:
 The scheduling uses the following configuration parameters:
 - interval: Numeric interval value
 - unit: Time unit (e.g., minutes, hours, days)
+
+Note:
+- Uses `schedule.every(interval).unit` pattern for scheduling
+- Passes an empty ticket_id context during scheduled executions
 
 :::
 

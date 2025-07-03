@@ -69,6 +69,10 @@ class DocumentationSummarizer:
         Returns:
             dict[str, str]: Dictionary mapping relative file paths (as strings) to their summaries.
                 Paths are relative to ``docs_dir``.
+
+        Raises:
+            OSError: Propagated from file reading errors in ``summarize_file``.
+            openai.OpenAIError: Propagated from API errors in ``summarize_file``.
         """
         tasks = []
         paths: list[Path] = []

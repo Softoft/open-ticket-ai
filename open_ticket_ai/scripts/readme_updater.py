@@ -34,9 +34,19 @@ class ReadmeUpdater:
         self.model = model
 
     def _get_file_structure(self) -> str:
+        """Generate a directory tree representation of the project.
+
+        Returns:
+            String representation of the directory structure.
+        """
         return display_dir_tree(find_python_code_root_path().parent)
 
     def _get_important_files(self) -> list[Path]:
+        """Identify important non-Markdown files to include in documentation.
+
+        Returns:
+            List of Path objects pointing to important project files.
+        """
         root_path = find_python_code_root_path().parent
         return [
             root_path / "pyproject.toml",
@@ -46,11 +56,13 @@ class ReadmeUpdater:
     async def update_ai_prompt(self) -> None:
         """Generate a new README from documentation and save it.
 
-        This method:
-        1. Collects all Markdown files (recursively) from the stored documentation directory.
+        This method performs the following steps:
+        1. Collects all Markdown files (recursively) from the stored documentation directory
+           and includes predefined important non-Markdown files.
         2. Constructs a prompt by concatenating file contents with headers indicating their relative paths.
         3. Uses the OpenAI API to generate an updated README based on the documentation.
-        4. Writes the generated content to the stored readme path.
+        4. Appends the project's directory structure to the generated content.
+        5. Writes the final content to the stored readme path.
 
         The system message for the OpenAI API instructs the model to:
         - Update the project summary (AI_README.md)
@@ -62,7 +74,7 @@ class ReadmeUpdater:
         Raises:
             FileNotFoundError: If the documentation directory or a Markdown file is not found.
             OSError: If an I/O error occurs during file operations.
-            `openai.OpenAIError`: If the OpenAI API request fails.
+            openai.OpenAIError: If the OpenAI API request fails.
         """
         root_path = find_python_code_root_path().parent
         docs_text: list[str] = []

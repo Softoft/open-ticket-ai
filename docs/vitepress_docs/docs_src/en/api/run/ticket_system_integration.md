@@ -1,11 +1,22 @@
 ---
-description: Explore the documentation for the Python `ticket_system_integration`
-  module. Learn how to use the `TicketSystemAdapter` abstract base class to create,
-  update, find, and manage tickets across different systems. This guide covers the
-  unified data models like `UnifiedTicket` and `UnifiedNote`, enabling a system-agnostic
-  approach to ticket management and integration.
+description: Discover our Python library for seamless ticket system integration. This
+  documentation details the `TicketSystemAdapter`, an abstract base class for building
+  custom connectors, and provides a ready-to-use `OTOBOAdapter`. Learn to manage tickets
+  across different platforms using unified models like `UnifiedTicket`, `UnifiedNote`,
+  and `SearchCriteria` for creating, updating, and finding support tickets.
 ---
 # Documentation for `**/ce/ticket_system_integration/*.py`
+
+## Module: `open_ticket_ai\src\ce\ticket_system_integration\otobo_adapter.py`
+
+Package for integrating with OTOBO systems.
+This module provides the primary interface for OTOBO integration by exposing
+the `OTOBOAdapter` class. It serves as the public API entry point for
+interacting with OTOBO services.
+
+
+
+---
 
 ## Module: `open_ticket_ai\src\ce\ticket_system_integration\otobo_adapter_config.py`
 
@@ -131,33 +142,73 @@ to tickets in the target system. The note content is provided in a unified forma
 
 Base entity with optional ID and name.
 
+**Parameters:**
+
+- **`id`** (`Optional[int]`) (default: `None`) - Unique identifier for the entity. Defaults to None.
+- **`name`** (`Optional[str]`) (default: `None`) - Display name of the entity. Defaults to None.
+
 ### <span style='text-info'>class</span> `UnifiedUser`
 
-User representation.
+Represents a user within the system.
+Inherits attributes from `UnifiedEntity` and adds:
+
+**Parameters:**
+
+- **`email`** (`Optional[str]`) (default: `None`) - Email address of the user. Defaults to None.
 
 ### <span style='text-info'>class</span> `UnifiedQueue`
 
-Ticket queue.
+Represents a ticket queue.
+Inherits attributes from `UnifiedEntity`.
 
 ### <span style='text-info'>class</span> `UnifiedPriority`
 
-Ticket priority.
+Represents a ticket priority level.
+Inherits attributes from `UnifiedEntity`.
 
 ### <span style='text-info'>class</span> `UnifiedStatus`
 
-Ticket status.
+Represents a ticket status.
+Inherits attributes from `UnifiedEntity`.
 
 ### <span style='text-info'>class</span> `UnifiedNote`
 
-Representation of a ticket note.
+Represents a note attached to a ticket.
+
+**Parameters:**
+
+- **`id`** (`Optional[str]`) (default: `None`) - Unique identifier for the note. Defaults to None.
+- **`body`** (`str`) - Content of the note.
+- **`created_at`** (`datetime`) - Timestamp when the note was created.
+- **`is_internal`** (`bool`) - Indicates if the note is internal (not visible to customers).
+- **`author`** (`UnifiedUser`) - User who created the note.
 
 ### <span style='text-info'>class</span> `UnifiedTicket`
 
-Unified ticket model used throughout the application.
+Unified representation of a support ticket.
+
+**Parameters:**
+
+- **`id`** (`str`) - Unique identifier for the ticket.
+- **`subject`** (`str`) - Subject line of the ticket.
+- **`body`** (`str`) - Main content/description of the ticket.
+- **`custom_fields`** (`Dict`) - Additional custom field data associated with the ticket.
+- **`queue`** (`UnifiedQueue`) - Queue to which the ticket belongs.
+- **`priority`** (`UnifiedPriority`) - Priority level of the ticket.
+- **`status`** (`UnifiedStatus`) - Current status of the ticket.
+- **`owner`** (`UnifiedUser`) - User currently assigned to the ticket.
+- **`notes`** (`List[UnifiedNote]`) (default: `empty list`) - List of notes attached to the ticket. Defaults to empty list.
 
 ### <span style='text-info'>class</span> `SearchCriteria`
 
-Criteria for ticket searches.
+Criteria for searching/filtering tickets.
+
+**Parameters:**
+
+- **`id`** (`Optional[str]`) (default: `None`) - Ticket ID to search for. Defaults to None.
+- **`subject`** (`Optional[str]`) (default: `None`) - Text to search in ticket subjects. Defaults to None.
+- **`queue`** (`Optional[UnifiedQueue]`) (default: `None`) - Queue to filter by. Defaults to None.
+- **`user`** (`Optional[UnifiedUser]`) (default: `None`) - User to filter by (e.g., owner). Defaults to None.
 
 
 ---

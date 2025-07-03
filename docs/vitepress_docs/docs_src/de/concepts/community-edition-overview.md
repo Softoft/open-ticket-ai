@@ -4,7 +4,7 @@ title: ATC Community Edition Übersicht
 ---
 # ATC Community Edition Übersicht
 
-## Einleitung
+## Einführung
 
 Die ATC (Automated Ticket Classification) Community Edition ist eine fortschrittliche Lösung zur automatisierten Klassifizierung von Support-Tickets. Sie ist kostenlos, On-Premise und kann auf jedem Betriebssystem installiert werden, das Docker unterstützt. Diese Dokumentation bietet einen umfassenden Überblick über die Funktionen und Anwendungsfälle von ATC.
 
@@ -16,11 +16,11 @@ ATC kann schnell und einfach über Docker-Container auf Ihrem Server installiert
 
 ### Leistungsstarke API
 
-ATC bietet eine robuste HTTP REST API, über die Benutzer Daten zur Verarbeitung senden, das Modelltraining initiieren und Klassifizierungsergebnisse abrufen können. Die API ist darauf ausgelegt, hohe Flexibilität und eine nahtlose Integration in bestehende Systeme zu ermöglichen.
+ATC bietet eine robuste HTTP REST API, über die Benutzer Daten zur Verarbeitung senden, das Training von Modellen initiieren und Klassifizierungsergebnisse abrufen können. Die API ist darauf ausgelegt, eine hohe Flexibilität und nahtlose Integration in bestehende Systeme zu ermöglichen.
 
 ### Datenübertragung und Training
 
-Benutzer können Trainingsdaten oder CSV-Dateien über die REST API an ATC senden. Das Modelltraining kann ebenfalls über die API ausgelöst werden, wodurch der gesamte Workflow der Datenverarbeitung und Modelloptimierung automatisiert wird.
+Benutzer können Trainingsdaten oder CSV-Dateien über die REST API an ATC senden. Das Training des Modells kann ebenfalls über die API ausgelöst werden, wodurch der gesamte Workflow der Datenverarbeitung und Modelloptimierung automatisiert wird.
 
 ### Automatisierte Klassifizierung
 
@@ -28,11 +28,11 @@ Einmal trainiert, kann ATC eingehende Support-Tickets automatisch klassifizieren
 
 ### OTOBO-Integration
 
-ATC stellt ein dediziertes Add-on für das OTOBO-Ticketsystem bereit, das eine nahtlose Integration ermöglicht. Dieses Add-on sammelt Daten aus OTOBO und nutzt ATC zur automatisierten Ticket-Klassifizierung, was die Effizienz und Genauigkeit bei der Ticketbearbeitung erheblich verbessert.
+ATC bietet ein dediziertes Add-on für das OTOBO-Ticketsystem, das eine nahtlose Integration ermöglicht. Dieses Add-on sammelt Daten aus OTOBO und nutzt ATC zur automatisierten Ticket-Klassifizierung, was die Effizienz und Genauigkeit bei der Ticketbearbeitung erheblich verbessert.
 
 ### Hohe Sicherheit
 
-Datensicherheit und der Schutz der Kundendaten haben oberste Priorität. Die gesamte Datenverarbeitung erfolgt lokal auf dem Server, ohne externe Speicherung oder Verarbeitung. Dies gewährleistet die vollständige Einhaltung der Datenschutzanforderungen.
+Datensicherheit und der Schutz der Privatsphäre von Kunden haben oberste Priorität. Die gesamte Datenverarbeitung erfolgt lokal auf dem Server, ohne externe Speicherung oder Verarbeitung. Dies gewährleistet die vollständige Einhaltung der Datenschutzanforderungen.
 
 ### Flexibilität und Anpassbarkeit
 
@@ -59,7 +59,7 @@ ATC kann einfach mit Docker auf Ihrem Server installiert werden. Führen Sie die
 
 ### API-Nutzung
 
-Nach der Installation haben Sie HTTP-REST-Zugriff auf die ATC API. Sie können Daten an die API senden, um das Training zu starten und Klassifizierungsergebnisse abzurufen.
+Nach der Installation haben Sie HTTP-REST-Zugriff auf die ATC-API. Sie können Daten an die API senden, um das Training zu starten und Klassifizierungsergebnisse abzurufen.
 
 #### Senden von Trainingsdaten
 
@@ -71,17 +71,17 @@ curl -X POST http://your-server:8080/api/train \
      --data-binary @yourfile.csv
 ```
 
-#### Starten des Trainings
+#### Training starten
 
-Lösen Sie das Modelltraining aus:
+Das Training des Modells auslösen:
 
 ```bash
 curl -X POST http://your-server:8080/api/start-training
 ```
 
-#### Klassifizieren von Tickets
+#### Tickets klassifizieren
 
-Senden Sie nach dem Training Tickets zur Klassifizierung an die API und erhalten Sie die entsprechenden Labels zurück:
+Senden Sie nach dem Training Tickets zur Klassifizierung an die API und erhalten Sie die entsprechenden Labels:
 
 ```bash
 curl -X POST http://your-server:8080/api/classify \

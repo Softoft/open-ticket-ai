@@ -1,8 +1,8 @@
 ---
-description: Explore the core configuration system for the Open Ticket AI project.
-  This documentation details the `config_models.py` module for structuring application
-  settings and `config_validator.py` for robust validation, ensuring a stable and
-  reliable deployment.
+description: Learn about the core configuration system for the open_ticket_ai project.
+  This documentation covers the Python modules for defining configuration models (`config_models.py`)
+  and implementing robust settings validation (`config_validator.py`) to ensure application
+  stability and integrity.
 ---
 # Documentation for `**/ce/core/config/**/*.py`
 

@@ -1,11 +1,10 @@
 ---
-description: Diese Dokumentation beschreibt ein modulares Python-Framework zum Erstellen
-  sequenzieller Datenverarbeitungspipelines. Sie erläutert Kernkomponenten wie `Pipeline`
-  zur Steuerung des Ausführungsflusses, die `Pipe`-Schnittstelle zur Erstellung
-  einzelner Verarbeitungsstufen und `PipelineContext` zur Übergabe von Zustand und
-  Daten zwischen den Pipes. Das System umfasst robuste Funktionen zur Statusverfolgung,
-  Fehlerbehandlung und kontrollierten Beendigung der Pipeline, was die Erstellung
-  widerstandsfähiger und wartbarer Daten-Workflows ermöglicht.
+description: 'Entdecken Sie ein modulares Python-Pipeline-Framework zum Erstellen robuster
+  Datenverarbeitungs-Workflows. Diese Dokumentation behandelt die Kernkomponenten:
+  den `Pipeline`-Orchestrator, einzelne `Pipe`-Stufen und den `PipelineContext` für
+  die Zustandsverwaltung. Lernen Sie, wie Sie eine sequenzielle Verarbeitung implementieren,
+  Fehler elegant behandeln, den Ausführungsstatus (RUNNING, SUCCESS, FAILED, STOPPED)
+  verwalten und die Typsicherheit mit Pydantic gewährleisten.'
 ---
 # Dokumentation für `**/ce/run/pipeline/*.py`
 
@@ -15,17 +14,29 @@ description: Diese Dokumentation beschreibt ein modulares Python-Framework zum E
 ### <span style='text-info'>class</span> `PipelineContext`
 
 Kontextobjekt, das zwischen den Pipeline-Stufen übergeben wird.
-Diese Klasse dient als Container zum Teilen von Zustand und Daten über verschiedene Stufen
-einer Verarbeitungspipeline hinweg. Sie verwendet Pydantic zur Datenvalidierung und Serialisierung.
+Diese generische Klasse dient als Container zum Teilen von Zustand und Daten über
+verschiedene Stufen einer Verarbeitungspipeline hinweg. Sie nutzt Pydantic zur Datenvalidierung
+und -serialisierung.
+
+Der generische Typparameter `DataT` muss eine Unterklasse von `BaseModel` sein,
+um die Typsicherheit für die Hauptdatennutzlast zu gewährleisten.
 
 **Parameter:**
 
-- **`ticket_id`** (`str`) - Der eindeutige Bezeichner des Tickets, das durch die Pipeline-Stufen verarbeitet wird.
-- **`data`** (`dict[str, Any]`) - Ein flexibles Dictionary zum Speichern beliebiger Daten, die zwischen den Pipeline-Stufen ausgetauscht werden. Standardmäßig ein leeres Dictionary.
+- **`data`** (`DataT`) - Die Hauptdatennutzlast, die durch die Pipeline verarbeitet wird.
+Muss eine Pydantic-Modellinstanz sein, die dem generischen Typ entspricht.
+- **`meta_info`** (`MetaInfo`) - Metadaten über die Pipeline-Ausführung, einschließlich
+Statusinformationen und operativen Details.
 
 
 ::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `stop_pipeline(self)`
-Eine Hilfsmethode für Pipes, um einen kontrollierten Stopp zu signalisieren.
+Signalisiert der Pipeline, die Verarbeitung anzuhalten.
+Diese Methode bietet eine kontrollierte Möglichkeit für Pipeline-Stufen, anzuzeigen,
+dass die Verarbeitung gestoppt werden soll. Sie aktualisiert die Status-Metadaten
+des Kontexts auf `STOPPED`, was nachfolgende Stufen prüfen können, um frühzeitig zu beenden.
+
+Hinweis:
+    Diese Methode ändert den Zustand des Kontexts, gibt aber keinen Wert zurück.
 
 :::
 
@@ -39,7 +50,7 @@ Eine Hilfsmethode für Pipes, um einen kontrollierten Stopp zu signalisieren.
 
 Speichert Metadaten über den Ausführungszustand der Pipeline.
 Dieses Modell erfasst den aktuellen Status einer Pipeline zusammen mit Fehlerinformationen,
-falls Fehler auftreten.
+wenn Fehler auftreten.
 
 **Parameter:**
 
@@ -80,14 +91,14 @@ führt Transformationen oder Operationen auf diesem Kontext durch und gibt den
 aktualisierten Kontext für die nächste Komponente in der Pipeline zurück.
 
 Argumente:
-    context: Der aktuelle Pipeline-Kontext, der gemeinsame Zustandsdaten enthält.
+    context: Der aktuelle Pipeline-Kontext, der die gemeinsamen Zustandsdaten enthält.
 
-Rückgabe:
+Rückgabewert:
     Das aktualisierte `PipelineContext`-Objekt nach der Verarbeitung.
 
-Löst aus:
-    Implementierungsspezifische Ausnahmen können von Unterklassen ausgelöst werden,
-    um Verarbeitungsfehler oder ungültige Zustände anzuzeigen.
+Wirft:
+    Implementierungsspezifische Ausnahmen können von Unterklassen ausgelöst werden, um
+    Verarbeitungsfehler oder ungültige Zustände anzuzeigen.
 
 :::
 
@@ -96,6 +107,9 @@ Löst aus:
 
 ## Modul: `open_ticket_ai\src\ce\run\pipeline\pipeline.py`
 
+Definiert die Pipeline-Klasse zur Ausführung einer Sequenz von Pipes.
+Die Pipeline ist eine spezialisierte Pipe, die mehrere Pipes nacheinander ausführt. Sie verwaltet den Kontext
+und den Status während der gesamten Ausführung und behandelt Fehler und Stopp-Anfragen entsprechend.
 
 ### <span style='text-info'>class</span> `Pipeline`
 
@@ -105,7 +119,7 @@ Fehlerweitergabe und Stopp-Anfragen während der Verarbeitung.
 
 **Parameter:**
 
-- **`pipes`** () - Liste der `Pipe`-Objekte, die nacheinander ausgeführt werden sollen.
+- **`pipes`** () - Liste von Pipe-Objekten, die nacheinander ausgeführt werden sollen.
 
 
 ::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `__init__(self, config: PipelineConfig, pipes: List[Pipe])`
@@ -114,38 +128,38 @@ Initialisiert die Pipeline mit Konfiguration und Pipe-Sequenz.
 **Parameter:**
 
 - **`config`** () - Konfigurationseinstellungen für die Pipeline.
-- **`pipes`** () - Geordnete Liste der auszuführenden `Pipe`-Instanzen.
+- **`pipes`** () - Geordnete Liste von Pipe-Instanzen, die ausgeführt werden sollen.
 
 :::
 
 
 ::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `execute(self, context: PipelineContext) -> PipelineContext`
 Führt alle Pipes nacheinander mit Fehlerbehandlung und Statusweitergabe aus.
-Verarbeitet jede Pipe nacheinander und dabei:
-- Validiert die Eingabedaten mithilfe des Eingabemodells jeder Pipe
-- Behandelt `STOPPED`-Statusanfragen von Pipes
-- Fängt und protokolliert Ausnahmen während der Pipe-Ausführung
-- Aktualisiert den Kontextstatus entsprechend (`RUNNING`, `SUCCESS`, `FAILED`, `STOPPED`)
+Verarbeitet jede Pipe nacheinander und führt dabei folgende Schritte aus:
+- Validierung der Eingabedaten mithilfe des Eingabemodells jeder Pipe
+- Behandlung von `STOPPED`-Statusanfragen von Pipes
+- Abfangen und Protokollieren von Ausnahmen während der Pipe-Ausführung
+- Entsprechende Aktualisierung des Kontextstatus (`RUNNING`, `SUCCESS`, `FAILED`, `STOPPED`)
 
 **Parameter:**
 
 - **`context`** () - Der Pipeline-Kontext, der den Ausführungszustand und die Daten enthält.
 
-**Rückgabe:** () - Aktualisierter `PipelineContext`, der den endgültigen Ausführungszustand nach der Verarbeitung widerspiegelt.
+**Rückgabewert:** () - Aktualisierter PipelineContext, der den endgültigen Ausführungszustand nach der Verarbeitung widerspiegelt.
 
 :::
 
 
 ::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `process(self, context: PipelineContext) -> PipelineContext`
 Verarbeitet den Kontext durch die gesamte Pipeline-Sequenz.
-Implementiert die abstrakte Methode aus der `Pipe`-Basisklasse. Delegiert
-die eigentliche Pipeline-Verarbeitung an die `execute()`-Methode.
+Implementiert die abstrakte Methode aus der Pipe-Basisklasse. Delegiert die
+eigentliche Pipeline-Verarbeitung an die `execute()`-Methode.
 
 **Parameter:**
 
 - **`context`** () - Der Pipeline-Kontext, der den Ausführungszustand und die Daten enthält.
 
-**Rückgabe:** () - Aktualisierter `PipelineContext` nach der Verarbeitung durch alle Pipes.
+**Rückgabewert:** () - Aktualisierter PipelineContext nach der Verarbeitung durch alle Pipes.
 
 :::
 
@@ -157,7 +171,7 @@ die eigentliche Pipeline-Verarbeitung an die `execute()`-Methode.
 
 ### <span style='text-info'>class</span> `PipelineStatus`
 
-Repräsentiert die möglichen Zustände einer Pipeline-Ausführung.
+Stellt die möglichen Zustände einer Pipeline-Ausführung dar.
 Dieses Enum definiert die verschiedenen Status, die eine Pipeline während ihres Lebenszyklus haben kann.
 
 **Parameter:**

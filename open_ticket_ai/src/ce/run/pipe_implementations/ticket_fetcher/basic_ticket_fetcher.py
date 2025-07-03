@@ -38,16 +38,16 @@ class BasicTicketFetcher(Pipe):
     def process(self, context: PipelineContext) -> PipelineContext:
         """Fetch ticket data using configured filters and update the context.
 
-        The fetcher reads optional ``filters`` from its configuration. Each filter
-        contains an ``attribute`` and ``value`` entry. Attributes must map to
-        fields supported by :class:`SearchCriteria`. Unsupported attributes
+        The fetcher reads optional `filters` from its configuration. Each filter
+        contains an `attribute` and `value` entry. Attributes must map to
+        fields supported by `SearchCriteria`. Unsupported attributes
         result in a controlled pipeline stop.
 
-        If no filters are provided, the ``ticket_id`` from the context is used as
+        If no filters are provided, the `ticket_id` from the context is used as
         the search criterion. When no ticket is found, the pipeline is stopped.
 
         Args:
-            context: The current :class:`PipelineContext`.
+            context: The current `PipelineContext`.
 
         Returns:
             The updated context or the original context if the pipeline was

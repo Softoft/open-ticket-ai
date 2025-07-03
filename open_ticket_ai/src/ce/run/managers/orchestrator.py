@@ -78,6 +78,10 @@ class Orchestrator:
         The scheduling uses the following configuration parameters:
         - interval: Numeric interval value
         - unit: Time unit (e.g., minutes, hours, days)
+
+        Note:
+        - Uses `schedule.every(interval).unit` pattern for scheduling
+        - Passes an empty ticket_id context during scheduled executions
         """
         self.build_pipelines()
         for pipeline_cfg in self.config.pipelines:

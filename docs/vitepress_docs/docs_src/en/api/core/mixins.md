@@ -1,7 +1,10 @@
 ---
-description: Official documentation for the `Providable` base class in `open_ticket_ai.ce.core.mixins`.
-  Learn how this class facilitates creating registry-managed objects, handling configuration,
-  and implementing provider registration with methods like `get_provider_key`.
+description: Explore the documentation for the `Providable` base class in Python,
+  a core mixin from the `open_ticket_ai` project. This class serves as a foundation
+  for objects managed by a registry, providing essential functionality for configuration
+  storage, provider key generation (`get_provider_key`), and descriptive information.
+  Learn how to create registry-providable instances with built-in configuration and
+  console handling for extensible systems.
 ---
 # Documentation for `**/ce/core/mixins/**/*.py`
 

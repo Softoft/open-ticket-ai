@@ -1,4 +1,3 @@
-# FILE_PATH: open_ticket_ai\scripts\doc_generation\generate_multi_lang_docs.py
 """Module for translating Markdown documentation files into multiple languages.
 
 This module provides functionality to asynchronously translate Markdown files using
@@ -39,7 +38,27 @@ from tenacity import stop_after_attempt, wait_exponential
 
 
 class Translator:
-    """Translate Markdown files using an injected OpenAI client."""
+    """Translates Markdown documentation files into multiple languages.
+
+    This class handles the translation of Markdown files using OpenAI's API. It supports
+    translating entire directory structures while preserving the file hierarchy and supports
+    multiple target languages.
+
+    Attributes:
+        client (AsyncOpenAI): An asynchronous OpenAI client instance for API interactions.
+        base_language (str): The source language of the documents (e.g., 'en').
+        translation_instruction (str): The system prompt instruction for translation.
+
+    Example:
+        client = AsyncOpenAI(api_key="your_api_key")
+        translator = Translator(client, base_language="en")
+        asyncio.run(translator.translate_directory(
+            docs_dir=Path("docs"),
+            languages=["es", "fr", "de"],
+            model="gpt-4",
+            out_dir=Path("translated_docs")
+        ))
+    """
 
     def __init__(
         self,

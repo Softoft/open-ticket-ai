@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class TextAIModelInput(BaseModel):
     """
     Context for the input to the Hugging Face inference service.
+
     This class is used to encapsulate the input data and any additional parameters
     required for the inference request.
 

@@ -1,4 +1,3 @@
-# FILE_PATH: open_ticket_ai\src\ce\core\dependency_injection\container.py
 """Dependency injection container setup for Open Ticket AI.
 
 This module defines the `DIContainer` class which is the central dependency injection
@@ -162,17 +161,19 @@ class DIContainer(Injector, AbstractContainer):
         """Retrieve a configured instance from the registry.
 
         Looks up the configuration by ID, retrieves the corresponding class from the registry,
-        and creates an instance of that class.
+        and creates an instance of that class. The instance must be a subclass of `Providable`
+        and of the type specified by `subclass_of`.
 
         Args:
-            id: Unique identifier of the instance configuration
-            subclass_of: Expected base class/interface of the instance
+            id: Unique identifier of the instance configuration.
+            subclass_of: The expected base class or interface of the instance (a subclass of `Providable`).
 
         Returns:
-            Instantiated object of the requested type
+            T: Instantiated object of the requested type.
 
         Raises:
-            KeyError: If configuration or provider key isn't found
+            KeyError: If configuration for the given `id` is not found, or if the provider key
+                in the configuration is not found in the registry.
         """
         instance_config = self.get_instance_config(id)
         instance_class = self.registry.get(instance_config.provider_key, subclass_of)
@@ -183,18 +184,21 @@ class DIContainer(Injector, AbstractContainer):
     def get_pipeline(self, predictor_id: str) -> Pipe:
         """Construct a processing pipeline instance.
 
-        Retrieves pipeline configuration and constructs a pipeline consisting of:
-        1. Configuration for the entire pipeline
-        2. Instantiated Pipe objects for each step in the pipeline
+        The pipeline is built from the configuration identified by `predictor_id`. It consists of:
+        - A configuration for the entire pipeline (of type `PipelineConfig`)
+        - A sequence of instantiated `Pipe` objects for each step in the pipeline.
+
+        The pipeline itself is an instance of `Pipeline` (a subclass of `Pipe`), which chains the steps.
 
         Args:
-            predictor_id: ID of the pipeline configuration
+            predictor_id: The unique identifier of the pipeline configuration.
 
         Returns:
-            Configured pipeline instance
+            Pipe: The constructed pipeline instance (a `Pipeline` object).
 
         Raises:
-            KeyError: If configuration or provider key isn't found
+            KeyError: If the configuration for `predictor_id` is not found, or if the provider key
+                in the configuration is not found in the registry.
         """
         predictor_config: PipelineConfig | None = None
         try:

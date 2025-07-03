@@ -141,14 +141,13 @@ except (ValueError, ImportError) as e:
     raise typer.Exit(code=1) from e
 
 root_project_path = find_python_code_root_path().parent
-docs_temp_api = root_project_path / "docs" / "original_source" / "api"
-docs_src_path = root_project_path / "docs" / "vitepress_docs" / "docs_src"
-original_source_path = root_project_path / "docs" / "original_source"
+docs_api = root_project_path / "docs" / "vitepress_docs" / "docs_src" / "en" / "api"
+docs_src_path = root_project_path / "docs" / "vitepress_docs" / "docs_src" / "en"
 summary_file_path = root_project_path / "docs" / "_documentation_summaries.json"
 
 EXCLUDE_DIRS = {
-    ".venv", "__pycache__", "build", "dist", "docs_temp_api",
-    "vitepress-atc-docs_temp_api", ".idea", ".github", "node_modules",
+    ".venv", "__pycache__", "build", "dist", "docs_api",
+    "vitepress-atc-docs_api", ".idea", ".github", "node_modules",
 }
 EXCLUDE_FILES = {"__init__.py"}
 DEFAULT_MODEL = "google/gemini-2.5-pro"
@@ -162,15 +161,15 @@ async def _generate_reference_api_markdown(model: str):
     )
     generator.generate_markdown(
         {
-            "**/ce/core/config/**/*.py": docs_temp_api / "core" / "ce_core_config.md",
-            "**/ce/core/dependency_injection/**/*.py": docs_temp_api / "core" / "di.md",
-            "**/ce/core/mixins/**/*.py": docs_temp_api / "core" / "mixins.md",
-            "**/ce/core/util/**/*.py": docs_temp_api / "core" / "util.md",
-            "**/ce/run/pipe_implementations/*.py": docs_temp_api / "run" / "pipes.md",
-            "**/ce/run/pipeline/*.py": docs_temp_api / "run" / "pipeline.md",
-            "**/ce/run/managers/*.py": docs_temp_api / "run" / "managers.md",
-            "**/ce/ticket_system_integration/*.py": docs_temp_api / "run" / "ticket_system_integration.md",
-            "**/ce/*.py": docs_temp_api / "main.md",
+            "**/ce/core/config/**/*.py": docs_api / "core" / "ce_core_config.md",
+            "**/ce/core/dependency_injection/**/*.py": docs_api / "core" / "di.md",
+            "**/ce/core/mixins/**/*.py": docs_api / "core" / "mixins.md",
+            "**/ce/core/util/**/*.py": docs_api / "core" / "util.md",
+            "**/ce/run/pipe_implementations/*.py": docs_api / "run" / "pipes.md",
+            "**/ce/run/pipeline/*.py": docs_api / "run" / "pipeline.md",
+            "**/ce/run/managers/*.py": docs_api / "run" / "managers.md",
+            "**/ce/ticket_system_integration/*.py": docs_api / "run" / "ticket_system_integration.md",
+            "**/ce/*.py": docs_api / "main.md",
         },
         excluded=["**/tests/**", "**/migrations/**", "**/__init__.py"],
     )
@@ -178,7 +177,7 @@ async def _generate_reference_api_markdown(model: str):
 
 async def _create_documentation_summaries(model: str) -> dict:
     """Creates summaries for documentation files."""
-    summarizer = DocumentationSummarizer(client, original_source_path)
+    summarizer = DocumentationSummarizer(client, docs_src_path)
     summaries = await summarizer.create_summary_dict(model=model)
     summary_file_path.write_text(json.dumps(summaries, indent=2), encoding="utf-8")
     return summaries
@@ -186,13 +185,13 @@ async def _create_documentation_summaries(model: str) -> dict:
 
 def _add_frontmatter_meta_seo_descriptions(summaries: dict):
     """Updates the frontmatter of Markdown files with SEO descriptions."""
-    update_frontmatter(original_source_path, summaries)
+    update_frontmatter(docs_src_path, summaries)
 
 
 async def _translate_to_multi_lang_docs(model: str):
     """Translates documentation files to multiple languages."""
     await generator.translate_docs(
-        original_source_path, "en", ["en", "de"], model, docs_src_path,
+        docs_src_path, "en", ["en", "de"], model, docs_src_path,
     )
 
 

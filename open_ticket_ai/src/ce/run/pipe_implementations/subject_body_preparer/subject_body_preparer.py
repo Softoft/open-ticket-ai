@@ -1,4 +1,5 @@
-# FILE_PATH: open_ticket_ai\src\ce\run\pipe_implementations\subject_body_preparer.py
+"""Module containing the SubjectBodyPreparer pipeline component for ticket processing."""
+
 from open_ticket_ai.src.ce.core.config.config_models import ProvidableConfig
 from open_ticket_ai.src.ce.run.pipeline.context import PipelineContext
 from open_ticket_ai.src.ce.run.pipeline.pipe import Pipe
@@ -31,11 +32,20 @@ class SubjectBodyPreparer(Pipe):
         repeats the subject as specified in configuration, concatenates it with
         the body and stores the result in the configured result field.
 
+        Configuration parameters (with defaults if not provided):
+          - `subject_field` (str): Key for subject in context data (default: `"subject"`)
+          - `body_field` (str): Key for body in context data (default: `"body"`)
+          - `repeat_subject` (int): Number of times to repeat subject (default: `3`)
+          - `result_field` (str): Key to store prepared result (default: `"subject_body_combined"`)
+
         Args:
             context (PipelineContext): Pipeline context containing ticket data.
 
         Returns:
-            PipelineContext: Updated context with prepared data.
+            PipelineContext: Updated context with prepared data stored under `result_field`.
+
+        Raises:
+            ValueError: If `repeat_subject` configuration parameter cannot be converted to integer.
         """
         subject_field = self.preparer_config.params.get("subject_field", "subject")
         body_field = self.preparer_config.params.get("body_field", "body")

@@ -1,8 +1,8 @@
 ---
-description: Discover the Dependency Injection (DI) architecture of Open Ticket AI.
-  This documentation explains how to create and use a Python class registry to manage
-  core services like OTOBO integration, data preparation, and local Hugging Face AI
-  inference.
+description: Explore the Python dependency injection (DI) system at the core of Open
+  Ticket AI. This documentation covers the creation of a central registry that configures
+  and provides key services, including an OTOBO adapter, data preparers, and a local
+  Hugging Face AI inference service for automated ticket processing.
 ---
 # Documentation for `**/ce/core/dependency_injection/**/*.py`
 

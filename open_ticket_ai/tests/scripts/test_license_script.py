@@ -21,6 +21,7 @@ from open_ticket_ai.scripts.license_script import (
 )
 
 TEST_DIR = "test_license_files_temp"
+"""Name of the temporary directory used for testing."""
 
 
 @pytest.fixture

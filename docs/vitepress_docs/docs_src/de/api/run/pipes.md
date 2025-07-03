@@ -1,8 +1,10 @@
 ---
-description: Lesen Sie die Dokumentation für Python-Datenmodelle in `pipe_implementations`.
-  Dieses Handbuch beschreibt die `TextAIModelInput`-Klasse, die zur Strukturierung von Eingaben für
-  die Inferenz von KI-Textmodellen verwendet wird, und das `EmptyDataModel`, einen vielseitigen Pydantic-Platzhalter
-  für Pipeline-Operationen.
+description: Erkunden Sie die Dokumentation für Python-Module im `open_ticket_ai`-Projekt,
+  die die Implementierung von KI-Modell-Inferenz-Pipelines beschreibt. Erfahren Sie
+  mehr über die `TextAIModelInput`-Klasse zur Strukturierung von Textdaten für Hugging
+  Face-Modelle und den `EmptyDataModel` Pydantic-Platzhalter. Dieser Leitfaden behandelt
+  die wesentlichen Datenmodelle und Dienststrukturen für die Ausführung von lokalen
+  und cloudbasierten Hugging Face-Inferenzaufgaben.
 ---
 # Dokumentation für `**/ce/run/pipe_implementations/*.py`
 
@@ -12,8 +14,8 @@ description: Lesen Sie die Dokumentation für Python-Datenmodelle in `pipe_imple
 ### <span style='text-info'>class</span> `TextAIModelInput`
 
 Kontext für die Eingabe an den Hugging Face Inferenzdienst.
-Diese Klasse wird verwendet, um die Eingabedaten und alle zusätzlichen Parameter
-zu kapseln, die für die Inferenzanfrage erforderlich sind.
+Diese `class` wird verwendet, um die Eingabedaten und alle zusätzlichen Parameter,
+die für die Inferenzanfrage erforderlich sind, zu kapseln.
 
 **Parameter:**
 
@@ -28,10 +30,22 @@ Stellt die primäre Datennutzlast für die Inferenzanfrage dar.
 
 ### <span style='text-info'>class</span> `EmptyDataModel`
 
-Leeres Pydantic-Modell ohne jegliche Felder.
-Dieses Modell dient als Platzhalter für Szenarien, die ein Pydantic-kompatibles
-Objekt, aber keine Datenfelder erfordern. Es kann als Basisklasse oder Type-Hint
+Leeres Pydantic-Modell ohne Felder.
+Dieses `model` dient als Platzhalter für Szenarien, die ein Pydantic-kompatibles
+Objekt erfordern, aber keine Datenfelder haben. Es kann als Basisklasse oder Typ-Hinweis
 verwendet werden, wenn keine spezifische Datenstruktur benötigt wird.
+
+
+---
+
+## Modul: `open_ticket_ai\src\ce\run\pipe_implementations\hf_cloud_inference_service.py`
+
+
+
+---
+
+## Modul: `open_ticket_ai\src\ce\run\pipe_implementations\hf_local_ai_inference_service.py`
+
 
 
 ---

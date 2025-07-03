@@ -1,7 +1,7 @@
 ---
-description: A technical overview of the Automated Ticket Classification (ATC) MVP,
-  detailing its architecture, use of Hugging Face models for queue and priority classification,
-  and specific integration steps for the OTOBO ticket system.
+description: Discover the technical architecture of the Automated Ticket Classification
+  (ATC) MVP, detailing its use of Hugging Face models for automatic queue and priority
+  classification and the specific steps for integration with the OTOBO ticket system.
 title: Technical Overview (MVP)
 ---
 # Technical Overview (MVP)
@@ -24,27 +24,31 @@ These predicted queues and priorities can be mapped to your organization's speci
 
 ## Architecture Implementation
 
-The core of the MVP architecture is straightforward:
+The MVP uses the same pipeline architecture as the rest of Open Ticket AI.  A
+pipeline is defined in `config.yml` and lists the components that should run in
+order. Typical stages include a fetcher, data preparers, AI inference services
+and modifiers that write results back to the help desk.
 
-*   **`QueueClassifier` and `PriorityClassifier`:** These components load the specified Hugging Face models and execute them to predict queue and priority.
-*   **Mapping to Local Queues/Priorities:** The predictions from the models are then mapped to your local system's queues and priorities. This mapping is defined as a dictionary in the configuration file. You can use a wildcard character (`*`) to match any queue. It's common practice to have a "Miscellaneous" or "Junk" queue where wildcard matches are routed. The same wildcard logic applies to priorities, though it's less frequently needed given the typical 5-level priority scale.
-*   **`TicketClassifier`:** This component orchestrates the process by calling both the `QueueClassifier` and `PriorityClassifier` simultaneously and returning their combined results.
-*   **`TicketProcessor`:** This component is responsible for the overall workflow. It:
-    1.  Fetches the next ticket from the integrated ticket system (via the `TicketSystemAdapter`).
-    2.  Calls the `TicketClassifier` to get predictions.
-    3.  Calls the `updateTicket` method of its injected `TicketSystemAdapter` to apply the classification results to the ticket in the external system.
-    The `TicketProcessor` runs in a continuous loop, polling for new tickets at a configurable interval (defaulting to 10 seconds).
+Pipelines are executed by the `Orchestrator`, which schedules them at the
+interval specified in the configuration. Each pipeline polls the ticket system
+for new tickets and processes them through the configured pipes.
+
+Start the service with:
+
+```bash
+python -m open_ticket_ai.src.ce.main start
+```
+
+This command launches the CLI, loads `config.yml`, builds the dependency
+injection container and begins executing the pipelines.
 
 Below are some diagrams illustrating parts of the system design:
 
 ### MVP Software Design
-![MVP Software Design](/images/mvp-software-design.png)
 
 ### MVP Design Diagram
-![MVP Design](/images/mvp-design.png)
 
 ### Data Collection Flow (MVP)
-![No Data Collection in MVP](/images/mv-no-data-collection.png)
 
 
 ## OTOBO Specifics
