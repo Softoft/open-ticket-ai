@@ -21,7 +21,7 @@ import typer
 
 from open_ticket_ai.scripts import ReadmeUpdater
 from open_ticket_ai.scripts.doc_generation.add_docstrings import DocstringGenerator
-from open_ticket_ai.scripts.doc_generation.generate_api_reference import generate_markdown
+from open_ticket_ai.scripts.doc_generation.generate_api_reference import generate_documentation
 from open_ticket_ai.scripts.doc_generation.generate_multi_lang_docs import Translator
 from open_ticket_ai.scripts.doc_generation.update_frontmatter import update_frontmatter
 from open_ticket_ai.scripts.documentation_summary import DocumentationSummarizer
@@ -153,26 +153,35 @@ EXCLUDE_FILES = {"__init__.py"}
 DEFAULT_MODEL = "google/gemini-2.5-pro"
 
 
+def generate_markdown():
+    """Generates API reference documentation in Markdown format."""
+    root_dir = find_python_code_root_path()
+    SRC_ROOT = root_dir  # <-- CHANGE THIS to your project's source folder
+
+    # Define where to save the final JSON file
+    OUTPUT_FILE = root_project_path / "docs" / "vitepress_docs" / ".vitepress" / "api_reference.json"
+
+    # Define any patterns to exclude
+    EXCLUDE_PATTERNS = [
+        "**/__init__.py",
+        "**/tests/*",
+        "**/venv/*",
+        "**/.*/*",  # Exclude hidden directories like .venv, .vscode
+    ]
+    # Generate the documentation
+    generate_documentation(
+        src_path=SRC_ROOT,
+        output_path=OUTPUT_FILE,
+        exclude_patterns=EXCLUDE_PATTERNS,
+    )
+
 # --- Reusable Core Functions for CLI ---
 async def _generate_reference_api_markdown(model: str):
     """Generates API reference documentation in Markdown format."""
     await generator.generate_docstrings(
         find_python_code_root_path(), EXCLUDE_DIRS, EXCLUDE_FILES, model=model,
     )
-    generator.generate_markdown(
-        {
-            "**/ce/core/config/**/*.py": docs_api / "core" / "ce_core_config.md",
-            "**/ce/core/dependency_injection/**/*.py": docs_api / "core" / "di.md",
-            "**/ce/core/mixins/**/*.py": docs_api / "core" / "mixins.md",
-            "**/ce/core/util/**/*.py": docs_api / "core" / "util.md",
-            "**/ce/run/pipe_implementations/*.py": docs_api / "run" / "pipes.md",
-            "**/ce/run/pipeline/*.py": docs_api / "run" / "pipeline.md",
-            "**/ce/run/managers/*.py": docs_api / "run" / "managers.md",
-            "**/ce/ticket_system_integration/*.py": docs_api / "run" / "ticket_system_integration.md",
-            "**/ce/*.py": docs_api / "main.md",
-        },
-        excluded=["**/tests/**", "**/migrations/**", "**/__init__.py"],
-    )
+    generate_markdown()
 
 
 async def _create_documentation_summaries(model: str) -> dict:
@@ -204,6 +213,12 @@ async def _update_ai_readme(model: str):
         model=model,
     )
     await updater.update_ai_prompt()
+
+@app.command(name="gen-md-from-docstrings")
+def generate_markdown_from_docstrings():
+    """Generates docstrings and converts them to API reference markdown files."""
+    generate_markdown()
+
 
 
 # --- CLI Commands ---

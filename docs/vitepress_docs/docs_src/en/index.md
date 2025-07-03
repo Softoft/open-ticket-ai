@@ -1,56 +1,42 @@
 ---
-description: Boost helpdesk efficiency with Open Ticket AI, the secure, on-premise
-  solution for automating OTOBO support ticket classification. Save time and money
-  with easy Docker installation, a powerful REST API, and seamless integration.
+description: Boost helpdesk efficiency with Open Ticket AI, the secure, open-source, on-premise solution for automating support ticket classification. Designed for flexibility, it can be integrated into any ticket system.
 features:
-- details: Installieren Sie ATC einfach mit Docker auf Ihrem Server.
+- details: Easily install Open Ticket AI on your own server using Docker.
   icon:
-    alt: OTOBO ATC AI Icon
-    dark: https://softoft.sirv.com/Images/otobo/docs/custom/icons/server-solid.png?h=48&q=100&colorlevel.white=0
-    height: 48
-    light: https://softoft.sirv.com/Images/otobo/docs/custom/icons/server-solid.png?h=48&q=100
-    width: auto
-  title: Einfache Installation
-- details: "Nutzen Sie die HTTP REST API f\xFCr die Daten\xFCbertragung und Modellverwaltung."
+    alt: Server Icon
+    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/server.svg&filt=negate
+    light: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/server.svg
+  title: Easy Installation
+- details: Thanks to its adapter-based architecture, Open Ticket AI can connect to virtually any helpdesk system like OTOBO, Znuny, or OTRS.
   icon:
-    alt: OTOBO ATC AI Icon
-    dark: https://softoft.sirv.com/Images/otobo/docs/custom/icons/code-solid.png?h=48&q=100&colorlevel.white=0
-    height: 48
-    light: https://softoft.sirv.com/Images/otobo/docs/custom/icons/code-solid.png?h=48&q=100
-    width: auto
-  title: Leistungsstarke API
-- details: "Verwenden Sie das ATC Add-On f\xFCr nahtlose Integration in OTOBO."
+    alt: Plug Icon
+    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/plug.svg&filt=negate
+    light: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/plug.svg
+  title: Flexible Integration
+- details: Automate the classification of support tickets by queue and priority to streamline your workflow.
   icon:
-    alt: OTOBO ATC AI Icon
-    dark: https://softoft.sirv.com/Images/otobo/docs/custom/icons/plug-solid.png?h=48&q=100&colorlevel.white=0
-    height: 48
-    light: https://softoft.sirv.com/Images/otobo/docs/custom/icons/plug-solid.png?h=48&q=100
-    width: auto
-  title: OTOBO Integration
-- details: Automatisieren Sie die Klassifizierung von Support-Tickets.
+    alt: Robot Icon
+    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/robot.svg&filt=negate
+    light: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/robot.svg
+  title: Automated Classification
+- details: As a fully on-premise solution, all your data is processed locally on your infrastructure, ensuring maximum privacy and security.
   icon:
-    alt: OTOBO ATC AI Icon
-    dark: https://softoft.sirv.com/Images/otobo/docs/custom/icons/robot-solid.png?h=48&q=100&colorlevel.white=0
-    height: 48
-    light: https://softoft.sirv.com/Images/otobo/docs/custom/icons/robot-solid.png?h=48&q=100
-    width: auto
-  title: Automatisierte Klassifizierung
-- details: "Alle Daten werden lokal verarbeitet, um Datenschutz zu gew\xE4hrleisten."
+    alt: Lock Icon
+    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/lock.svg&filt=negate
+    light: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/lock.svg
+  title: High Security
+- details: Open Ticket AI is free and open-source. Benefit from community-driven development and complete transparency.
   icon:
-    alt: OTOBO ATC AI Icon
-    dark: https://softoft.sirv.com/Images/otobo/docs/custom/icons/lock-solid.png?h=48&q=100&colorlevel.white=0
-    height: 48
-    light: https://softoft.sirv.com/Images/otobo/docs/custom/icons/lock-solid.png?h=48&q=100
-    width: auto
-  title: Hohe Sicherheit
-- details: "Passen Sie die Konfiguration nach Ihren Bed\xFCrfnissen an."
+    alt: Open Source Icon
+    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/code-branch.svg&filt=negate
+    light: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/code-branch.svg
+  title: Open Source
+- details: Customize the processing pipelines, models, and system connections through a simple yet powerful configuration file.
   icon:
-    alt: OTOBO ATC AI Icon
-    dark: https://softoft.sirv.com/Images/otobo/docs/custom/icons/gear-solid.png?h=48&q=100&colorlevel.white=0
-    height: 48
-    light: https://softoft.sirv.com/Images/otobo/docs/custom/icons/gear-solid.png?h=48&q=100
-    width: auto
-  title: "Flexibilit\xE4t"
+    alt: Gear Icon
+    dark: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/gear.svg&filt=negate
+    light: https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/gear.svg
+  title: Highly Customizable
 hero:
   actions:
   - link: /get-started
@@ -60,11 +46,11 @@ hero:
     text: Feature Overview
     theme: alt
   image:
-    alt: VitePress
+    alt: Open Ticket AI Logo
     dark: https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=300&q=100
     light: https://softoft.sirv.com/Images/atc-logo-2024-blue.png?w=300&q=100
   name: Open Ticket AI
-  tagline: Save time and money by automating
+  tagline: Automate Your Helpdesk. Securely and On-Premise.
   text: ''
 layout: home
 ---

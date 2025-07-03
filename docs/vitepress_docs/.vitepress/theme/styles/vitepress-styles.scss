@@ -5,6 +5,8 @@
  */
 :root {
     // Brand Colors (based on Indigo)
+    font-size: clamp(1rem, 1rem + 0.5vw, 1.125rem);
+
     --vp-c-brand-1: #646cff;
     --vp-c-brand-2: #747bff;
     --vp-c-brand-3: #535bf2;
@@ -23,7 +25,6 @@
  * ===================================================================
  */
 
-/* Light Mode (default) */
 :root {
     /* General */
     --bs-body-bg: var(--vp-c-bg);
@@ -98,7 +99,15 @@
 }
 
 .VPFeature .VPImage {
-    margin: 1rem auto;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: clamp(40px, 5vw, 60px);
+
+    height: clamp(40px, 5vw, 60px);
+
+    object-fit: contain;
 }
 
 a {

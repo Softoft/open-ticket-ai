@@ -1,10 +1,10 @@
 <template>
     <h2 class="mb-4 w-100 text-center text-body-emphasis">{{
-            t('otai_prediction_demo_component.title')
+        t('otai_prediction_demo_component.title')
         }}</h2>
     <div class="container my-3">
         <div class="row justify-content-center">
-            <div class="col-md-12 col-lg-8">
+            <div class="col-md-12 col-lg-10">
 
                 <div class="mb-3">
                     <label class="form-label fw-bold" for="demo-example-select">
@@ -27,7 +27,7 @@
 
                 <div class="mb-3">
                     <label class="form-label fw-bold" for="demo-subject">{{
-                            t('otai_prediction_demo_component.subjectLabel')
+                        t('otai_prediction_demo_component.subjectLabel')
                         }}</label>
                     <input
                         id="demo-subject"
@@ -40,7 +40,7 @@
 
                 <div class="mb-3">
                     <label class="form-label fw-bold" for="demo-body">{{
-                            t('otai_prediction_demo_component.messageLabel')
+                        t('otai_prediction_demo_component.messageLabel')
                         }}</label>
                     <textarea
                         id="demo-body"
@@ -53,7 +53,7 @@
 
                 <button
                     :disabled="loading"
-                    class="btn btn-lg btn-primary mb-4 mt-1"
+                    class="btn btn-primary mb-4 mt-1"
                     type="button"
                     @click="predict"
                 >
@@ -144,7 +144,6 @@ async function query(endpoint: string, payload: any) {
     return res.json()
 }
 
-// your real endpoints here
 const QUEUE_EP = 'https://uwlzdugezcmrk5vk.eu-west-1.aws.endpoints.huggingface.cloud'
 const PRIORITY_EP = 'https://rxnypflnfgdbgoxr.us-east-1.aws.endpoints.huggingface.cloud'
 

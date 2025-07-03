@@ -4,7 +4,6 @@ import {defineConfig} from "vitepress";
 var __VUE_PROD_DEVTOOLS__ = false
 console.log(__VUE_PROD_DEVTOOLS__)
 export default defineConfig({
-    srcDir: `docs-src`,
     title: 'AI Ticket Classification',
     srcDir: './docs_src',
     head: [
@@ -24,6 +23,12 @@ export default defineConfig({
                 crossorigin: 'anonymous'
             }
         ],
+        [
+            'script',
+            {
+                src: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'
+            }
+        ]
     ],
     description: '',
     sitemap: {

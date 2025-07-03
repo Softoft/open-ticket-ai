@@ -42,9 +42,9 @@ const handleCtaClick = (productName: string) => {
 </script>
 
 <template>
-    <div class="pricing-component container py-5">
-        <h2 class="text-center display-4 fw-bold mb-5">{{ title }}</h2>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
+    <div class="pricing-component my-5">
+        <h2 class="text-center display-3 fw-bold mb-5">{{ title }}</h2>
+        <div class="row row-cols-1 row-cols-lg-3 g-4 justify-content-center">
             <div
                 v-for="(product, index) in products"
                 :key="index"
@@ -52,13 +52,13 @@ const handleCtaClick = (productName: string) => {
             >
                 <div
                     :class="{ 'border-primary border-2': product.featured }"
-                    class="card h-100 shadow-sm py-3"
+                    class="card price-card h-100 shadow-sm py-3"
                 >
-                    <div class="card-body px-4 py-0 d-flex flex-column">
+                    <div class="card-body px-2 px-xl-3 py-0 d-flex flex-column">
                         <h3 class="card-title fw-bold">{{ product.name }}</h3>
-                        <p class="text-body-secondary">{{ product.description }}</p>
+                        <p class="text-body-secondary product-description">{{ product.description }}</p>
 
-                        <div class="my-3">
+                        <div class="my-2">
                             <span class="display-5 fw-bolder">${{ product.price }}</span>
                             <span v-if="product.pricePeriod" class="text-body-secondary"> / {{
                                     product.pricePeriod
@@ -101,16 +101,16 @@ const handleCtaClick = (productName: string) => {
 </template>
 
 <style scoped>
-.card {
+.price-card {
     transition: all 0.3s ease-in-out;
 }
 
-.card:hover {
+.price-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
-.featured-plan {
-    transform: scale(1.05);
+.product-description{
+    min-height: 3rem;
 }
 </style>

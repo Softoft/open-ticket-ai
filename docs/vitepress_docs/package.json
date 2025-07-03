@@ -19,6 +19,6 @@
   "dependencies": {
     "bootstrap": "^5.3.7",
     "sass": "^1.89.2",
-    "vue-i18n": "^9.9.1"
+    "vue-i18n": "^11.1.2"
   }
 }

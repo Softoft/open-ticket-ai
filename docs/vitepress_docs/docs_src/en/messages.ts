@@ -7,7 +7,7 @@ export default {
         subjectPlaceholder: 'Enter the subject of the ticket',
         messageLabel: 'Message',
         messagePlaceholder: 'Enter the message of the ticket',
-        submitButtonText: 'Predict',
+        submitButtonText: 'Predict Ticket Attributes',
         loadingText: 'Analyzing...',
         predictionError: 'Prediction failed. Please try again later.',
         resultTitle: 'Prediction Result',

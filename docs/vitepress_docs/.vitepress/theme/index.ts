@@ -8,6 +8,7 @@ import ProductCards from '../components/ProductCards.vue'
 import OTAIPredictionDemo from '../components/OTAIPredictionDemo.vue'
 import ServicePackagesComponent from '../components/ServicePackagesComponent.vue'
 import SupportPlansComponent from '../components/SupportPlansComponent.vue'
+import CodeDocumentation from '../components/CodeDocumentation.vue'
 import './styles/theme.scss'
 import {createI18n, useI18n} from 'vue-i18n'
 import deMessages from '../../docs_src/de/messages'
@@ -32,6 +33,7 @@ export default {
         app.component('OTAIPredictionDemo', OTAIPredictionDemo)
         app.component('ServicePackagesComponent', ServicePackagesComponent)
         app.component('SupportPlansComponent', SupportPlansComponent)
+        app.component('CodeDocumentation', CodeDocumentation)
     },
     setup() {
         const {isDark} = useData()
