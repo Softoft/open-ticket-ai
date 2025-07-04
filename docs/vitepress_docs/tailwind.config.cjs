@@ -4,7 +4,11 @@ module.exports = {
     './.vitepress/**/*.{vue,js,ts}'
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'electric-teal': '#00F5D4',
+      },
+    },
   },
   plugins: [],
 };
