@@ -1,11 +1,11 @@
 <template>
-  <span :class="badgeClass" class="badge me-2">
+  <Badge :type="type" class="me-2">
     <slot>{{ text }}</slot>
-  </span>
+  </Badge>
 </template>
 
 <script lang="ts" setup>
-import {computed} from 'vue';
+import Badge from './core/Badge.vue'
 
 // Define typed props using the <script setup> syntax
 interface Props {
@@ -20,12 +20,10 @@ const props = withDefaults(defineProps<Props>(), {
     text: '',
 });
 
-const badgeClass = computed(() => `bg-${props.type}`);
 </script>
 
 <style scoped>
-.badge {
-    font-size: 0.8em;
-    vertical-align: middle;
+.me-2 {
+  margin-right: 0.5rem;
 }
 </style>

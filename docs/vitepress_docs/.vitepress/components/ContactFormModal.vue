@@ -8,9 +8,9 @@
                 <form @submit.prevent="handleSubmit">
                     <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
                         <h5 id="contactFormLabel" class="text-lg font-semibold">Contact Us</h5>
-                        <button aria-label="Close" type="button"
-                                class="text-gray-500 hover:text-gray-700 dark:text-gray-400"
-                                @click="close">&times;</button>
+                        <Button aria-label="Close" type="button"
+                                class="text-gray-500 hover:text-gray-700 dark:text-gray-400 px-2"
+                                variant="secondary" @click="close">&times;</Button>
                     </div>
                     <div class="p-4">
                             <div class="mb-3">
@@ -64,10 +64,10 @@
                             </div>
                         </div>
                         <div class="flex justify-end gap-2 border-t border-gray-200 dark:border-gray-700 p-4">
-                            <button class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600" type="button" @click="close">Close
-                            </button>
-                            <button class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700" type="submit">Request a Consultation
-                            </button>
+                            <Button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600" variant="secondary" type="button" @click="close">Close
+                            </Button>
+                            <Button class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700" type="submit">Request a Consultation
+                            </Button>
                         </div>
                     </form>
                 </div>
@@ -80,6 +80,7 @@
 <script lang="ts" setup>
 
 import {defineExpose, ref} from 'vue'
+import Button from './core/Button.vue'
 
 interface ContactFormData {
     plan: string
