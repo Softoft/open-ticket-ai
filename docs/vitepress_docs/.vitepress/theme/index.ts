@@ -9,6 +9,14 @@ import OTAIPredictionDemo from '../components/OTAIPredictionDemo.vue'
 import ServicePackagesComponent from '../components/ServicePackagesComponent.vue'
 import SupportPlansComponent from '../components/SupportPlansComponent.vue'
 import CodeDocumentation from '../components/CodeDocumentation.vue'
+import Button from '../components/Button.vue'
+import Card from '../components/Card.vue'
+import Badge from '../components/Badge.vue'
+import Callout from '../components/Callout.vue'
+import Tabs from '../components/Tabs.vue'
+import ApiReference from '../components/ApiReference.vue'
+import FeatureGrid from '../components/FeatureGrid.vue'
+import Accordion from '../components/Accordion.vue'
 import './styles/tailwind.css'
 import {createI18n, useI18n} from 'vue-i18n'
 import deMessages from '../../docs_src/de/messages'
@@ -34,6 +42,14 @@ export default {
         app.component('ServicePackagesComponent', ServicePackagesComponent)
         app.component('SupportPlansComponent', SupportPlansComponent)
         app.component('CodeDocumentation', CodeDocumentation)
+        app.component('AppButton', Button)
+        app.component('AppCard', Card)
+        app.component('AppBadge', Badge)
+        app.component('AppCallout', Callout)
+        app.component('AppTabs', Tabs)
+        app.component('ApiReference', ApiReference)
+        app.component('FeatureGrid', FeatureGrid)
+        app.component('Accordion', Accordion)
     },
     setup() {
         const {isDark} = useData()
