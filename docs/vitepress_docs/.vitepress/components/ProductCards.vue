@@ -2,6 +2,8 @@
 var __VUE_PROD_DEVTOOLS__ = false
 
 import {ref} from 'vue'
+import Card from './core/Card.vue'
+import Button from './core/Button.vue'
 
 const selectedPlan = ref<string | null>(null)
 
@@ -50,10 +52,9 @@ const handleCtaClick = (productName: string) => {
                 :key="index"
                 class="flex"
             >
-                <div
-                    :class="{ 'border-blue-600 border-2': product.featured }"
-                    class="price-card h-full rounded-lg shadow-sm py-3"
-                >
+                <Card
+                    :class="['price-card h-full rounded-lg shadow-sm py-3',
+                             { 'border-blue-600 border-2': product.featured }]">
                     <div class="flex flex-col px-2 xl:px-3 py-0">
                         <h3 class="font-bold">{{ product.name }}</h3>
                         <p class="text-gray-500 product-description">{{ product.description }}</p>
@@ -81,24 +82,22 @@ const handleCtaClick = (productName: string) => {
                         <div class="mt-auto">
                             <a v-if="buttonHref"
                                :class="['w-full text-center px-4 py-2 rounded text-sm font-medium',
-                                product.featured ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                : 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white']"
+                                        product.featured ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                        : 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white']"
                                :href="buttonHref"
-                               @click.prevent="handleCtaClick(product.name)"
-                            >
+                               @click.prevent="handleCtaClick(product.name)">
                                 {{ buttonText }}
                             </a>
-                            <button v-else
-                                    :class="['w-full px-4 py-2 rounded text-sm font-medium',
-                                     product.featured ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                     : 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white']"
-                                    @click="handleCtaClick(product.name)"
-                            >
+                            <Button v-else
+                                    class="w-full text-sm font-medium"
+                                    :class="product.featured ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                           : 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'"
+                                    @click="handleCtaClick(product.name)">
                                 {{ buttonText }}
-                            </button>
+                            </Button>
                         </div>
                     </div>
-                </div>
+                </Card>
             </div>
         </div>
     </div>

@@ -51,10 +51,9 @@
                     ></textarea>
                 </div>
 
-                <button
+                <Button
                     :disabled="loading"
-                    class="px-4 py-2 mt-1 mb-4 rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
-                    type="button"
+                    class="px-4 py-2 mt-1 mb-4 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
                     @click="predict"
                 >
                     <span v-if="loading" aria-hidden="true"
@@ -65,7 +64,7 @@
                           role="status">{{ t('otai_prediction_demo_component.loadingText') }}</span>
                     <span v-else
                           class="text-white">{{ t('otai_prediction_demo_component.submitButtonText') }}</span>
-                </button>
+                </Button>
 
                 <div v-if="errorMessage" class="mt-4 rounded bg-red-100 p-3 text-red-700" role="alert">
                     {{ errorMessage }}
@@ -129,6 +128,7 @@
 <script lang="ts" setup>
 
 import {ref} from 'vue'
+import Button from './core/Button.vue'
 import {examples} from "./demoExamples";
 import {useI18n} from 'vue-i18n'
 
