@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles migrated from vitepress-styles.scss */
+.VPHomeHero .VPImage {
+    padding: 3rem !important;
+}
+.VPFeature .VPImage {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: clamp(40px, 5vw, 60px);
+    height: clamp(40px, 5vw, 60px);
+    object-fit: contain;
+}
+a {
+    text-decoration: none !important;
+    font-weight: 500;
+    transition: color 0.25s;
+}
