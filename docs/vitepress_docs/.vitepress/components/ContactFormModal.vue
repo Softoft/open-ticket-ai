@@ -1,81 +1,79 @@
 <template>
     <div>
         <div
-            :class="{ show: isVisible }"
-            :style="{ display: isVisible ? 'block' : 'none' }"
-            class="modal fade"
-            tabindex="-1"
+            v-if="isVisible"
+            class="fixed inset-0 z-50 flex items-center justify-center"
         >
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form @submit.prevent="handleSubmit">
-                        <div class="modal-header">
-                            <h5 id="contactFormLabel" class="modal-title">Contact Us</h5>
-                            <button aria-label="Close" class="btn-close" type="button"
-                                    @click="close"></button>
-                        </div>
-                        <div class="modal-body">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-lg w-full">
+                <form @submit.prevent="handleSubmit">
+                    <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+                        <h5 id="contactFormLabel" class="text-lg font-semibold">Contact Us</h5>
+                        <button aria-label="Close" type="button"
+                                class="text-gray-500 hover:text-gray-700 dark:text-gray-400"
+                                @click="close">&times;</button>
+                    </div>
+                    <div class="p-4">
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Plan of Interest</label>
+                                <label class="mb-1 font-bold">Plan of Interest</label>
                                 <input
                                     v-model="form.plan"
-                                    class="form-control"
+                                    class="block w-full rounded border border-gray-300 p-2 mb-2 dark:bg-gray-700 dark:border-gray-600"
                                     disabled
                                     readonly
                                     type="text"
                                 />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Your Name</label>
+                                <label class="mb-1 font-bold">Your Name</label>
                                 <input
                                     v-model="form.name"
-                                    class="form-control"
+                                    class="block w-full rounded border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
                                     placeholder="e.g., Jane Doe"
                                     required
                                     type="text"
                                 />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Company Name</label>
+                                <label class="mb-1 font-bold">Company Name</label>
                                 <input
                                     v-model="form.company"
-                                    class="form-control"
+                                    class="block w-full rounded border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
                                     placeholder="e.g., Example Corp"
                                     type="text"
                                 />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Work Email</label>
+                                <label class="mb-1 font-bold">Work Email</label>
                                 <input
                                     v-model="form.email"
-                                    class="form-control"
+                                    class="block w-full rounded border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
                                     placeholder="jane.doe@example.com"
                                     required
                                     type="email"
                                 />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Please tell us a bit about your
+                                <label class="mb-1 font-bold">Please tell us a bit about your
                                     needs.</label>
                                 <textarea
                                     v-model="form.requirements"
-                                    class="form-control"
+                                    class="block w-full rounded border border-gray-300 p-2 dark:bg-gray-700 dark:border-gray-600"
                                     placeholder=""
                                     rows="4"
                                 ></textarea>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" @click="close">Close
+                        <div class="flex justify-end gap-2 border-t border-gray-200 dark:border-gray-700 p-4">
+                            <button class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600" type="button" @click="close">Close
                             </button>
-                            <button class="btn btn-primary" type="submit">Request a Consultation
+                            <button class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700" type="submit">Request a Consultation
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <div v-if="isVisible" class="modal-backdrop fade show"></div>
+        <div v-if="isVisible" class="fixed inset-0 z-40 bg-black/50" @click="close"></div>
     </div>
 </template>
 
@@ -107,8 +105,4 @@ const form = ref<ContactFormData>({
 })
 </script>
 
-<style scoped>
-.modal-backdrop.show {
-    opacity: 0.8;
-}
-</style>
+
