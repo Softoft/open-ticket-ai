@@ -80,14 +80,18 @@ const handleCtaClick = (productName: string) => {
 
                         <div class="mt-auto">
                             <a v-if="buttonHref"
-                               :class="['w-full text-center px-4 py-2 rounded text-sm font-medium', product.featured ? 'bg-blue-600 text-white hover:bg-blue-700' : 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white']"
+                               :class="['w-full text-center px-4 py-2 rounded text-sm font-medium',
+                                product.featured ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                : 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white']"
                                :href="buttonHref"
                                @click.prevent="handleCtaClick(product.name)"
                             >
                                 {{ buttonText }}
                             </a>
                             <button v-else
-                                    :class="['w-full px-4 py-2 rounded text-sm font-medium', product.featured ? 'bg-blue-600 text-white hover:bg-blue-700' : 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white']"
+                                    :class="['w-full px-4 py-2 rounded text-sm font-medium',
+                                     product.featured ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                     : 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white']"
                                     @click="handleCtaClick(product.name)"
                             >
                                 {{ buttonText }}
@@ -110,7 +114,7 @@ const handleCtaClick = (productName: string) => {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
-.product-description{
+.product-description {
     min-height: 3rem;
 }
 </style>

@@ -58,7 +58,9 @@
                     @click="predict"
                 >
                     <span v-if="loading" aria-hidden="true"
-                          class="animate-spin h-4 w-4 mr-1 border-2 border-white border-t-transparent rounded-full"></span>
+                          class="animate-spin h-4 w-4 mr-1 border-2 border-white border-t-transparent rounded-full">
+
+                    </span>
                     <span v-if="loading"
                           role="status">{{ t('otai_prediction_demo_component.loadingText') }}</span>
                     <span v-else
@@ -95,7 +97,8 @@
                                 <td>{{ queueResult[0].label }}</td>
                                 <td class="text-center">
                                     <span
-                                        :class="['inline-block px-2 py-1 rounded-full text-white text-sm', confidenceBadge(queueResult[0].score)]">
+                                        :class="['inline-block px-2 py-1 rounded-full text-white text-sm',
+                                         confidenceBadge(queueResult[0].score)]">
                                         {{ formatScore(queueResult[0].score) }}
                                     </span>
                                 </td>
@@ -107,7 +110,8 @@
                                 <td>{{ prioResult[0].label }}</td>
                                 <td class="text-center">
                                     <span
-                                        :class="['inline-block px-2 py-1 rounded-full text-white text-sm', confidenceBadge(prioResult[0].score)]">
+                                        :class="['inline-block px-2 py-1 rounded-full text-white text-sm',
+                                         confidenceBadge(prioResult[0].score)]">
                                         {{ formatScore(prioResult[0].score) }}
                                     </span>
                                 </td>

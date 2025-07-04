@@ -24,7 +24,6 @@ export default defineConfig({
                 crossorigin: 'anonymous'
             }
         ],
-        // Tailwind CSS is bundled via PostCSS; no external scripts needed
     ],
     description: '',
     sitemap: {
