@@ -1,15 +1,14 @@
 ---
-description: Entdecken Sie die OpenTicketAI `Orchestrator`-Klasse, eine Kernkomponente
-  zur Automatisierung von Ticketverarbeitungs-Workflows. Dieses Python-Modul verwaltet
-  den gesamten Lebenszyklus von Pipelines, einschließlich der Instanziierung mittels
-  Dependency Injection, der Verarbeitung einzelner Tickets und der zeitgesteuerten
-  Ausführung für eine kontinuierliche Automatisierung.
+description: Erkunden Sie die OpenTicketAI `Orchestrator`-Klasse, eine Kernkomponente zur Automatisierung
+  von Ticketverarbeitungs-Workflows. Dieses Python-Modul verwaltet den gesamten Lebenszyklus
+  von Pipelines, einschließlich der Instanziierung mittels Dependency Injection, der Verarbeitung
+  einzelner Tickets und der geplanten Ausführung für eine kontinuierliche Automatisierung.
 ---
 # Dokumentation für `**/ce/run/managers/*.py`
 
 ## Modul: `open_ticket_ai\src\ce\run\managers\orchestrator.py`
 
-Orchestrierungs-Hilfsprogramme der obersten Ebene.
+Orchestrierungs-Hilfsprogramme auf höchster Ebene.
 
 ### <span style='text-info'>class</span> `Orchestrator`
 
@@ -17,7 +16,7 @@ Orchestriert die Ausführung von Ticketverarbeitungs-Pipelines.
 Diese Klasse verwaltet den Lebenszyklus von Pipelines, einschließlich:
 - Instanziierung der Pipeline mittels Dependency Injection
 - Verarbeitung einzelner Tickets
-- Zeitgesteuerte Ausführung von Pipelines
+- Geplante Ausführung von Pipelines
 
 **Parameter:**
 
@@ -40,8 +39,8 @@ Initialisiert den Orchestrator mit Konfiguration und DI-Container.
 
 ::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `process_ticket(self, ticket_id: str, pipeline: Pipeline) -> PipelineContext`
 Führt eine Pipeline für ein bestimmtes Ticket aus.
-Erstellt einen Verarbeitungskontext und führt die angegebene Pipeline aus, um
-das gegebene Ticket zu verarbeiten. Dies ist die Kernmethode für die Verarbeitung einzelner Tickets.
+Erstellt einen Verarbeitungskontext und führt die angegebene Pipeline aus, um das
+gegebene Ticket zu verarbeiten. Dies ist die Kernmethode für die individuelle Ticketverarbeitung.
 
 **Parameter:**
 
@@ -64,19 +63,19 @@ mit Zuordnungen von Pipeline-IDs zu Instanzen.
 
 
 ::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `set_schedules(self) -> None`
-Konfiguriert die zeitgesteuerte Ausführung für alle Pipelines.
-Führt die folgenden Operationen aus:
-1. Erstellt die Pipelines, falls sie noch nicht instanziiert wurden
+Konfiguriert die geplante Ausführung für alle Pipelines.
+Führt die folgenden Operationen durch:
+1. Erstellt Pipelines, falls diese noch nicht instanziiert sind
 2. Konfiguriert die periodische Ausführung für jede Pipeline gemäß ihrer
    Zeitplankonfiguration unter Verwendung der `schedule`-Bibliothek
 
 Die Zeitplanung verwendet die folgenden Konfigurationsparameter:
 - interval: Numerischer Intervallwert
-- unit: Zeiteinheit (z. B. Minuten, Stunden, Tage)
+- unit: Zeiteinheit (z.B. Minuten, Stunden, Tage)
 
 Hinweis:
 - Verwendet das `schedule.every(interval).unit`-Muster für die Zeitplanung
-- Übergibt bei zeitgesteuerten Ausführungen einen leeren `ticket_id`-Kontext
+- Übergibt bei geplanten Ausführungen einen leeren `ticket_id`-Kontext
 
 :::
 

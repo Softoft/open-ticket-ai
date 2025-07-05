@@ -1,148 +1,153 @@
 <template>
-    <!-- RENDER A LIST OF SUB-PACKAGES -->
-    <div v-if="subPackagesToDisplay.length > 0" class="sub-package-container">
-        <h2 class="mb-4">
-            <CodeBadge text="package" type="success"/>
-            <span class="font-monospace">Contents of {{ parentPackageId }}</span>
-        </h2>
-        <div class="d-grid gap-4">
-            <div v-for="subPkg in subPackagesToDisplay" :key="subPkg.module_path">
-                <!-- Recursively call the component to render each sub-module as a full card -->
+    <!-- Render sub-packages in a vertical list -->
+    <div v-if="subPackagesToDisplay.length" class="space-y-4">
+        <div class="flex items-center space-x-2">
+
+
+            <Badge class="text-3xl" type="success">package</Badge>
+            <h1 class="text-3xl mb-2">
+                {{ parentPackageId }}
+            </h1>
+        </div>
+        <div class="space-y-4">
+            <Card
+                v-for="subPkg in subPackagesToDisplay"
+                :key="subPkg.module_path"
+            >
                 <CodeDocumentation
                     :package-id="subPkg.module_path"
                     show-all-classes
                     show-all-functions
                 />
-            </div>
+            </Card>
         </div>
     </div>
 
-    <!-- RENDER A SINGLE DOC ITEM (class or package) -->
-    <div v-else-if="classData || packageData" class="code-documentation-wrapper card shadow-sm mb-4">
-        <!-- RENDER A SINGLE CLASS -->
-        <div v-if="classData" class="card-body">
-            <h2 class="card-title mb-1">
-                <CodeBadge text="class" type="warning"/>
-                <span class="font-monospace">{{ classData.name }}</span>
-            </h2>
-            <p class="card-subtitle mb-2 text-muted small">
-                From: <code>{{ classData.module_path }}</code>
-            </p>
-            <Docstring :doc="classData.docstring"/>
-
-            <!-- Methods Section -->
-            <div v-if="methodsToDisplay.length > 0" class="mt-4">
-                <h3>Methods</h3>
-                <div :id="`accordion-methods-${classId}`" class="accordion">
-                    <FunctionDoc v-for="method in methodsToDisplay" :key="method.name" :func="method"
-                                 :parent-id="classId"/>
+    <!-- Render class or module docs -->
+    <Card v-else-if="classData || packageData" class="mb-4">
+        <template #default>
+            <!-- Class Documentation -->
+            <div v-if="classData">
+                <div class="flex items-center space-x-2 mb-2">
+                    <Badge type="warning">class</Badge>
+                    <h2 class="font-mono text-lg">{{ classData.name }}</h2>
                 </div>
-            </div>
-        </div>
+                <p class="text-sm text-vp-text-2 mb-4">From: <code>{{ classData.module_path }}</code></p>
+                <Docstring class="py-3" :doc="classData.docstring"/>
 
-        <!-- RENDER A WHOLE PACKAGE/MODULE -->
-        <div v-if="packageData" class="card-body">
-            <h3 class="card-title mb-1">
-                <CodeBadge text="module" type="primary"/>
-                <span class="font-monospace">{{ packageId }}</span>
-            </h3>
-            <Docstring :doc="packageData.module_docstring"/>
-
-            <!-- All Classes in Package -->
-            <div v-if="showAllClasses && packageData.classes.length > 0" class="mt-4">
-                <h4>Classes</h4>
-                <div v-for="cls in packageData.classes" :key="cls.name" class="mb-3">
-                    <CodeDocumentation :class_id="`${packageId.replace(/\//g, '.')}.${cls.name}`" show-public-methods/>
-                </div>
+                <Accordion v-if="methodsToDisplay.length" :items="methodItems">
+                    <template
+                        v-for="(method, i) in methodsToDisplay"
+                        :key="i"
+                        v-slot:[`item-${i}`]
+                    >
+                        <FunctionDoc :func="method" :parent-id="classId"/>
+                    </template>
+                </Accordion>
             </div>
 
-            <!-- All Functions in Package -->
-            <div v-if="showAllFunctions && packageData.functions.length > 0" class="mt-4">
-                <h4>Functions</h4>
-                <div :id="`accordion-functions-${packageId}`" class="accordion">
-                    <FunctionDoc v-for="func in packageData.functions" :key="func.name" :func="func"
-                                 :parent-id="packageId"/>
+            <!-- Module Documentation -->
+            <div v-else-if="packageData">
+                <div class="flex items-center space-x-2 mb-2">
+                    <Badge type="primary">module</Badge>
+                    <h2 class="font-mono text-lg">{{ packageId }}</h2>
+                </div>
+                <Docstring class="py-3" :doc="packageData.module_docstring"/>
+
+                <div v-if="showAllClasses && packageData.classes.length" class="mt-4 space-y-3">
+                    <h3 class="text-base font-semibold">Classes</h3>
+                    <div v-for="cls in packageData.classes" :key="cls.name">
+                        <CodeDocumentation
+                            :class-id="`${packageId.replace(/\//g, '.')}.${cls.name}`"
+                            show-public-methods
+                        />
+                    </div>
+                </div>
+
+                <div v-if="showAllFunctions && packageData.functions.length" class="mt-4">
+                    <h3 class="text-base font-semibold mb-2">Functions</h3>
+                    <Accordion :items="functionItems">
+                        <template
+                            v-for="(func, i) in packageData.functions"
+                            :key="i"
+                            v-slot:[`item-${i}`]
+                        >
+                            <FunctionDoc :func="func" :parent-id="packageId"/>
+                        </template>
+                    </Accordion>
                 </div>
             </div>
-        </div>
-    </div>
+        </template>
+    </Card>
 </template>
 
 <script lang="ts" setup>
-import {computed} from 'vue';
-// Import ModuleEntry for the new computed property
-import {useApiDocs} from '../composables/useApiDocs';
-import FunctionDoc from './FunctionDoc.vue';
-import Docstring from './Docstring.vue';
-import CodeBadge from './CodeBadge.vue';
+import {computed} from 'vue'
+import {useApiDocs} from '../composables/useApiDocs'
+import FunctionDoc from './FunctionDoc.vue'
+import Docstring from './Docstring.vue'
+import Badge from './core/Badge.vue'
+import Card from './core/Card.vue'
+import Accordion from './core/Accordion.vue'
+import CodeDocumentation from './CodeDocumentation.vue'
 
-// Define the component's props with types
 interface Props {
-    classId?: string;
-    packageId?: string;
-    parentPackageId?: string; // <-- NEW PROP
-    showAllMethods?: boolean;
-    showPublicMethods?: boolean;
-    showPublicAttributes?: boolean; // For future use
-    showAllClasses?: boolean;
-    showAllFunctions?: boolean;
+    classId?: string
+    packageId?: string
+    parentPackageId?: string
+    showAllMethods?: boolean
+    showPublicMethods?: boolean
+    showAllClasses?: boolean
+    showAllFunctions?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
     classId: '',
     packageId: '',
-    parentPackageId: '', // <-- NEW PROP DEFAULT
+    parentPackageId: '',
     showAllMethods: false,
     showPublicMethods: false,
-    showPublicAttributes: false,
     showAllClasses: false,
     showAllFunctions: false,
-});
+})
 
-// Get the processed data from our store
-const {packages, classes} = useApiDocs();
+const {packages, classes} = useApiDocs()
 
-// Find the specific data based on the ID props, with types for the computed values
-const classData = computed(() => props.classId ? (classes.get(props.classId) ?? null) : null);
-const packageData = computed(() => props.packageId ? (packages.get(props.packageId) ?? null) : null);
+const classData = computed(() =>
+    props.classId ? classes.get(props.classId) ?? null : null
+)
+const packageData = computed(() =>
+    props.packageId ? packages.get(props.packageId) ?? null : null
+)
 
-
-// Computed property to dynamically filter methods
 const methodsToDisplay = computed(() => {
-    if (!classData.value?.methods) return [];
-    if (props.showAllMethods) {
-        return classData.value.methods;
-    }
+    if (!classData.value?.methods) return []
+    if (props.showAllMethods) return classData.value.methods
     if (props.showPublicMethods) {
-        // Public methods in Python don't start with an underscore
-        return classData.value.methods.filter(method => !method.name.startsWith('_'));
+        return classData.value.methods.filter(m => !m.name.startsWith('_'))
     }
-    return [];
-});
+    return []
+})
 
-// NEW computed property to find sub-packages
+const methodItems = computed(() =>
+    methodsToDisplay.value.map(m => ({title: m.name}))
+)
+
+const functionItems = computed(() =>
+    packageData.value?.functions.map(f => ({title: f.name})) || []
+)
+
 const subPackagesToDisplay = computed(() => {
-    if (!props.parentPackageId) return [];
-
-    const allPackages = Array.from(packages.values());
-    // Normalize module paths to use dots for consistent matching
-    const parentPath = props.parentPackageId.replace(/\//g, '.');
-
-    return allPackages.filter(pkg => {
-        const childPath = pkg.module_path.replace(/\//g, '.');
-        // Find modules that are children of the parent package
-        return childPath.startsWith(parentPath + '.')
-    });
-});
+    if (!props.parentPackageId) return []
+    const parentPath = props.parentPackageId.replace(/\//g, '.')
+    return Array.from(packages.values()).filter(pkg =>
+        pkg.module_path.replace(/\//g, '.').startsWith(parentPath + '.')
+    )
+})
 </script>
 
 <style scoped>
-.code-documentation-wrapper {
-    /* The VP theme provides a --vp-c-bg-soft for a subtle background. */
-    background-color: var(--vp-c-bg-soft, #f8f9fa);
-}
-
-.card-title .font-monospace {
-    color: var(--vp-c-brand-1);
+.font-mono {
+    font-family: monospace;
 }
 </style>

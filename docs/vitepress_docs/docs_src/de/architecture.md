@@ -1,10 +1,13 @@
 ---
-description: Erkunden Sie die technische Architektur von Open Ticket AI. Erfahren Sie, wie die modulare Daten-Pipeline, Dependency Injection und Hugging-Face-Modelle eine intelligente Ticket-Klassifizierung und -Weiterleitung für Helpdesk-Systeme wie OTOBO ermöglichen.
+description: Erkunden Sie die technische Architektur von Open Ticket AI. Erfahren Sie,
+  wie die modulare Datenpipeline, Dependency Injection und die Hugging-Face-Modelle
+  eine intelligente Ticket-Klassifizierung und -Weiterleitung für Helpdesk-Systeme
+  wie OTOBO ermöglichen.
 title: Architekturübersicht von Open Ticket AI
 ---
 # Architekturübersicht
 
-Open Ticket AI läuft als Hintergrunddienst, der über die Kommandozeile gestartet wird. Die Architektur basiert auf einer modularen Pipeline, die jedes Ticket in einer Reihe von klar definierten Stufen verarbeitet. Dependency Injection und eine zentrale Konfigurationsdatei (`config.yml`) steuern, welche Komponenten verwendet werden, was die Erweiterung oder den Austausch einzelner Teile vereinfacht.
+Open Ticket AI läuft als Hintergrunddienst, der von der Kommandozeile aus gestartet wird. Seine Architektur basiert auf einer modularen Pipeline, die jedes Ticket durch eine Reihe klar definierter Stufen verarbeitet. Dependency Injection und eine zentrale Konfigurationsdatei (`config.yml`) steuern, welche Komponenten verwendet werden, was es einfach macht, einzelne Teile zu erweitern oder zu ersetzen.
 
 ## Einstiegspunkt der Anwendung
 
@@ -14,19 +17,19 @@ Starten Sie die Anwendung mit:
 python -m open_ticket_ai.src.ce.main start
 ```
 
-Dieser Befehl initialisiert den Dependency-Injection-Container, erstellt das `App`-Objekt und startet die Hauptverarbeitungsschleife.
+Dieser Befehl initialisiert den Dependency Injection Container, erstellt das `App`-Objekt und startet die Hauptverarbeitungsschleife.
 
 ## Ausführungsablauf
 
 1. `main.py` konfiguriert das Logging und erstellt einen `DIContainer`.
-2. Der Container lädt die `config.yml` und erstellt alle konfigurierten Komponenten.
+2. Der Container lädt `config.yml` und erstellt alle konfigurierten Komponenten.
 3. Die `App` validiert die Konfiguration und delegiert an den `Orchestrator`.
 4. Der `Orchestrator` liest die Pipeline-Definitionen und plant sie mithilfe der `schedule`-Bibliothek.
-5. Jede geplante Pipeline fragt den Helpdesk periodisch nach neuen Tickets ab und verarbeitet diese.
+5. Jede geplante Pipeline fragt das Helpdesk-System periodisch nach neuen Tickets ab und verarbeitet diese.
 
-## Verarbeitungs-Pipeline
+## Verarbeitungspipeline
 
-Die Ticket-Verarbeitungs-Pipeline sieht wie folgt aus:
+Die Ticket-Verarbeitungspipeline sieht wie folgt aus:
 
 ```mermaid
 flowchart TB
@@ -42,21 +45,21 @@ flowchart TB
 
         subgraph "TicketSystemAdapter"
             direction TB
-            Fetch[Aufruf der `fetch()`-Methode<br/>Kommuniziert mit externer Ticket-System REST API]
+            Fetch[Aufruf der fetch()-Methode<br/>Kommuniziert mit der REST-API des externen Ticketsystems]
         end
         BF --> Fetch
 
-        Fetch --> Decision{Ticket-Daten empfangen?}
+        Fetch --> Decision{Ticketdaten zurückgegeben?}
 
-        Decision -- Ja --> Context[**PipelineContext** erstellen und füllen<br/>(enthält ticket_id, data)]
-        Context --> SB[Context an **SubjectBodyPreparer** übergeben<br/>Daten werden für die KI transformiert]
-        SB --> AI[Context an **HFAIInferenceService** übergeben<br/>KI-Vorhersage wird zum Context hinzugefügt]
-        AI --> SF[Context an **SetFieldFromModelOutput** übergeben<br/>Vorhersage wird in eine Anweisung zur Feldaktualisierung umgewandelt (z.B. `{'Queue': 'Sales'}`)]
-        SF --> GT[Context an letzte Pipe (**GenericTicketUpdater**) übergeben]
+        Decision -- Ja --> Context[**PipelineContext** erstellen und füllen<br/>(enthält ticket_id, Daten)]
+        Context --> SB[Kontext an **SubjectBodyPreparer** übergeben<br/>Daten werden für die KI transformiert]
+        SB --> AI[Kontext an **HFAIInferenceService** übergeben<br/>KI-Vorhersage wird zum Kontext hinzugefügt]
+        AI --> SF[Kontext an **SetFieldFromModelOutput** übergeben<br/>Vorhersage wird in eine Anweisung zur Feldaktualisierung umgewandelt (z.B. `{'Queue': 'Sales'}`)]
+        SF --> GT[Kontext an die letzte Pipe (**GenericTicketUpdater**) übergeben]
 
         subgraph "TicketSystemAdapter"
             direction TB
-            Update[Aufruf von `update()` mit Daten aus dem Context<br/>Kommuniziert mit externer Ticket-System REST API]
+            Update[Aufruf von update() mit Daten aus dem Kontext<br/>Kommuniziert mit der REST-API des externen Ticketsystems]
         end
         GT --> Update
 
@@ -64,28 +67,28 @@ flowchart TB
         Decision -- Nein --> EndNo[Pipeline endet]
     end
 
-    Complete --> Stop([Stopp])
+    Complete --> Stop([Stop])
     EndNo --> Stop
 
 ```
 
-Jeder Schritt konsumiert und produziert **Value Objects** wie `subject`, `body`, `queue_id` und `priority`. Dieser Ansatz hält die Pipeline modular und ermöglicht das Hinzufügen neuer Schritte oder Value Objects mit minimalen Änderungen am Rest des Systems.
+Jeder Schritt konsumiert und produziert **Value Objects** wie `subject`, `body`, `queue_id` und `priority`. Dieser Ansatz hält die Pipeline modular und ermöglicht das Hinzufügen neuer Schritte oder Value Objects mit minimalen Änderungen am restlichen System.
 
 ## Hauptkomponenten
 
-- **App & Orchestrator** – Validieren die Konfiguration, planen Jobs und verwalten die Gesamtschleife.
+- **App & Orchestrator** – Validieren die Konfiguration, planen Jobs und verwalten die gesamte Schleife.
 - **Fetchers** – Rufen neue Tickets von externen Systemen ab.
-- **Preparers** – Wandeln rohe Ticket-Daten in eine für KI-Modelle geeignete Form um.
+- **Preparers** – Wandeln rohe Ticketdaten in eine für KI-Modelle geeignete Form um.
 - **AI Inference Services** – Laden Hugging-Face-Modelle und erzeugen Vorhersagen für Queue oder Priorität.
-- **Modifiers** – Wenden die Vorhersagen über Adapter wieder auf das Ticketsystem an.
+- **Modifiers** – Übertragen die Vorhersagen über Adapter zurück an das Ticketsystem.
 - **Ticket System Adapters** – Stellen REST-Integrationen mit Systemen wie OTOBO bereit.
 
-Alle Komponenten werden in einem zentralen Dependency-Injection-Container registriert und über die `config.yml` konfiguriert.
+Alle Komponenten werden in einem zentralen Dependency Injection Container registriert und über `config.yml` konfiguriert.
 
 ## Diagramme
 
-### Anwendungs-Klassendiagramm
-![Anwendungs-Klassendiagramm](../../public/images/application_class_diagram.png)
+### Anwendungsklassendiagramm
+![Anwendungsklassendiagramm](../../public/images/application_class_diagram.png)
 
 ### Übersichtsdiagramm
 ![Übersichtsdiagramm](../../public/images/overview.png)

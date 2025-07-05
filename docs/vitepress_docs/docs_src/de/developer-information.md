@@ -1,7 +1,7 @@
 ---
-description: Entwicklerleitfaden für die ATC Community Edition, ein On-Premise-Tool zur Ticket-Klassifizierung.
+description: Entwicklerhandbuch für die ATC Community Edition, ein On-Premise-Tool zur Ticket-Klassifizierung.
   Lernen Sie, das System mit YAML zu konfigurieren, es über die CLI auszuführen und seine
-  Architektur durch benutzerdefinierte Python-Komponenten, Pipes und Ticketsystem-Adapter zu erweitern.
+  Architektur mit benutzerdefinierten Python-Komponenten, Pipes und Ticketsystem-Adaptern zu erweitern.
 title: Entwicklerinformationen
 ---
 # Entwicklerinformationen für die ATC Community Edition
@@ -29,24 +29,24 @@ python -m open_ticket_ai.src.ce.main start
 
 ## Training benutzerdefinierter Modelle
 
-Ein direktes Training durch die Anwendung ist im MVP nicht vorgesehen. Vortrainierte Modelle können in der Konfiguration spezifiziert und verwendet werden. Wenn ein `model` angepasst oder neu erstellt werden muss, muss dies außerhalb der Anwendung geschehen.
+Ein direktes Training über die Anwendung ist im MVP nicht vorgesehen. Vor-trainierte Modelle können in der Konfiguration spezifiziert und verwendet werden. Wenn ein Model angepasst oder neu erstellt werden muss, muss dies außerhalb der Anwendung geschehen.
 
 ## Erweiterung
 
-Benutzerdefinierte Fetcher, Preparer, KI-Services oder Modifier können als Python-`classes` implementiert und über die Konfiguration registriert werden. Dank Dependency Injection können neue Komponenten einfach integriert werden.
+Benutzerdefinierte Fetcher, Preparer, KI-Services oder Modifier können als Python-Klassen implementiert und über die Konfiguration registriert werden. Dank Dependency Injection können neue Komponenten einfach integriert werden.
 
 ## Wie man eine benutzerdefinierte Pipe hinzufügt
 
 Die Verarbeitungspipeline kann mit eigenen Pipe-Klassen erweitert werden. Eine Pipe ist eine
 Arbeitseinheit, die einen `PipelineContext` empfängt, diesen modifiziert und zurückgibt. Alle
-Pipes erben von der [`Pipe`](../api/run/pipes.md)-Basisklasse, die bereits
+Pipes erben von der `Pipe`-Basisklasse, die bereits
 das `Providable`-Mixin implementiert.
 
 1. **Erstellen Sie ein Konfigurationsmodell** für Ihre Pipe, falls diese Parameter benötigt.
 2. **Leiten Sie von `Pipe` ab** und implementieren Sie die `process`-Methode.
 3. **Überschreiben Sie `get_provider_key()`**, wenn Sie einen benutzerdefinierten Schlüssel wünschen.
 
-Das folgende vereinfachte Beispiel aus der `AI_README` zeigt eine Pipe zur Stimmungsanalyse:
+Das folgende vereinfachte Beispiel aus der `AI_README` zeigt eine Pipe für die Sentiment-Analyse:
 
 ```python
 class SentimentPipeConfig(BaseModel):
@@ -73,8 +73,8 @@ class SentimentAnalysisPipe(Pipe, Providable):
         return "SentimentAnalysisPipe"
 ```
 
-Nach der Implementierung der `class` registrieren Sie sie in Ihrer Dependency-Injection-Registry
-und referenzieren Sie sie in der `config.yml` über den von
+Nach der Implementierung der Klasse registrieren Sie diese in Ihrer Dependency-Injection-Registry
+und referenzieren sie in der `config.yml` über den von
 `get_provider_key()` zurückgegebenen Provider-Schlüssel.
 
 ## Wie man ein neues Ticketsystem integriert
@@ -92,9 +92,10 @@ einheitlichen Modellen des Projekts.
    - `add_note`
 3. **Übersetzen Sie Daten** zu und von den `UnifiedTicket`- und `UnifiedNote`-Modellen.
 4. **Stellen Sie ein Konfigurationsmodell** für Anmeldeinformationen oder API-Einstellungen bereit.
-5. **Registrieren Sie den Adapter** in `create_registry.py`, damit er aus der YAML-Konfiguration instanziiert werden kann.
+5. **Registrieren Sie den Adapter** in `create_registry.py`, damit er aus der
+   YAML-Konfiguration instanziiert werden kann.
 
-Sobald der Adapter registriert ist, spezifizieren Sie ihn im `system`-Abschnitt der `config.yml`, und
+Sobald der Adapter registriert ist, geben Sie ihn im `system`-Abschnitt der `config.yml` an, und
 der Orchestrator wird ihn zur Kommunikation mit dem Ticketsystem verwenden.
 
 ## Zusammenfassung

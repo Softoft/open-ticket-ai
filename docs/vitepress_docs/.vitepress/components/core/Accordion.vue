@@ -5,7 +5,7 @@
         class="flex w-full justify-between py-3 font-semibold text-left"
         @click="toggle(i)"
       >
-        <span>{{ item.title }}</span>
+        <span class="font-bold text-lg">{{ item.title }}</span>
         <span>{{ openIndex === i ? '-' : '+' }}</span>
       </button>
       <div v-show="openIndex === i" class="pb-3 text-vp-text-2">

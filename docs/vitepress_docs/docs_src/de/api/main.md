@@ -1,5 +1,5 @@
 ---
-description: Offizielle Dokumentation für den Kommandozeilenschnittstellen (CLI) Einstiegspunkt von Open Ticket AI. Diese Anleitung behandelt main.py und beschreibt, wie man Protokollierungsstufen konfiguriert und die Anwendung startet.
+description: Offizielle Dokumentation für den Kommandozeilen-Interface (CLI) Einstiegspunkt von Open Ticket AI. Diese Anleitung behandelt main.py und beschreibt, wie man Logging-Level konfiguriert und die Anwendung startet.
 ---
 # Dokumentation für `**/ce/*.py`
 
@@ -11,25 +11,25 @@ description: Offizielle Dokumentation für den Kommandozeilenschnittstellen (CLI
 
 ## Modul: `open_ticket_ai\src\ce\main.py`
 
-Einstiegspunkt der Open Ticket AI CLI.
-Dieses Modul stellt die Kommandozeilenschnittstelle für die Open Ticket AI-Anwendung bereit.
-Es konfiguriert die Protokollierungsstufen und startet die Hauptanwendung.
+Einstiegspunkt für die Open Ticket AI CLI.
+Dieses Modul stellt die Kommandozeilen-Schnittstelle für die Open Ticket AI-Anwendung bereit.
+Es konfiguriert die Logging-Level und startet die Hauptanwendung.
 
 
 ### <span class='text-warning'>def</span> `main(verbose: bool, debug: bool)`
 
-Konfiguriert die Protokollierung basierend auf CLI-Optionen.
-Diese Funktion setzt die Protokollierungsstufe für die Anwendung basierend auf den übergebenen Kommandozeilen-Flags.
-Es werden zwei Stufen der Ausführlichkeit unterstützt:
-- `--verbose` für die Protokollierung auf INFO-Ebene
-- `--debug` für die Protokollierung auf DEBUG-Ebene
+Konfiguriert das Logging basierend auf den CLI-Optionen.
+Diese Funktion setzt den Logging-Level für die Anwendung basierend auf den übergebenen Kommandozeilen-Flags.
+Sie unterstützt zwei Stufen der Ausführlichkeit:
+- `--verbose` für Logging auf INFO-Level
+- `--debug` für Logging auf DEBUG-Level
 
-Wenn keine Flags angegeben werden, ist die Standard-Protokollierungsstufe WARNING. Die Funktion konfiguriert auch die Protokollformatierung und unterdrückt laute Bibliotheken (z.B. urllib3).
+Wenn keine Flags angegeben werden, ist der Standard-Logging-Level WARNING. Die Funktion konfiguriert auch die Log-Formatierung und unterdrückt laute Bibliotheken (z. B. urllib3).
 
 **Parameter:**
 
-- **`verbose`** (`bool`) - Aktiviert die Protokollierung auf INFO-Ebene, wenn True.
-- **`debug`** (`bool`) - Aktiviert die Protokollierung auf DEBUG-Ebene, wenn True.
+- **`verbose`** (`bool`) - Aktiviert das Logging auf INFO-Level, wenn True.
+- **`debug`** (`bool`) - Aktiviert das Logging auf DEBUG-Level, wenn True.
 
 
 
@@ -38,11 +38,12 @@ Wenn keine Flags angegeben werden, ist die Standard-Protokollierungsstufe WARNIN
 Initialisiert den Container und startet die Anwendung.
 Dieser Befehl führt die folgenden Aktionen aus:
 1. Konfiguriert den Dependency-Injection-Container
-2. Ruft die Hauptinstanz der Anwendung aus dem Container ab
+2. Ruft die Hauptanwendungsinstanz aus dem Container ab
 3. Führt die Anwendung aus
 4. Zeigt ein stilisiertes Startbanner mit `pyfiglet` an
 
-Die Anwendung folgt einem Dependency-Injection-Muster, bei dem alle erforderlichen Abhängigkeiten über den `DIContainer` aufgelöst werden.
+Die Anwendung folgt einem Dependency-Injection-Muster, bei dem alle erforderlichen
+Abhängigkeiten über den `DIContainer` aufgelöst werden.
 
 
 

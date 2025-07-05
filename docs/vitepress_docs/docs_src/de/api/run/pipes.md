@@ -1,7 +1,7 @@
 ---
-description: Erkunden Sie die Dokumentation für Python-Module im `open_ticket_ai`-Projekt,
-  die die Implementierung von KI-Modell-Inferenz-Pipelines beschreibt. Erfahren Sie
-  mehr über die `TextAIModelInput`-Klasse zur Strukturierung von Textdaten für Hugging
+description: Erkunden Sie die Dokumentation für Python-Module im Projekt `open_ticket_ai`,
+  die die Implementierung von AI-Modell-Inferenz-Pipelines beschreibt. Erfahren Sie
+  mehr über die Klasse `TextAIModelInput` zur Strukturierung von Textdaten für Hugging
   Face-Modelle und den `EmptyDataModel` Pydantic-Platzhalter. Dieser Leitfaden behandelt
   die wesentlichen Datenmodelle und Dienststrukturen für die Ausführung von lokalen
   und cloudbasierten Hugging Face-Inferenzaufgaben.
@@ -13,14 +13,14 @@ description: Erkunden Sie die Dokumentation für Python-Module im `open_ticket_a
 
 ### <span style='text-info'>class</span> `TextAIModelInput`
 
-Kontext für die Eingabe an den Hugging Face Inferenzdienst.
-Diese `class` wird verwendet, um die Eingabedaten und alle zusätzlichen Parameter,
+Kontext für die Eingabe an den Hugging Face Inferenz-Dienst.
+Diese Klasse wird verwendet, um die Eingabedaten und alle zusätzlichen Parameter,
 die für die Inferenzanfrage erforderlich sind, zu kapseln.
 
 **Parameter:**
 
-- **`ai_model_input`** (`str`) - Der Eingabetext, der dem KI-Modell zur Verarbeitung bereitgestellt wird.
-Stellt die primäre Datennutzlast für die Inferenzanfrage dar.
+- **`ai_model_input`** (`str`) - Der Eingabetext, der dem AI-Modell zur Verarbeitung bereitgestellt wird.
+Repräsentiert die primäre Datennutzlast für die Inferenzanfrage.
 
 
 ---
@@ -31,8 +31,8 @@ Stellt die primäre Datennutzlast für die Inferenzanfrage dar.
 ### <span style='text-info'>class</span> `EmptyDataModel`
 
 Leeres Pydantic-Modell ohne Felder.
-Dieses `model` dient als Platzhalter für Szenarien, die ein Pydantic-kompatibles
-Objekt erfordern, aber keine Datenfelder haben. Es kann als Basisklasse oder Typ-Hinweis
+Dieses Modell dient als Platzhalter für Szenarien, die ein Pydantic-kompatibles
+Objekt erfordern, aber keine Datenfelder haben. Es kann als Basisklasse oder Type-Hint
 verwendet werden, wenn keine spezifische Datenstruktur benötigt wird.
 
 

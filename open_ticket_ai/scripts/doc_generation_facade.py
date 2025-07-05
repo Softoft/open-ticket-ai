@@ -82,25 +82,6 @@ class DocGenerationFacade:
         )
         await docstring_generator.run()
 
-    def generate_markdown(
-        self,
-        patterns_to_output_map: dict[str, Path],
-        excluded: list[str],
-    ):
-        """Generate markdown files from Python code based on provided patterns.
-
-        Args:
-            patterns_to_output_map: A dictionary mapping glob patterns to output file paths.
-                Each pattern will be used to find matching files, and the corresponding
-                output path specifies where the generated markdown should be saved.
-            excluded: A list of glob patterns to exclude from processing.
-        """
-
-        generate_markdown(
-            find_python_code_root_path(),
-            patterns_to_output_map,
-            excluded=excluded,
-        )
 
     async def translate_docs(
         self,

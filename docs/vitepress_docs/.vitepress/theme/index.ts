@@ -16,7 +16,8 @@ import Callout from '../components/core/Callout.vue'
 import Tabs from '../components/core/Tabs.vue'
 import FeatureGrid from '../components/core/FeatureGrid.vue'
 import Accordion from '../components/core/Accordion.vue'
-import './styles/vitepress-styles.scss'
+import './styles/index.scss'
+
 import {createI18n, useI18n} from 'vue-i18n'
 import deMessages from '../../docs_src/de/messages'
 import enMessages from '../../docs_src/en/messages'
@@ -64,7 +65,7 @@ export default {
 
         watch(lang, (newLang) => {
             locale.value = newLang
-        }, {immediate: true}) // `immediate` ensures this runs on initial page load
+        }, {immediate: true})
 
 
         onMounted(() => {

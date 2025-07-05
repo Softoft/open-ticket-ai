@@ -1,5 +1,5 @@
 ---
-description: Erfahren Sie, wie Sie Open Ticket AI mit Docker Compose schnell installieren und ausführen können. Diese Anleitung bietet einfache Einrichtungsanweisungen für die Integration mit Ihrem OTRS-, OTOBO- oder Znuny-Helpdesk über Web Services.
+description: Erfahren Sie, wie Sie Open Ticket AI mit Docker Compose schnell installieren und ausführen. Diese Anleitung bietet einfache Einrichtungsanweisungen für die Integration mit Ihrem OTRS-, OTOBO- oder Znuny-Helpdesk über Web Services.
 title: Erste Schritte
 ---
 # Installation
@@ -28,6 +28,6 @@ Derzeit sind Integrationen für **OTRS**, **OTOBO** und **Znuny** verfügbar. Di
 
 1. Konfigurieren Sie die erforderlichen Web Services in Ihrem Ticketsystem.
 2. Erstellen Sie einen dedizierten Benutzer oder Agenten für den Zugriff durch Open Ticket AI.
-3. Richten Sie die Integration auf die URL und die Anmeldeinformationen dieses Web-Service-Benutzers aus.
+3. Richten Sie die Integration auf die URL und die Anmeldeinformationen dieses Web Service-Benutzers aus.
 
 Detaillierte Anweisungen finden Sie in den entsprechenden Anleitungen für die ersten Schritte für Ihr Ticketsystem.

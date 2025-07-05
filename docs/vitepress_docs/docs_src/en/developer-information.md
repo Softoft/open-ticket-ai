@@ -1,14 +1,17 @@
 ---
 description: Developer guide for the ATC Community Edition, an on-premise ticket classification
-  tool. Learn to configure the system with YAML, run it from the CLI, and extend its
-  architecture using custom Python components, pipes, and ticket system adapters.
+    tool. Learn to configure the system with YAML, run it from the CLI, and extend its
+    architecture using custom Python components, pipes, and ticket system adapters.
 title: Developer Information
 ---
+
 # Developer Information for the ATC Community Edition
 
 ## Overview
 
-The ATC Community Edition is an on-premise solution for automated classification of support tickets. The current MVP version is controlled via a YAML configuration file and started via CLI. There is no REST API for uploading training data or triggering a training run.
+The ATC Community Edition is an on-premise solution for automated classification of support tickets. The current MVP
+version is controlled via a YAML configuration file and started via CLI. There is no REST API for uploading training
+data or triggering a training run.
 
 ## Software Architecture
 
@@ -19,7 +22,8 @@ The application essentially consists of the following packages:
 * **ticket\_system\_integration** – adapters for different ticket systems.
 * **main.py** – CLI entry point that starts the scheduler and the orchestrator.
 
-The orchestrator executes configurable `AttributePredictors`, which are composed of `DataFetcher`, `DataPreparer`, `AIInferenceService`, and `Modifier`. All components are defined in `config.yml` and validated at program startup.
+The orchestrator executes configurable `AttributePredictors`, which are composed of `DataFetcher`, `DataPreparer`,
+`AIInferenceService`, and `Modifier`. All components are defined in `config.yml` and validated at program startup.
 
 An example command to start the application:
 
@@ -29,17 +33,19 @@ python -m open_ticket_ai.src.ce.main start
 
 ## Training Custom Models
 
-Direct training through the application is not provided in the MVP. Pre-trained models can be specified and used in the configuration. If a model needs to be adjusted or newly created, this must be done outside the application.
+Direct training through the application is not provided in the MVP. Pre-trained models can be specified and used in the
+configuration. If a model needs to be adjusted or newly created, this must be done outside the application.
 
 ## Extension
 
-Custom fetchers, preparers, AI services, or modifiers can be implemented as Python classes and registered via the configuration. Thanks to dependency injection, new components can be easily integrated.
+Custom fetchers, preparers, AI services, or modifiers can be implemented as Python classes and registered via the
+configuration. Thanks to dependency injection, new components can be easily integrated.
 
 ## How to Add a Custom Pipe
 
 The processing pipeline can be extended with your own pipe classes. A pipe is a
 unit of work that receives a `PipelineContext`, modifies it and returns it. All
-pipes inherit from the [`Pipe`](../api/run/pipes.md) base class which already
+pipes inherit from the `Pipe` base class which already
 implements the `Providable` mixin.
 
 1. **Create a configuration model** for your pipe if it needs parameters.
@@ -52,6 +58,7 @@ pipe:
 ```python
 class SentimentPipeConfig(BaseModel):
     model_name: str = "distilbert/distilbert-base-uncased-finetuned-sst-2-english"
+
 
 class SentimentAnalysisPipe(Pipe, Providable):
     def __init__(self, config: SentimentPipeConfig):
@@ -86,11 +93,11 @@ project's unified models.
 
 1. **Create an adapter class**, e.g. `FreshdeskAdapter(TicketSystemAdapter)`.
 2. **Implement all abstract methods**:
-   - `find_tickets`
-   - `find_first_ticket`
-   - `create_ticket`
-   - `update_ticket`
-   - `add_note`
+    - `find_tickets`
+    - `find_first_ticket`
+    - `create_ticket`
+    - `update_ticket`
+    - `add_note`
 3. **Translate data** to and from the `UnifiedTicket` and `UnifiedNote` models.
 4. **Provide a configuration model** for credentials or API settings.
 5. **Register the adapter** in `create_registry.py` so it can be instantiated
@@ -101,4 +108,5 @@ the orchestrator will use it to communicate with the ticket system.
 
 ## Summary
 
-The ATC Community Edition offers a locally executed workflow for automatic ticket classification in its MVP version. All settings are managed via YAML files; no REST API is available. External processes or scripts must be used for training.
+The ATC Community Edition offers a locally executed workflow for automatic ticket classification in its MVP version. All
+settings are managed via YAML files; no REST API is available. External processes or scripts must be used for training.

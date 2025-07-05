@@ -1,30 +1,30 @@
 ---
-description: Erkunden Sie die Architektur von Open Ticket AI, einer modularen Pipeline, die Transformer-Modelle nutzt, um Support-Tickets automatisch nach Warteschlange und Priorität zu klassifizieren, Helpdesk-Workflows zu optimieren und über eine REST-API in Ticketsysteme zu integrieren.
-title: Architektur von Open Ticket AI
+description: Erkunden Sie die Architektur von Open Ticket AI, einer modularen Pipeline, die Transformer-Modelle nutzt, um Support-Tickets automatisch nach Warteschlange und Priorität zu klassifizieren. Dies optimiert Helpdesk-Workflows und integriert sich über eine REST-API in Ticketsysteme.
+title: Open Ticket AI Architektur
 ---
 # Architektur
 
 ## Pipeline & Value Objects
 
-Das Herzstück von Open Ticket AI ist seine Verarbeitungspipeline:
+Der Kern von Open Ticket AI ist seine Verarbeitungspipeline:
 
 ```
-[ Incoming Ticket ]
+[ Eingehendes Ticket ]
        ↓
-[ Preprocessor ] — cleans & merges subject+body
+[ Preprocessor ] — bereinigt & führt Betreff+Text zusammen
        ↓
 [ Transformer Tokenizer ]
        ↓
-[ Queue Classifier ] → Queue ID + confidence
+[ Queue Classifier ] → Queue-ID + Konfidenz
        ↓
-[ Priority Classifier ] → Priority score + confidence
+[ Priority Classifier ] → Prioritäts-Score + Konfidenz
        ↓
-[ Postprocessor ] — applies thresholds, routes or flags
+[ Postprocessor ] — wendet Schwellenwerte an, leitet weiter oder markiert
        ↓
-[ Ticket System Adapter ] — updates ticket via REST API
+[ Ticket System Adapter ] — aktualisiert Ticket über REST API
 ```
 
-Jede Stufe in dieser Pipeline konsumiert und produziert **Value Objects** (z.B. `subject`, `body`, `queue_id`, `priority`). Dieses Design macht die Pipeline modular und einfach erweiterbar mit benutzerdefinierten Verarbeitungsschritten oder neuen Value Objects.
+Jede Stufe in dieser Pipeline konsumiert und produziert **Value Objects** (z. B. `subject`, `body`, `queue_id`, `priority`). Dieses Design macht die Pipeline modular und einfach durch benutzerdefinierte Verarbeitungsschritte oder neue Value Objects erweiterbar.
 
 ## Pipeline-Komponenten
 
