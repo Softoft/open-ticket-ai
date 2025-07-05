@@ -10,7 +10,7 @@
                 type="button"
             >
                 <span class="d-flex align-items-center w-100">
-                    <CodeBadge v-if="func.is_async" text="async" type="info"/>
+                    <Badge v-if="func.is_async" text="async" type=""/>
                     <span class="font-monospace text-nowrap">
                         <span class="function-name fw-bold me-1">{{ func.name }}</span>
                         <span class="signature-text">{{ func.signature }}</span>
@@ -30,7 +30,6 @@
 import {computed} from 'vue';
 import type {FunctionData} from '../composables/useApiDocs';
 import Docstring from './Docstring.vue';
-import CodeBadge from './CodeBadge.vue';
 
 interface Props {
     func: FunctionData;

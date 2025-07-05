@@ -9,14 +9,13 @@ import OTAIPredictionDemo from '../components/OTAIPredictionDemo.vue'
 import ServicePackagesComponent from '../components/ServicePackagesComponent.vue'
 import SupportPlansComponent from '../components/SupportPlansComponent.vue'
 import CodeDocumentation from '../components/CodeDocumentation.vue'
-import Button from '../components/Button.vue'
-import Card from '../components/Card.vue'
-import Badge from '../components/Badge.vue'
-import Callout from '../components/Callout.vue'
-import Tabs from '../components/Tabs.vue'
-import ApiReference from '../components/ApiReference.vue'
-import FeatureGrid from '../components/FeatureGrid.vue'
-import Accordion from '../components/Accordion.vue'
+import Button from '../components/core/Button.vue'
+import Card from '../components/core/Card.vue'
+import Badge from '../components/core/Badge.vue'
+import Callout from '../components/core/Callout.vue'
+import Tabs from '../components/core/Tabs.vue'
+import FeatureGrid from '../components/core/FeatureGrid.vue'
+import Accordion from '../components/core/Accordion.vue'
 import './styles/vitepress-styles.scss'
 import {createI18n, useI18n} from 'vue-i18n'
 import deMessages from '../../docs_src/de/messages'
@@ -47,7 +46,6 @@ export default {
         app.component('AppBadge', Badge)
         app.component('AppCallout', Callout)
         app.component('AppTabs', Tabs)
-        app.component('ApiReference', ApiReference)
         app.component('FeatureGrid', FeatureGrid)
         app.component('Accordion', Accordion)
     },
