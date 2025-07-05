@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex border-b border-slate-700">
+    <div class="flex border-b border-vp-border">
       <button
         v-for="(label, idx) in tabs"
         :key="idx"
@@ -8,8 +8,8 @@
         :class="[
           'px-4 py-2 -mb-px',
           active === idx
-            ? 'border-b-2 text-electric-teal border-electric-teal'
-            : 'text-slate-400'
+            ? 'border-b-2 text-vp-brand border-vp-brand'
+            : 'text-vp-text-2'
         ]"
       >
         {{ label }}

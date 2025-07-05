@@ -48,38 +48,37 @@ const uniqueId = computed(() => {
 
 <style scoped>
 .accordion-item {
-    /* Use Bootstrap variables for automatic dark/light theme support */
-    background-color: var(--bs-body-bg);
-    border: 1px solid var(--bs-border-color-translucent);
+    background-color: var(--vp-c-bg);
+    border: 1px solid var(--vp-c-divider);
 }
 
 .accordion-button {
-    background-color: var(--bs-tertiary-bg);
-    color: var(--bs-body-color);
+    background-color: var(--vp-c-bg-soft);
+    color: var(--vp-c-text-1);
     transition: background-color 0.15s ease-in-out;
 }
 
 .accordion-button:not(.collapsed) {
-    background-color: var(--bs-secondary-bg);
-    color: var(--bs-emphasis-color);
+    background-color: var(--vp-c-bg-soft);
+    color: var(--vp-c-text-1);
 }
 
 .accordion-button:focus {
-    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
-    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.25rem var(--vp-c-brand-soft);
+    border-color: var(--vp-c-brand-1);
 }
 
 .accordion-button:hover {
-    background-color: var(--bs-secondary-bg);
+    background-color: var(--vp-c-bg-soft);
 }
 
 .function-name {
-    color: var(--bs-primary);
+    color: var(--vp-c-brand-1);
 }
 
 /* In dark mode, the default signature text can be too bright */
 [data-bs-theme="dark"] .signature-text {
-    color: var(--bs-gray-400);
+    color: var(--vp-c-text-2);
 }
 
 .font-monospace {
