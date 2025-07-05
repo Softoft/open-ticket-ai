@@ -56,9 +56,4 @@ def simple_math_operation(x: int, y: int, operation: str = "add") -> float:
         return float(x - y)
     elif operation == "multiply":
         return float(x * y)
-    elif operation == "divide":
-        if y == 0:
-            raise ValueError("Cannot divide by zero.")
-        return float(x / y)
-    else:
-        raise ValueError(f"Unknown operation: {operation}")
+    elif

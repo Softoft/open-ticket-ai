@@ -2,8 +2,16 @@
 import fs from 'fs';
 import path from 'path';
 
-interface NavbarItem { text: string; link: string; }
-interface NavbarItemGroup { text: string; items: (NavbarItem | NavbarItemGroup)[]; }
+interface NavbarItem {
+    text: string;
+    link: string;
+}
+
+interface NavbarItemGroup {
+    text: string;
+    items: (NavbarItem | NavbarItemGroup)[];
+}
+
 type NavItem = NavbarItem | NavbarItemGroup;
 
 function formatTitle(name: string): string {
@@ -13,28 +21,35 @@ function formatTitle(name: string): string {
 
 function generateNavItemsRecursive(currentPath: string, docsRootPath: string): NavItem[] {
     try {
-        const entries = fs.readdirSync(currentPath, { withFileTypes: true });
+        const entries = fs.readdirSync(currentPath, {withFileTypes: true});
+        console.log(`🔍 Scanning directory: ${currentPath} (${entries.length} entries)`);
         return entries
-            .filter(dirent => !dirent.name.startsWith('.') && dirent.name !== 'index.md')
+            .filter((dirent: fs.Dirent) => {
+                // Exclude hidden files/directories (e.g., .DS_Store)
+                if (dirent.name.startsWith('.') || dirent.name.startsWith('_') || dirent.name == 'index.md') {
+                    return false;
+                }
+                // Include directories and markdown files
+                return dirent.isDirectory() || dirent.name.endsWith('.md');
+            })
             .map((dirent): NavItem | null => {
                 const fullPath = path.join(currentPath, dirent.name);
                 const title = formatTitle(dirent.name);
+                console.log(`🔍 Processing: ${fullPath} (Title: ${title})`);
                 if (dirent.isDirectory()) {
                     return {
                         text: title,
                         items: generateNavItemsRecursive(fullPath, docsRootPath),
                     };
-                } else if (dirent.isFile() && dirent.name.endsWith('.md')) {
+                } else {
                     const relativePath = path.relative(docsRootPath, fullPath);
                     const link = `${relativePath.replace(/\\/g, '/')}`;
-                    return { text: title, link };
+                    return {text: title, link};
                 }
-                return null;
-            })
-            .filter((item): item is NavItem => item !== null);
+            });
     } catch (error) {
         console.error(`❌ Error scanning ${currentPath}:`, (error as Error).message);
-        return [];
+        throw error;
     }
 }
 

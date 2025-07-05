@@ -37,8 +37,12 @@ def pretty_print_config(config: BaseModel, console: Console):
     using `rich`'s printing capabilities for optimal formatting.
 
     Args:
-        config (`BaseModel`): The Pydantic model configuration to display.
-        console (`Console`): The rich console instance for output rendering.
+        config (BaseModel): The Pydantic model configuration to display.
+        console (Console): The rich console instance for output rendering.
+
+    Raises:
+        TypeError: If `config` is not a Pydantic BaseModel instance.
+        yaml.YAMLError: If YAML serialization fails due to invalid data.
     """
 
     # turn your BaseModel into a dict

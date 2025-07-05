@@ -2,6 +2,8 @@
 var __VUE_PROD_DEVTOOLS__ = false
 
 import {ref} from 'vue'
+import Card from './core/Card.vue'
+import Button from './core/Button.vue'
 
 const selectedPlan = ref<string | null>(null)
 
@@ -42,75 +44,76 @@ const handleCtaClick = (productName: string) => {
 </script>
 
 <template>
-    <div class="pricing-component container py-5">
-        <h2 class="text-center display-4 fw-bold mb-5">{{ title }}</h2>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
+    <div class="my-5">
+        <h2 class="mb-5 text-center text-4xl font-bold">{{ title }}</h2>
+        <div class="grid gap-4 sm:grid-cols-1 lg:grid-cols-3 justify-center">
             <div
                 v-for="(product, index) in products"
                 :key="index"
-                class="col"
+                class="flex"
             >
-                <div
-                    :class="{ 'border-primary border-2': product.featured }"
-                    class="card h-100 shadow-sm py-3"
-                >
-                    <div class="card-body px-4 py-0 d-flex flex-column">
-                        <h3 class="card-title fw-bold">{{ product.name }}</h3>
-                        <p class="text-body-secondary">{{ product.description }}</p>
+                <Card
+                    :class="['price-card h-full rounded-lg shadow-sm py-3',
+                             { 'border-vp-brand border-2': product.featured }]">
+                    <div class="flex flex-col px-2 xl:px-3 py-0">
+                        <h3 class="font-bold">{{ product.name }}</h3>
+                        <p class="text-vp-text-2 product-description">{{ product.description }}</p>
 
-                        <div class="my-3">
-                            <span class="display-5 fw-bolder">${{ product.price }}</span>
-                            <span v-if="product.pricePeriod" class="text-body-secondary"> / {{
+                        <div class="my-2">
+                            <span class="text-3xl font-bold">${{ product.price }}</span>
+                            <span v-if="product.pricePeriod" class="text-vp-text-2"> / {{
                                     product.pricePeriod
                                 }}</span>
                         </div>
 
                         <hr>
 
-                        <ul class="list-unstyled mb-4">
+                        <ul class="mb-4 list-none">
                             <li
                                 v-for="(feature, fIndex) in product.features"
                                 :key="fIndex"
-                                class="d-flex align-items-center mb-3"
+                                class="flex items-center mb-3"
                             >
-                                <i :class="['fas', feature.icon, 'me-3', 'text-primary']"></i>
+                                <i :class="['fas', feature.icon, 'mr-3', 'text-vp-brand']"></i>
                                 <span>{{ feature.text }}</span>
                             </li>
                         </ul>
 
                         <div class="mt-auto">
                             <a v-if="buttonHref"
-                               :class="['btn', 'w-100', 'btn-lg', product.featured ? 'btn-primary' : 'btn-outline-primary']"
+                               :class="['w-full text-center px-4 py-2 rounded text-sm font-medium',
+                                        product.featured ? 'bg-vp-brand text-white hover:bg-vp-brand-light'
+                                        : 'border border-vp-brand text-vp-brand hover:bg-vp-brand hover:text-white']"
                                :href="buttonHref"
-                               @click.prevent="handleCtaClick(product.name)"
-                            >
+                               @click.prevent="handleCtaClick(product.name)">
                                 {{ buttonText }}
                             </a>
-                            <button v-else
-                                    :class="['btn', 'w-100', 'btn-lg', product.featured ? 'btn-primary' : 'btn-outline-primary']"
-                                    @click="handleCtaClick(product.name)"
-                            >
+                            <Button v-else
+                                    class="w-full text-sm font-medium"
+                                    :class="product.featured ? 'bg-vp-brand text-white hover:bg-vp-brand-light'
+                                           : 'border border-vp-brand text-vp-brand hover:bg-vp-brand hover:text-white'"
+                                    @click="handleCtaClick(product.name)">
                                 {{ buttonText }}
-                            </button>
+                            </Button>
                         </div>
                     </div>
-                </div>
+                </Card>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-.card {
+.price-card {
     transition: all 0.3s ease-in-out;
 }
 
-.card:hover {
+.price-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
-.featured-plan {
-    transform: scale(1.05);
+.product-description {
+    min-height: 3rem;
 }
 </style>

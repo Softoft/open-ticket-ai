@@ -1,3 +1,10 @@
+# FILE_PATH: open_ticket_ai\src\ce\core\util\path_util.py
+"""Utilities for handling file paths within the project.
+
+This module provides helper functions for common path operations, particularly
+for locating important directories in the project structure.
+"""
+
 from pathlib import Path
 
 
@@ -17,8 +24,12 @@ def find_python_code_root_path(project_name: str = 'open_ticket_ai') -> Path:
     Raises:
         FileNotFoundError: If the project root directory cannot be found in any
             parent directories.
-    """
 
+    Example:
+        ```python
+        project_root = find_python_code_root_path("my_project")
+        ```
+    """
     start_path = Path(__file__).resolve()
     for parent in [start_path, *start_path.parents]:
         if parent.name == project_name:

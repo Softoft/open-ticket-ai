@@ -1,16 +1,19 @@
+# FILE_PATH: open_ticket_ai\src\ce\run\pipeline\pipe.py
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
+from pydantic import BaseModel
+
+from ...core.mixins.registry_providable_instance import Providable
 from .context import PipelineContext
-from ...core.mixins.registry_providable_instance import RegistryProvidableInstance
 
 
-class Pipe(RegistryProvidableInstance, ABC):
+class Pipe[InputDataT: BaseModel, OutputDataT: BaseModel](Providable, ABC):
     """Interface for all pipeline components.
 
     This abstract base class defines the common interface that all pipeline
-    components must implement. It inherits from `RegistryProvidableInstance`
+    components must implement. It inherits from `Providable`
     to enable automatic registration in a component registry and from `ABC`
     to enforce abstract method implementation.
 
@@ -18,11 +21,20 @@ class Pipe(RegistryProvidableInstance, ABC):
     data transformation logic within the pipeline.
 
     Attributes:
-        Inherits attributes from `RegistryProvidableInstance` for registry management.
+        Inherits attributes from `Providable` for registry management.
+        InputDataType (type[InputDataT]): The type of the input data model 
+            expected by this pipe component.
+        OutputDataType (type[OutputDataT]): The type of the output data model 
+            produced by this pipe component.
     """
-
+    InputDataType: type[InputDataT] = type[InputDataT]
+    """The type annotation for the input data model used in this pipe."""
+    
+    OutputDataType: type[OutputDataT] = type[OutputDataT]
+    """The type annotation for the output data model produced by this pipe."""
+    
     @abstractmethod
-    def process(self, context: PipelineContext) -> PipelineContext:
+    def process(self, context: PipelineContext[InputDataT]) -> PipelineContext[OutputDataT]:
         """Process a pipeline context object and return the modified context.
 
         This method defines the core processing logic for a pipeline component.

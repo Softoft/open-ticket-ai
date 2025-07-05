@@ -48,12 +48,12 @@ class Orchestrator:
         the given ticket. This is the core method for individual ticket processing.
 
         Args:
-            ticket_id: Unique identifier of the ticket to process
-            pipeline: Pipeline instance to execute
+            ticket_id: Unique identifier of the ticket to process.
+            pipeline: Pipeline instance to execute.
 
         Returns:
             PipelineContext: The execution context containing results and state
-                after pipeline execution
+                after pipeline execution.
         """
         return pipeline.execute(PipelineContext(ticket_id=ticket_id))
 
@@ -78,6 +78,10 @@ class Orchestrator:
         The scheduling uses the following configuration parameters:
         - interval: Numeric interval value
         - unit: Time unit (e.g., minutes, hours, days)
+
+        Note:
+        - Uses `schedule.every(interval).unit` pattern for scheduling
+        - Passes an empty ticket_id context during scheduled executions
         """
         self.build_pipelines()
         for pipeline_cfg in self.config.pipelines:

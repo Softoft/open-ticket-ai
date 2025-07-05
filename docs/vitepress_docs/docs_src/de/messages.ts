@@ -7,7 +7,7 @@ export default {
         subjectPlaceholder: 'Geben Sie den Betreff des Tickets ein',
         messageLabel: 'Nachricht',
         messagePlaceholder: 'Geben Sie die Nachricht des Tickets ein',
-        submitButtonText: 'Vorhersagen',
+        submitButtonText: 'Vorhersage starten',
         loadingText: 'Analysiere...',
         predictionError: 'Vorhersage fehlgeschlagen. Bitte versuchen Sie es später erneut.',
         resultTitle: 'Ergebnis der Vorhersage',

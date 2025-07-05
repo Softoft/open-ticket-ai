@@ -29,19 +29,24 @@ open_ticket_ai:
                 subject_field: "subject"
                 body_field: "body"
                 repeat_subject: 3
+                result_field: "subject_body_combined"
 
     ai_inference_services:
         -   id: "queue_ai_inference"
-            provider_key: "HFAIInferenceService"
+            provider_key: "HFLocalAIInferenceService"
             params:
+                input_field: "subject_body_combined"
                 hf_model: "open-ticket-ai/queue-classification-german-bert"
                 hf_token_env_var: "HUGGINGFACE_TOKEN"
+                result_field: "queue_classification"
 
         -   id: "priority_ai_inference"
-            provider_key: "HFAIInferenceService"
+            provider_key: "HFLocalAIInferenceService"
             params:
+                input_field: "subject_body_combined"
                 hf_model: "open-ticket-ai/priority-classification-german-bert"
                 hf_token_env_var: "HUGGINGFACE_TOKEN"
+                result_field: "priority_classification"
 
 
     modifiers:

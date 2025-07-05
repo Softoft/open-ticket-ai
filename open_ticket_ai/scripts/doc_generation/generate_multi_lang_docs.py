@@ -1,18 +1,63 @@
+"""Module for translating Markdown documentation files into multiple languages.
+
+This module provides functionality to asynchronously translate Markdown files using
+OpenAI's API. It supports translating entire directory structures while preserving
+file hierarchy and supports multiple target languages.
+
+The main class `Translator` handles:
+- Initialization with translation parameters
+- Text translation with automatic retries
+- File processing and output writing
+- Concurrent directory translation
+
+Example usage:
+    client = AsyncOpenAI(api_key="your_api_key")
+    translator = Translator(client, base_language="en")
+    asyncio.run(translator.translate_directory(
+        docs_dir=Path("docs"),
+        languages=["es", "fr", "de"],
+        model="gpt-4",
+        out_dir=Path("translated_docs")
+    ))
+
+Note:
+    The translation instruction prompt is read from 'translation_instruction.txt'
+    by default. This file should contain system instructions for the translation model.
+"""
 from __future__ import annotations
 
 import asyncio
 from pathlib import Path
 from typing import List
 
-from openai import AsyncOpenAI
 import tenacity
+from openai import AsyncOpenAI
 from tenacity import stop_after_attempt, wait_exponential
 
 
-# TODO update, dir structure changed, other languages arent in direrct super dir but instead are in parent parent / version / lang
 
 class Translator:
-    """Translate Markdown files using an injected OpenAI client."""
+    """Translates Markdown documentation files into multiple languages.
+
+    This class handles the translation of Markdown files using OpenAI's API. It supports
+    translating entire directory structures while preserving the file hierarchy and supports
+    multiple target languages.
+
+    Attributes:
+        client (AsyncOpenAI): An asynchronous OpenAI client instance for API interactions.
+        base_language (str): The source language of the documents (e.g., 'en').
+        translation_instruction (str): The system prompt instruction for translation.
+
+    Example:
+        client = AsyncOpenAI(api_key="your_api_key")
+        translator = Translator(client, base_language="en")
+        asyncio.run(translator.translate_directory(
+            docs_dir=Path("docs"),
+            languages=["es", "fr", "de"],
+            model="gpt-4",
+            out_dir=Path("translated_docs")
+        ))
+    """
 
     def __init__(
         self,
@@ -27,6 +72,10 @@ class Translator:
             base_language: Language code (e.g., 'en') representing the source language of documents.
             translation_file_path: Path to a file containing the translation instruction for the system prompt.
                 If not provided, defaults to "translation_instruction.txt" in the same directory as this module.
+
+        Raises:
+            FileNotFoundError: If the translation instruction file is not found.
+            OSError: If there is an error reading the translation instruction file.
         """
         if translation_file_path is None:
             translation_file_path = Path(__file__).parent / "translation_instruction.txt"
@@ -93,6 +142,10 @@ class Translator:
             languages: List of target language codes to translate into.
             model: OpenAI model identifier for translation.
             out_dir: Base output directory for translated files.
+
+        Raises:
+            tenacity.RetryError: If translation fails after multiple retries.
+            OSError: If there is an issue reading the source file or writing the translated file.
         """
         text = path.read_text(encoding="utf-8")
         relative = path.relative_to(root)
@@ -123,6 +176,10 @@ class Translator:
             languages: List of target language codes for translation.
             model: OpenAI model identifier for translation.
             out_dir: Base output directory for translated files.
+
+        Raises:
+            tenacity.RetryError: If translation of any file fails after retries.
+            OSError: If any file I/O operation fails during processing.
         """
         tasks = []
         for md_file in docs_dir.rglob("*.md"):

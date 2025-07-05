@@ -1,19 +1,19 @@
 <template>
-    <h2 class="mb-4 w-100 text-center text-body-emphasis">{{
-            t('otai_prediction_demo_component.title')
+    <h2 class="mb-4 w-full text-center text-vp-text">{{
+        t('otai_prediction_demo_component.title')
         }}</h2>
-    <div class="container my-3">
-        <div class="row justify-content-center">
-            <div class="col-md-12 col-lg-8">
+    <div class="my-3 mx-auto max-w-4xl">
+        <div class="flex justify-center">
+            <div class="w-full max-w-3xl">
 
                 <div class="mb-3">
-                    <label class="form-label fw-bold" for="demo-example-select">
+                    <label class="block mb-1 font-bold" for="demo-example-select">
                         {{ t('otai_prediction_demo_component.pickExampleText') }}
                     </label>
                     <select
                         id="demo-example-select"
                         v-model="selected"
-                        class="form-select"
+            class="block w-full rounded border border-vp-border p-2 bg-vp-bg"
                         @change="applyExample"
                     >
                         <option :value="-1" disabled>
@@ -26,55 +26,56 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-bold" for="demo-subject">{{
-                            t('otai_prediction_demo_component.subjectLabel')
+                    <label class="block mb-1 font-bold" for="demo-subject">{{
+                        t('otai_prediction_demo_component.subjectLabel')
                         }}</label>
                     <input
                         id="demo-subject"
                         v-model="subject"
                         :placeholder="t('otai_prediction_demo_component.subjectPlaceholder')"
-                        class="form-control"
+            class="block w-full rounded border border-vp-border p-2 bg-vp-bg"
                         type="text"
                     />
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-bold" for="demo-body">{{
-                            t('otai_prediction_demo_component.messageLabel')
+                    <label class="block mb-1 font-bold" for="demo-body">{{
+                        t('otai_prediction_demo_component.messageLabel')
                         }}</label>
                     <textarea
                         id="demo-body"
                         v-model="body"
                         :placeholder="t('otai_prediction_demo_component.messagePlaceholder')"
-                        class="form-control"
+            class="block w-full rounded border border-vp-border p-2 bg-vp-bg"
                         rows="4"
                     ></textarea>
                 </div>
 
-                <button
+                <Button
                     :disabled="loading"
-                    class="btn btn-lg btn-primary mb-4 mt-1"
-                    type="button"
+                    class="px-4 py-2 mt-1 mb-4 bg-vp-brand text-white hover:bg-vp-brand-light disabled:opacity-50"
                     @click="predict"
                 >
                     <span v-if="loading" aria-hidden="true"
-                          class="spinner-border spinner-border-sm me-1"></span>
+                          class="animate-spin h-4 w-4 mr-1 border-2 border-white border-t-transparent rounded-full">
+
+                    </span>
                     <span v-if="loading"
                           role="status">{{ t('otai_prediction_demo_component.loadingText') }}</span>
                     <span v-else
                           class="text-white">{{ t('otai_prediction_demo_component.submitButtonText') }}</span>
-                </button>
+                </Button>
 
-                <div v-if="errorMessage" class="alert alert-danger" role="alert">
+                <div v-if="errorMessage" class="mt-4 rounded bg-red-100 p-3 text-red-700" role="alert">
                     {{ errorMessage }}
                 </div>
 
                 <div v-if="queueResult && prioResult" class="mt-4">
-                    <h3 class="fw-bold text-body-emphasis mb-3">
+        <h3 class="mb-3 font-bold text-vp-text">
                         {{ t('otai_prediction_demo_component.resultTitle') }}</h3>
-                    <div class="table-responsive">
-                        <table class="table table-dark table-hover align-middle">
-                            <thead class="table-light">
+                    <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-vp-border">
+                <thead class="bg-vp-bg-soft">
                             <tr>
                                 <th scope="col">
                                     {{ t('otai_prediction_demo_component.typeColumnHeader') }}
@@ -95,7 +96,8 @@
                                 <td>{{ queueResult[0].label }}</td>
                                 <td class="text-center">
                                     <span
-                                        :class="['badge', 'fs-6', confidenceBadge(queueResult[0].score)]">
+                                        :class="['inline-block px-2 py-1 rounded-full text-white text-sm',
+                                         confidenceBadge(queueResult[0].score)]">
                                         {{ formatScore(queueResult[0].score) }}
                                     </span>
                                 </td>
@@ -107,7 +109,8 @@
                                 <td>{{ prioResult[0].label }}</td>
                                 <td class="text-center">
                                     <span
-                                        :class="['badge', 'fs-6', confidenceBadge(prioResult[0].score)]">
+                                        :class="['inline-block px-2 py-1 rounded-full text-white text-sm',
+                                         confidenceBadge(prioResult[0].score)]">
                                         {{ formatScore(prioResult[0].score) }}
                                     </span>
                                 </td>
@@ -125,6 +128,7 @@
 <script lang="ts" setup>
 
 import {ref} from 'vue'
+import Button from './core/Button.vue'
 import {examples} from "./demoExamples";
 import {useI18n} from 'vue-i18n'
 
@@ -144,7 +148,6 @@ async function query(endpoint: string, payload: any) {
     return res.json()
 }
 
-// your real endpoints here
 const QUEUE_EP = 'https://uwlzdugezcmrk5vk.eu-west-1.aws.endpoints.huggingface.cloud'
 const PRIORITY_EP = 'https://rxnypflnfgdbgoxr.us-east-1.aws.endpoints.huggingface.cloud'
 
@@ -205,12 +208,11 @@ async function predict() {
 }
 
 function confidenceBadge(score: number): string {
-    // ... (function is unchanged)
     const pct = score * 100;
-    if (pct > 90) return 'bg-success';
-    if (pct > 80) return 'bg-info';
-    if (pct > 50) return 'bg-warning text-dark';
-    return 'bg-danger';
+    if (pct > 90) return 'bg-green-600';
+    if (pct > 80) return 'bg-vp-brand';
+    if (pct > 50) return 'bg-yellow-400 text-black';
+    return 'bg-red-600';
 }
 
 /**

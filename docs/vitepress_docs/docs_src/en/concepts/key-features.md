@@ -1,8 +1,9 @@
 ---
+description: Explore the features of Open Ticket AI, an on-premise solution for automated
+  ticket classification. Automatically predict queues and priorities, integrate via
+  a REST API, and maintain full data privacy with multi-language support.
 title: Features of Open Ticket AI
-description: Explore the capabilities of Open Ticket AI.
 ---
-
 # Features
 
 Open Ticket AI is designed to automate ticket classification while keeping full control over your data. The following sections provide an overview of the core capabilities that help streamline customer service workflows.

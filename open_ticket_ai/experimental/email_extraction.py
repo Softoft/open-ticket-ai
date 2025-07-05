@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\experimental\email_extraction.py
 """This module provides text cleaning and email signature removal utilities for German text.
 
 It includes functions to:

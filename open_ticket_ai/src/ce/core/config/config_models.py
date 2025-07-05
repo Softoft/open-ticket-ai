@@ -1,13 +1,48 @@
+# FILE_PATH: open_ticket_ai\src\ce\core\config\config_models.py
 # In open_ticket_ai/src/ce/core/config/config_models.py
 
 from typing import Any, Self
 
 from pydantic import BaseModel, Field, model_validator
 
-from open_ticket_ai.src.ce.core.mixins.registry_instance_config import RegistryInstanceConfig
+
+class ProvidableConfig(BaseModel):
+    """Base configuration for registry instances.
+
+    This class defines the core configuration structure required for initializing
+    and managing registry instances. Each registry instance must have a unique
+    identifier, a provider key, and can include additional provider-specific
+    parameters.
+
+    Attributes:
+        id: A unique string identifier for the registry instance. Must be at least
+            1 character long.
+        params: A dictionary of additional configuration parameters specific to the
+                registry provider. Defaults to an empty dictionary.
+        provider_key: A string key identifying the provider implementation for this
+                      registry instance. Must be at least 1 character long.
+
+    Example:
+        ```python
+        config = ProvidableConfig(
+            id="docker-registry-1",
+            provider_key="dockerhub",
+        )
+        ```
+    """
+    id: str = Field(..., min_length=1, description="The unique identifier for the registry instance.")
+    params: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Additional parameters for the registry instance configuration.",
+    )
+    provider_key: str = Field(
+        ...,
+        min_length=1,
+        description="The key identifying the provider for the registry instance.",
+    )
 
 
-class SystemConfig(RegistryInstanceConfig):
+class SystemConfig(ProvidableConfig):
     """Configuration for the ticket system adapter.
 
     Attributes:
@@ -16,20 +51,36 @@ class SystemConfig(RegistryInstanceConfig):
     params: dict[str, Any] = Field(default_factory=dict)
 
 
-class FetcherConfig(RegistryInstanceConfig):
-    """Configuration for data fetchers."""
+class FetcherConfig(ProvidableConfig):
+    """Configuration for data fetchers.
+
+    This class represents the configuration for a data fetcher component. It inherits all attributes
+    from `ProvidableConfig`.
+    """
 
 
-class PreparerConfig(RegistryInstanceConfig):
-    """Configuration for data preparers."""
+class PreparerConfig(ProvidableConfig):
+    """Configuration for data preparers.
+
+    This class represents the configuration for a data preparer component. It inherits all attributes
+    from `ProvidableConfig`.
+    """
 
 
-class ModifierConfig(RegistryInstanceConfig):
-    """Configuration for modifiers."""
+class ModifierConfig(ProvidableConfig):
+    """Configuration for modifiers.
+
+    This class represents the configuration for a modifier component. It inherits all attributes
+    from `ProvidableConfig`.
+    """
 
 
-class AIInferenceServiceConfig(RegistryInstanceConfig):
-    """Configuration for AI inference services."""
+class AIInferenceServiceConfig(ProvidableConfig):
+    """Configuration for AI inference services.
+
+    This class represents the configuration for an AI inference service component. It inherits all attributes
+    from `ProvidableConfig`.
+    """
 
 
 class SchedulerConfig(BaseModel):
@@ -44,7 +95,7 @@ class SchedulerConfig(BaseModel):
 
 
 # NEW: This class replaces AttributePredictorConfig
-class PipelineConfig(RegistryInstanceConfig):
+class PipelineConfig(ProvidableConfig):
     """Configuration for a single pipeline workflow.
 
     Attributes:
@@ -57,7 +108,7 @@ class PipelineConfig(RegistryInstanceConfig):
     pipes: list[str] = Field(
         ...,
         min_length=1,
-        description="Ordered list of all pipe component IDs to execute, starting with a fetcher."
+        description="Ordered list of all pipe component IDs to execute, starting with a fetcher.",
     )
 
     def validate_pipe_ids_are_registered(self, all_pipe_ids: set[str]) -> None:
@@ -72,7 +123,7 @@ class PipelineConfig(RegistryInstanceConfig):
         for pipe_id in self.pipes:
             if pipe_id not in all_pipe_ids:
                 raise ValueError(
-                    f"Pipeline '{self.id}' references unknown pipe component '{pipe_id}'"
+                    f"Pipeline '{self.id}' references unknown pipe component '{pipe_id}'",
                 )
 
 
@@ -115,14 +166,14 @@ class OpenTicketAIConfig(BaseModel):
             pipeline.validate_pipe_ids_are_registered(all_pipe_ids)
         return self
 
-    def get_all_register_instance_configs(self) -> list[RegistryInstanceConfig]:
+    def get_all_register_instance_configs(self) -> list[ProvidableConfig]:
         """Return all registered instances in the configuration.
 
         The returned list includes all instances of fetchers, data preparers, AI inference services,
         modifiers, and pipelines.
 
         Returns:
-            list[RegistryInstanceConfig]: A list of all registered instance configurations.
+            list[ProvidableConfig]: A list of all registered instance configurations.
         """
         return (
             self.fetchers +
@@ -152,7 +203,7 @@ def load_config(path: str) -> OpenTicketAIConfig:
     """
     import yaml
 
-    with open(path, "r", encoding="utf-8") as fh:
+    with open(path, encoding="utf-8") as fh:
         data = yaml.safe_load(fh)
 
     if "open_ticket_ai" not in data:

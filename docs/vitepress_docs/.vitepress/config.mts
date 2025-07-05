@@ -1,10 +1,10 @@
 import {generateNavbar} from './navbarUtil.js'
 import {defineConfig} from "vitepress";
+import {generateMultiSidebar} from "./siedebarUtil";
 
 var __VUE_PROD_DEVTOOLS__ = false
 console.log(__VUE_PROD_DEVTOOLS__)
 export default defineConfig({
-    srcDir: `docs-src`,
     title: 'AI Ticket Classification',
     srcDir: './docs_src',
     head: [
@@ -37,7 +37,8 @@ export default defineConfig({
             themeConfig: {
                 nav: [
                     ...generateNavbar('en'),
-                ]
+                ],
+                sidebar: generateMultiSidebar("en")
             }
         },
         de: {
@@ -47,7 +48,8 @@ export default defineConfig({
             themeConfig: {
                 nav: [
                     ...generateNavbar('de'),
-                ]
+                ],
+                sidebar: generateMultiSidebar("de")
             }
         }
     },

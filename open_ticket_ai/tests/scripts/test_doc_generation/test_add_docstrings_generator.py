@@ -1,7 +1,14 @@
-import asyncio
-from types import SimpleNamespace, ModuleType
-from pathlib import Path
+"""Unit tests for the DocstringGenerator functionality.
+
+This module contains tests that verify the behavior of the DocstringGenerator class,
+particularly its interaction with the OpenAI API and its ability to generate and insert
+docstrings into Python code.
+
+Note: This test module uses a mock OpenAI client to avoid making real API calls during testing.
+"""
 import sys
+from pathlib import Path
+from types import ModuleType, SimpleNamespace
 
 # Provide a dummy openai module if it's not installed
 if "openai" not in sys.modules:
@@ -9,12 +16,10 @@ if "openai" not in sys.modules:
     dummy.AsyncOpenAI = object
     sys.modules["openai"] = dummy
 
-from open_ticket_ai.scripts.doc_generation.add_docstrings import DocstringGenerator
-
 
 class MockClient:
     """Mock client for testing OpenAI API interactions.
-    
+
     This class simulates the behavior of an OpenAI client by capturing API call arguments
     and returning predefined responses. It's designed specifically for testing the
     DocstringGenerator functionality.
@@ -32,10 +37,10 @@ class MockClient:
         """
         async def create(**kwargs):
             """Mock API call that captures arguments and returns a fixed response.
-            
+
             Args:
                 **kwargs: Arbitrary keyword arguments representing the API request.
-            
+
             Returns:
                 SimpleNamespace: Simulated API response containing the predefined content.
             """

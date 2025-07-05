@@ -5,20 +5,35 @@
   "scripts": {
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
-    "docs:preview": "vitepress preview"
+    "docs:preview": "vitepress preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@chromatic-com/storybook": "^4.0.1",
+    "@storybook/addon-a11y": "^9.0.15",
+    "@storybook/addon-docs": "^9.0.15",
+    "@storybook/addon-onboarding": "^9.0.15",
+    "@storybook/addon-vitest": "^9.0.15",
+    "@storybook/vue3-vite": "^9.0.15",
     "@types/node": "^24.0.4",
+    "@vitest/browser": "^3.2.4",
+    "@vitest/coverage-v8": "^3.2.4",
+    "autoprefixer": "^10.4.17",
+    "playwright": "^1.53.2",
+    "postcss": "^8.4.38",
+    "storybook": "^9.0.15",
+    "tailwindcss": "^3.4.4",
     "vitepress": "^1.6.3",
+    "vitest": "^3.2.4",
     "vue": "^3.4.27"
   },
   "dependencies": {
-    "bootstrap": "^5.3.7",
-    "sass": "^1.89.2",
-    "vue-i18n": "^9.9.1"
+    "markdown-it": "^14.1.0",
+    "vue-i18n": "^11.1.2"
   }
 }

@@ -26,7 +26,7 @@ class RootConfig(BaseModel):
     It is designed to be used for generating JSON schema representations of the configuration.
 
     Attributes:
-        open_ticket_ai (OpenTicketAIConfig): The main configuration object containing all
+        `open_ticket_ai` (`OpenTicketAIConfig`): The main configuration object containing all
             settings and parameters for the OpenTicketAI system.
     """
 

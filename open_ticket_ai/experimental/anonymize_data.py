@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\experimental\anonymize_data.py
 # Installationen und Modelldownload (falls noch nicht geschehen)
 """Module for anonymizing personally identifiable information (PII) in text.
 
@@ -7,7 +8,10 @@ the Faker library for generating replacement data.
 
 Example:
     To anonymize a text string:
-        anonymized = anonymize_text("Original text with PII")
+
+    ```python
+    anonymized = anonymize_text("Original text with PII")
+    ```
 
 Note:
     Uses German locale for generating fake data and models optimized for German text.
@@ -15,17 +19,20 @@ Note:
 import re
 
 import phonenumbers
-import spacy
 from faker import Faker
 
+try:
+    import spacy
 
-# spaCy-German-Modell und Faker-Generator mit deutscher Lokalisierung
-nlp = spacy.load("de_core_news_sm")
+    nlp = spacy.load("de_core_news_sm")
+except Exception:  # pragma: no cover - optional dependency
+    nlp = None
+
 fake = Faker("de_DE")
 
+
 def anonymize_text(text):
-    """
-    Anonymizes sensitive information (PII) in the input text by replacing it with fake data.
+    """Anonymizes sensitive information (PII) in the input text by replacing it with fake data.
 
     This function identifies and replaces the following types of personally identifiable information (PII):
       - Person names (PER), organization names (ORG), and locations (LOC) using spaCy's named entity recognition
@@ -50,6 +57,9 @@ def anonymize_text(text):
     Note:
         Uses Faker with German localization for generating replacement data.
     """
+    if nlp is None:
+        return text
+
     doc = nlp(text)
     new_text = text
     # Ersetzungen für erkannte Named Entities (von hinten nach vorn, um Indexprobleme zu vermeiden)
@@ -68,11 +78,10 @@ def anonymize_text(text):
     new_text = re.sub(r'\b[\w.+-]+@[\w-]+\.\w+\b', lambda m: fake.ascii_email(), new_text)
     # Telefonnummern erkennen und ersetzen
     def replace_phone(match):
-        """
-        Replaces a matched phone number with a fake German phone number if valid.
+        """Replaces a matched phone number with a fake German phone number if valid.
 
         Args:
-            match: A regex match object containing the phone number string.
+            match (re.Match): A regex match object containing the phone number string.
 
         Returns:
             str: Fake phone number if input is valid, original string otherwise.

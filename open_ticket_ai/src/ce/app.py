@@ -14,7 +14,7 @@ from rich.console import Console
 
 from open_ticket_ai.src.ce.core.config.config_models import OpenTicketAIConfig
 from open_ticket_ai.src.ce.core.config.config_validator import OpenTicketAIConfigValidator
-from open_ticket_ai.src.ce.run.orchestrator import Orchestrator
+from open_ticket_ai.src.ce.run.managers.orchestrator import Orchestrator
 
 console = Console()
 """Global console instance for rich text output throughout the application."""
@@ -74,6 +74,13 @@ class App:
         After setup, the method enters a continuous loop that:
         - Checks for pending scheduled jobs every second
         - Executes any pending jobs found
+
+        Note:
+            This method runs indefinitely until interrupted by the user or an unhandled exception.
+
+        Raises:
+            KeyboardInterrupt: If the program is interrupted by the user (e.g., via Ctrl+C).
+            Exception: Any unhandled exception occurring during the execution of a scheduled job.
         """
         try:
             self.validator.validate_registry()

@@ -22,12 +22,14 @@ dependencies = [
     "schedule~=1.2.2",
     "requests~=2.32.4",
     "pyfiglet>=1.0.3",
-    "otobo>=1.0.1",
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.6.14",
     "mkdocstrings[python]>=0.29.1",
     "mkdocs-gen-files>=0.5.0",
     "docstring-parser>=0.16",
+    "otobo==1.0.1",
+    "openai>=1.93.0",
+    "tenacity>=9.1.2",
 ]
 
 [project.optional-dependencies]
@@ -40,7 +42,7 @@ dev = [
 include = ["open_ticket_ai*"]
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]

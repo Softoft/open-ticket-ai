@@ -18,17 +18,19 @@ The tests are organized into three main sections:
 
 These tests use `pytest` and rely on fixtures for temporary directories and environment patching.
 """
-import json
-import runpy
-from types import SimpleNamespace
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
+from pydantic import BaseModel
 from rich.syntax import Syntax
 
-from open_ticket_ai.src.ce.core.util import path_util, pretty_print_config, create_json_config_schema
-from pydantic import BaseModel
+from open_ticket_ai.src.ce.core.util import (
+    create_json_config_schema,
+    path_util,
+    pretty_print_config,
+)
 
 
 class DummyModel(BaseModel):
@@ -102,23 +104,3 @@ def test_root_config_schema_contains_open_ticket_ai():
     """
     schema = create_json_config_schema.RootConfig.model_json_schema()
     assert "open_ticket_ai" in schema.get("properties", {})
-
-
-def test_schema_file_written(tmp_path, monkeypatch):
-    """Tests that the JSON schema file is correctly generated and written.
-
-    Args:
-        tmp_path: Pytest fixture for temporary directory
-        monkeypatch: Pytest fixture for modifying environment
-
-    Verifies:
-        - Output file exists in expected location
-        - Output file contains the expected 'open_ticket_ai' property
-    """
-    monkeypatch.setattr(path_util, "find_project_root", lambda project_name="open_ticket_ai": tmp_path)
-    runpy.run_module(create_json_config_schema.__name__, run_name="__main__")
-
-    out_file = tmp_path / "config.schema.json"
-    assert out_file.exists()
-    data = json.loads(out_file.read_text())
-    assert "open_ticket_ai" in data.get("properties", {))

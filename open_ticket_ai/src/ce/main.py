@@ -1,3 +1,4 @@
+# FILE_PATH: open_ticket_ai\src\ce\main.py
 """Open Ticket AI CLI entry point.
 
 This module provides the command-line interface for the Open Ticket AI application.
@@ -13,6 +14,10 @@ from open_ticket_ai.src.ce.app import App
 from open_ticket_ai.src.ce.core.dependency_injection.container import DIContainer
 
 cli = typer.Typer()
+"""The main Typer CLI application instance.
+
+This instance is used to register commands and callbacks for the command-line interface.
+"""
 
 @cli.callback()
 def main(
@@ -22,7 +27,7 @@ def main(
     """Configure logging based on CLI options.
 
     This function sets the logging level for the application based on the provided command-line flags.
-    It supports two levels of verbosity: 
+    It supports two levels of verbosity:
     - `--verbose` for INFO level logging
     - `--debug` for DEBUG level logging
 
@@ -52,15 +57,15 @@ def main(
 @cli.command()
 def start():
     """Initialize the container and start the application.
-    
+
     This command performs the following actions:
     1. Configures the dependency injection container
     2. Retrieves the main application instance from the container
     3. Runs the application
-    4. Displays a stylized startup banner using pyfiglet
-    
+    4. Displays a stylized startup banner using `pyfiglet`
+
     The application follows a dependency injection pattern where all required
-    dependencies are resolved through the DIContainer.
+    dependencies are resolved through the `DIContainer`.
     """
     logger = logging.getLogger(__name__)
     f = Figlet(font="slant")

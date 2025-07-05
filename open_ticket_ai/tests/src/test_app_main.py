@@ -9,26 +9,26 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from open_ticket_ai.src.ce.app import App, console
-from open_ticket_ai.src.ce import main as main_module
 import open_ticket_ai.src.ce.app as app_module
+from open_ticket_ai.src.ce import main as main_module
+from open_ticket_ai.src.ce.app import App, console
 
 
 class TestAppRun:
-    """Test suite for the App.run() method functionality."""
+    """Test suite for the `App.run()` method functionality."""
 
     def test_run_validation_passes(self, monkeypatch):
-        """Tests that App.run() executes validation and scheduling when validation passes.
+        """Tests that `App.run()` executes validation and scheduling when validation passes.
 
-        This test mocks the scheduler and console to simulate a KeyboardInterrupt to break the loop.
+        Mocks the scheduler and console to simulate a `KeyboardInterrupt` to break the loop.
 
-        Ensures:
-            - Validator is called exactly once.
-            - Orchestrator sets schedules exactly once.
-            - Console output occurs as expected.
+        Verifies:
+            - The validator is called exactly once
+            - The orchestrator sets schedules exactly once
+            - The console output occurs as expected
 
         Args:
-            monkeypatch: pytest fixture for monkeypatching.
+            monkeypatch (`pytest.MonkeyPatch`): Fixture for modifying runtime behavior.
         """
         validator = MagicMock()
         orchestrator = MagicMock()
@@ -50,17 +50,17 @@ class TestAppRun:
         print_mock.assert_called_once()
 
     def test_run_validation_error_logs(self, monkeypatch, caplog):
-        """Tests that App.run() logs validation errors appropriately.
+        """Tests that `App.run()` logs validation errors appropriately.
 
-        This test mocks the validator to raise an exception and checks the logs.
+        Mocks the validator to raise an exception and checks the logs.
 
-        Ensures:
-            - Validation errors are logged at ERROR level.
-            - Orchestrator still attempts to set schedules after validation failure.
+        Verifies:
+            - Validation errors are logged at `ERROR` level
+            - Orchestrator still attempts to set schedules after validation failure
 
         Args:
-            monkeypatch: pytest fixture for monkeypatching.
-            caplog: pytest fixture for capturing logs.
+            monkeypatch (`pytest.MonkeyPatch`): Fixture for modifying runtime behavior.
+            caplog (`pytest.LogCaptureFixture`): Fixture for capturing log messages.
         """
         validator = MagicMock()
         validator.validate_registry.side_effect = ValueError("bad config")
@@ -81,16 +81,15 @@ class TestAppRun:
 
 
 class TestMainModule:
-    """Test suite for main module functionality."""
+    """Test suite for `main` module functionality."""
 
     def test_main_sets_logging_level(self, monkeypatch):
-        """Tests that main() correctly sets logging verbosity levels.
+        """Tests that `main()` correctly sets logging verbosity levels.
 
-        Verifies:
-            - Logging level is set to INFO when verbose=True.
+        Verifies that the logging level is set to `INFO` when `verbose=True`.
 
         Args:
-            monkeypatch: pytest fixture for monkeypatching.
+            monkeypatch (`pytest.MonkeyPatch`): Fixture for modifying runtime behavior.
         """
         basic_cfg = MagicMock()
         monkeypatch.setattr(main_module.logging, "basicConfig", basic_cfg)
@@ -102,14 +101,14 @@ class TestMainModule:
     def test_start_creates_container_and_runs_app(self, monkeypatch, capsys):
         """Tests the full application startup sequence.
 
-        Ensures:
-            - Dependency container is initialized.
-            - App instance is retrieved and executed.
-            - Expected console output (figlet art) is present.
+        Verifies:
+            - `DIContainer` dependency container is initialized
+            - `App` instance is retrieved and executed
+            - Expected console output (`Figlet` art) is present
 
         Args:
-            monkeypatch: pytest fixture for monkeypatching.
-            capsys: pytest fixture for capturing stdout and stderr.
+            monkeypatch (`pytest.MonkeyPatch`): Fixture for modifying runtime behavior.
+            capsys (`pytest.CaptureFixture`): Fixture for capturing stdout/stderr.
         """
         app_mock = MagicMock()
         container_mock = MagicMock(get=MagicMock(return_value=app_mock))

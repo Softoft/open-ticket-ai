@@ -1,29 +1,28 @@
 ---
-title: Open Ticket AI installieren
-description: Schritt-für-Schritt-Anleitung zur Installation von Open Ticket AI.
+description: Lernen Sie mit dieser Schritt-für-Schritt-Anleitung, wie Sie Open Ticket AI mit Docker Compose installieren. Folgen Sie den Anweisungen, um das Repository zu klonen, eine Konfiguration zu erstellen und die Anwendung bereitzustellen.
+title: Installation von Open Ticket AI
 ---
-
 # Installation
 
-Befolgen Sie diese Schritte, um Open Ticket AI zu installieren:
+Die empfohlene Methode zur Bereitstellung von Open Ticket AI ist über Docker Compose.
 
-1.  **Das Repository klonen**
-    ```bash
-    git clone https://github.com/your-org/open-ticket-ai.git
-    cd open-ticket-ai
-    ```
-
-2.  **Eine `config.yml` erstellen**
-    Details zum Einrichten dieser Datei finden Sie in der Dokumentation zur.
-
-3.  **Mit Docker Compose starten**
-    Dieser Befehl erstellt die notwendigen Docker-Images und startet die Anwendungsdienste im Detached-Modus.
-    ```bash
-    docker-compose up -d --build
-    ```
-
-4.  **Logs überwachen**
-    Sie können die Logs der laufenden Dienste überwachen, um sicherzustellen, dass alles korrekt startet.
-    ```bash
-    docker-compose logs -f
-    ```
+1. **Stellen Sie sicher, dass Docker und Docker Compose auf Ihrem Server installiert sind**.
+2. **Klonen Sie das Repository**
+   ```bash
+   git clone https://github.com/your-org/open-ticket-ai.git
+   cd open-ticket-ai
+   ```
+3. **Erstellen Sie eine Konfiguration**
+   Kopieren Sie die Beispielkonfiguration und passen Sie sie an Ihre Umgebung an:
+   ```bash
+   cp docs/original_source/_config_examples/queue_priority_local_config.yml config.yml
+   ```
+4. **Starten Sie die Dienste**
+   Erstellen und starten Sie die Container im Hintergrund:
+   ```bash
+   docker-compose up -d --build
+   ```
+5. **Überwachen Sie die Protokolle (optional)**
+   ```bash
+   docker-compose logs -f
+   ```
