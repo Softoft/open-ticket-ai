@@ -29,7 +29,7 @@ const colorClasses = computed(() => {
     case 'danger':
       return 'bg-pink-800/20 border-pink-500 text-pink-400'
     default:
-      return 'bg-electric-teal/10 border-electric-teal text-electric-teal'
+      return 'bg-vp-brand/10 border-vp-brand text-vp-brand'
   }
 })
 

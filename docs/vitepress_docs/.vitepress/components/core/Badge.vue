@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 const typeClass = computed(() => {
   switch (props.type) {
     case 'primary':
-      return 'bg-electric-teal text-black'
+      return 'bg-vp-brand text-white'
     case 'success':
       return 'bg-green-600 text-black'
     case 'warning':
@@ -26,7 +26,7 @@ const typeClass = computed(() => {
     case 'danger':
       return 'bg-pink-600 text-white'
     default:
-      return 'bg-slate-700 text-white'
+      return 'bg-[var(--vp-c-bg-soft)] text-[var(--vp-c-text-1)]'
   }
 })
 </script>

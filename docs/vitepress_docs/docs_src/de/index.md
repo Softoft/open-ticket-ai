@@ -68,7 +68,7 @@ layout: home
 <div class="text-center mt-8">
   <p class="text-lg font-semibold">Interessiert an unseren Dienstleistungen?</p>
   <p class="text-gray-600">Kontaktieren Sie uns für ein persönliches Angebot.</p>
-  <a href="mailto:sales@softoft.de" class="mt-4 inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition-colors">
+  <a href="mailto:sales@softoft.de" class="mt-4 inline-block bg-vp-brand text-white px-6 py-3 rounded hover:bg-vp-brand-light transition-colors">
     Senden Sie uns eine E-Mail an sales@softoft.de
   </a>
 </div>

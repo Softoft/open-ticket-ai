@@ -54,14 +54,14 @@ const handleCtaClick = (productName: string) => {
             >
                 <Card
                     :class="['price-card h-full rounded-lg shadow-sm py-3',
-                             { 'border-blue-600 border-2': product.featured }]">
+                             { 'border-vp-brand border-2': product.featured }]">
                     <div class="flex flex-col px-2 xl:px-3 py-0">
                         <h3 class="font-bold">{{ product.name }}</h3>
-                        <p class="text-gray-500 product-description">{{ product.description }}</p>
+                        <p class="text-vp-text-2 product-description">{{ product.description }}</p>
 
                         <div class="my-2">
                             <span class="text-3xl font-bold">${{ product.price }}</span>
-                            <span v-if="product.pricePeriod" class="text-gray-500"> / {{
+                            <span v-if="product.pricePeriod" class="text-vp-text-2"> / {{
                                     product.pricePeriod
                                 }}</span>
                         </div>
@@ -74,7 +74,7 @@ const handleCtaClick = (productName: string) => {
                                 :key="fIndex"
                                 class="flex items-center mb-3"
                             >
-                                <i :class="['fas', feature.icon, 'mr-3', 'text-blue-600']"></i>
+                                <i :class="['fas', feature.icon, 'mr-3', 'text-vp-brand']"></i>
                                 <span>{{ feature.text }}</span>
                             </li>
                         </ul>
@@ -82,16 +82,16 @@ const handleCtaClick = (productName: string) => {
                         <div class="mt-auto">
                             <a v-if="buttonHref"
                                :class="['w-full text-center px-4 py-2 rounded text-sm font-medium',
-                                        product.featured ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                        : 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white']"
+                                        product.featured ? 'bg-vp-brand text-white hover:bg-vp-brand-light'
+                                        : 'border border-vp-brand text-vp-brand hover:bg-vp-brand hover:text-white']"
                                :href="buttonHref"
                                @click.prevent="handleCtaClick(product.name)">
                                 {{ buttonText }}
                             </a>
                             <Button v-else
                                     class="w-full text-sm font-medium"
-                                    :class="product.featured ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                           : 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'"
+                                    :class="product.featured ? 'bg-vp-brand text-white hover:bg-vp-brand-light'
+                                           : 'border border-vp-brand text-vp-brand hover:bg-vp-brand hover:text-white'"
                                     @click="handleCtaClick(product.name)">
                                 {{ buttonText }}
                             </Button>

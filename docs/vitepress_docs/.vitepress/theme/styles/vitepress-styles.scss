@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom component tweaks to better match the VitePress theme */
+.VPHomeHero .VPImage {
+  padding: 3rem !important;
+}
+
+.VPFeature .VPImage {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: clamp(40px, 5vw, 60px);
+  height: clamp(40px, 5vw, 60px);
+  object-fit: contain;
+}
+
+a {
+  color: var(--vp-c-brand-1);
+  text-decoration: none !important;
+  transition: color 0.25s;
+}
+
+a:hover {
+  color: var(--vp-c-brand-2);
+}

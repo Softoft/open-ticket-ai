@@ -1,5 +1,5 @@
 <template>
-    <h2 class="mb-4 w-full text-center text-gray-800 dark:text-gray-200">{{
+    <h2 class="mb-4 w-full text-center text-vp-text">{{
         t('otai_prediction_demo_component.title')
         }}</h2>
     <div class="my-3 mx-auto max-w-4xl">
@@ -13,7 +13,7 @@
                     <select
                         id="demo-example-select"
                         v-model="selected"
-                        class="block w-full rounded border border-gray-300 p-2 dark:bg-gray-800 dark:border-gray-700"
+            class="block w-full rounded border border-vp-border p-2 bg-vp-bg"
                         @change="applyExample"
                     >
                         <option :value="-1" disabled>
@@ -33,7 +33,7 @@
                         id="demo-subject"
                         v-model="subject"
                         :placeholder="t('otai_prediction_demo_component.subjectPlaceholder')"
-                        class="block w-full rounded border border-gray-300 p-2 dark:bg-gray-800 dark:border-gray-700"
+            class="block w-full rounded border border-vp-border p-2 bg-vp-bg"
                         type="text"
                     />
                 </div>
@@ -46,14 +46,14 @@
                         id="demo-body"
                         v-model="body"
                         :placeholder="t('otai_prediction_demo_component.messagePlaceholder')"
-                        class="block w-full rounded border border-gray-300 p-2 dark:bg-gray-800 dark:border-gray-700"
+            class="block w-full rounded border border-vp-border p-2 bg-vp-bg"
                         rows="4"
                     ></textarea>
                 </div>
 
                 <Button
                     :disabled="loading"
-                    class="px-4 py-2 mt-1 mb-4 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+                    class="px-4 py-2 mt-1 mb-4 bg-vp-brand text-white hover:bg-vp-brand-light disabled:opacity-50"
                     @click="predict"
                 >
                     <span v-if="loading" aria-hidden="true"
@@ -71,11 +71,11 @@
                 </div>
 
                 <div v-if="queueResult && prioResult" class="mt-4">
-                    <h3 class="mb-3 font-bold text-gray-800 dark:text-gray-200">
+        <h3 class="mb-3 font-bold text-vp-text">
                         {{ t('otai_prediction_demo_component.resultTitle') }}</h3>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
-                            <thead class="bg-gray-100 dark:bg-gray-700">
+            <table class="min-w-full divide-y divide-vp-border">
+                <thead class="bg-vp-bg-soft">
                             <tr>
                                 <th scope="col">
                                     {{ t('otai_prediction_demo_component.typeColumnHeader') }}
@@ -210,7 +210,7 @@ async function predict() {
 function confidenceBadge(score: number): string {
     const pct = score * 100;
     if (pct > 90) return 'bg-green-600';
-    if (pct > 80) return 'bg-blue-600';
+    if (pct > 80) return 'bg-vp-brand';
     if (pct > 50) return 'bg-yellow-400 text-black';
     return 'bg-red-600';
 }

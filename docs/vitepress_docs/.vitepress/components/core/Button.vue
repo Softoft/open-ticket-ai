@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const variantClasses = computed(() => {
   return props.variant === 'secondary'
-    ? 'border border-slate-700 text-slate-300 hover:bg-slate-900 px-4 py-2'
-    : 'bg-electric-teal text-black hover:brightness-110 px-4 py-2'
+    ? 'border border-vp-border text-vp-text hover:bg-vp-bg-soft px-4 py-2'
+    : 'bg-vp-brand text-white hover:bg-vp-brand-light px-4 py-2'
 })
 </script>
