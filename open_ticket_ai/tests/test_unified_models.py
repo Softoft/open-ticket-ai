@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from open_ticket_ai.src.ce.ticket_system_integration.unified_models import (
+from open_ticket_ai.src.ticket_system_integration.unified_models import (
     UnifiedUser,
     UnifiedQueue,
     UnifiedPriority,

@@ -10,9 +10,9 @@ from pathspec import PathSpec
 from pathspec.patterns import GitWildMatchPattern
 from pathspec.util import normalize_file
 from rich.tree import Tree
-from rich import console, print
+from rich import print
 from rich.console import Console
-from open_ticket_ai.src.ce.core.util.path_util import find_python_code_root_path
+from open_ticket_ai.src.core.util.path_util import find_python_code_root_path
 
 
 def load_gitignore(base_path: Path) -> PathSpec:

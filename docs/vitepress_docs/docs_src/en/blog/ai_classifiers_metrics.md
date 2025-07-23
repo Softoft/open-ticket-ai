@@ -24,18 +24,17 @@ truly matter.
 ## Why Accuracy is Misleading
 
 **Accuracy** is defined as the total correct predictions over all predictions:
-contentReference[oaicite:1]{index=1}:
-\[ \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN} \]
-In formula terms, accuracy = (TP + TN)/(all samples):contentReference[oaicite:2]{index=2}. While
+$ \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN} $
+In formula terms, accuracy = (TP + TN)/(all samples). While
 simple, accuracy fails badly on imbalanced data. For example, if 80% of tickets belong to class A, a
 dumb classifier that *always* predicts A achieves 80% accuracy by default – yet it completely
 ignores the other 20% of tickets. In extreme cases (e.g. 99% vs 1% class split), always predicting
-the majority yields 99% accuracy despite no real learning:contentReference[oaicite:3]{index=3}. In
+the majority yields 99% accuracy despite no real learning. In
 short, a high accuracy can simply reflect class distribution, not genuine performance.
 
 > **“... accuracy is no longer a proper measure [for imbalanced datasets], since it does not
 distinguish between the numbers of correctly classified examples of different classes. Hence, it may
-lead to erroneous conclusions ...”**:contentReference[oaicite:4]{index=4}.
+lead to erroneous conclusions ...”.
 
 ## Core Metrics: Precision, Recall, F1
 
@@ -51,10 +50,8 @@ classification:
 From these counts, we define:
 
 - **Precision** = TP / (TP + FP) – proportion of predicted positives that are correct:
-  contentReference[oaicite:5]{index=5}.
 - **Recall** = TP / (TP + FN) – proportion of actual positives that were found:
-  contentReference[oaicite:6]{index=6}.
-- **F1-Score** = harmonic mean of precision and recall:contentReference[oaicite:7]{index=7}:
+- **F1-Score** = harmonic mean of precision and recall:
   \[ \mathrm{F1} = \frac{2 \cdot \mathrm{TP}}{2 \cdot \mathrm{TP} + \mathrm{FP} + \mathrm{FN}}. \]
 
 Each metric highlights different errors: precision penalizes false alarms (FP), while recall
@@ -63,12 +60,6 @@ written as \( (TP + TN) / (TP+TN+FP+FN) \):contentReference[oaicite:8]{index=8},
 data it masks model failures.
 
 In practice, scikit-learn’s `classification_report` computes these per class. For example:
-
-```python
-from sklearn.metrics import classification_report
-
-print(classification_report(y_test, y_pred))
-````
 
 reports precision, recall, F1 (and support) for each ticket class.
 

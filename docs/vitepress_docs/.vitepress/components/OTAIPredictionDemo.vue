@@ -13,7 +13,7 @@
                     <select
                         id="demo-example-select"
                         v-model="selected"
-            class="block w-full rounded border border-vp-border p-2 bg-vp-bg"
+            class="block w-full rounded border border-vp-border p-3 bg-vp-bg-soft"
                         @change="applyExample"
                     >
                         <option :value="-1" disabled>
@@ -33,7 +33,7 @@
                         id="demo-subject"
                         v-model="subject"
                         :placeholder="t('otai_prediction_demo_component.subjectPlaceholder')"
-            class="block w-full rounded border border-vp-border p-2 bg-vp-bg"
+            class="block w-full rounded border border-vp-border p-3 bg-vp-bg-soft"
                         type="text"
                     />
                 </div>
@@ -46,14 +46,14 @@
                         id="demo-body"
                         v-model="body"
                         :placeholder="t('otai_prediction_demo_component.messagePlaceholder')"
-            class="block w-full rounded border border-vp-border p-2 bg-vp-bg"
-                        rows="4"
+            class="block w-full rounded border border-vp-border p-3 bg-vp-bg-soft"
+                        rows="6"
                     ></textarea>
                 </div>
 
                 <Button
                     :disabled="loading"
-                    class="px-4 py-2 mt-1 mb-4 bg-vp-brand text-white hover:bg-vp-brand-light disabled:opacity-50"
+                    class="px-4 py-2 mt-1 mb-4 bg-vp-brand-1 text-white hover:bg-vp-brand-light disabled:opacity-50"
                     @click="predict"
                 >
                     <span v-if="loading" aria-hidden="true"
@@ -181,7 +181,7 @@ async function predict() {
     prioResult.value = null
 
     const text = (subject.value + ' ').repeat(2) + body.value
-    const maxAttempts = 4
+    const maxAttempts = 8
 
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         try {

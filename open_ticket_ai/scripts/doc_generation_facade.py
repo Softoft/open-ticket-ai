@@ -25,7 +25,7 @@ from open_ticket_ai.scripts.doc_generation.generate_api_reference import generat
 from open_ticket_ai.scripts.doc_generation.generate_multi_lang_docs import Translator
 from open_ticket_ai.scripts.doc_generation.update_frontmatter import update_frontmatter
 from open_ticket_ai.scripts.documentation_summary import DocumentationSummarizer
-from open_ticket_ai.src.ce.core.util.path_util import find_python_code_root_path
+from open_ticket_ai.src.core.util.path_util import find_python_code_root_path
 
 # --- CLI Setup ---
 app = typer.Typer(

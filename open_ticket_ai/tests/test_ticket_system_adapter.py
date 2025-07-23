@@ -2,13 +2,13 @@ import inspect
 
 import pytest
 
-from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import (
+from open_ticket_ai.src.ticket_system_integration.ticket_system_adapter import (
     TicketSystemAdapter,
 )
-from open_ticket_ai.src.ce.ticket_system_integration.otobo_adapter import (
+from open_ticket_ai.src.ticket_system_integration import (
     OTOBOAdapter,
 )
-from open_ticket_ai.src.ce.core.config.config_models import SystemConfig
+from open_ticket_ai.src.core.config.config_models import SystemConfig
 from otobo import OTOBOClient, OTOBOClientConfig, AuthData
 
 

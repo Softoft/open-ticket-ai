@@ -34,8 +34,9 @@ OpenTicketAI defines an abstract base class `TicketSystemAdapter` that all integ
 A **ZammadAdapter** will subclass this and implement these methods using Zammad’s API. It will typically hold configuration (base URL, credentials) injected via a `SystemConfig`. For example:
 
 ```python
-from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai.src.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 import httpx
+
 
 class ZammadAdapter(TicketSystemAdapter):
     def __init__(self, config):

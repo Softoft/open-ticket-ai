@@ -26,11 +26,7 @@ import yaml
 from pydantic import BaseModel
 from rich.syntax import Syntax
 
-from open_ticket_ai.src.ce.core.util import (
-    create_json_config_schema,
-    path_util,
-    pretty_print_config,
-)
+from open_ticket_ai.src.core.util import create_json_config_schema, path_util, pretty_print_config
 
 
 class DummyModel(BaseModel):
