@@ -9,11 +9,9 @@ import ast
 import json
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
-from typing import Dict, List, Optional, Union, Any
+from typing import Optional, Union
 
 from docstring_parser import Docstring, DocstringParam, DocstringRaises, parse
-
-from open_ticket_ai.src.ce.core.util.path_util import find_python_code_root_path
 
 
 # --- Data Models (using Dataclasses) ---

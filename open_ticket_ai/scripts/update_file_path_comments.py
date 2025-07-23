@@ -11,7 +11,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from open_ticket_ai.src.ce.core.util.path_util import find_python_code_root_path
+from open_ticket_ai.src.core.util.path_util import find_python_code_root_path
 
 FILE_PATH_PATTERN = re.compile(r"^\s*#\s*FILE_PATH:.*$")
 """re.Pattern: Regular expression to match lines that are FILE_PATH comments.
@@ -56,7 +56,7 @@ def process_directory(directory: Path) -> None:
 
 def main() -> None:
     """Main entry point for the script.
-    
+
     Processes all Python files in the project's code root directory.
     """
     process_directory(find_python_code_root_path())

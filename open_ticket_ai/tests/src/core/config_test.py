@@ -21,7 +21,7 @@ The tests use pytest fixtures and parametrization to cover various scenarios.
 import pytest
 from pydantic import ValidationError
 
-from open_ticket_ai.src.ce.core.config import config_models
+from open_ticket_ai.src.core.config import config_models
 
 # --- Test Fixtures and Helper Functions ---
 
@@ -29,7 +29,7 @@ from open_ticket_ai.src.ce.core.config import config_models
 def minimal_config_dict():
     """Build the smallest valid dict for ``OpenTicketAIConfig``.
 
-    The config now follows the new pipes and filters structure with
+    The config now follows the new pipe_ids and filters structure with
     ``pipelines`` instead of ``attribute_predictors``.
 
     Returns:
@@ -74,7 +74,7 @@ def minimal_config_dict():
                 "id": "pipeline_id_1",
                 "provider_key": "dummy_pipeline",
                 "schedule": {"interval": 1, "unit": "seconds"},
-                "pipes": [
+                "pipe_ids": [
                     "fetcher_id_1",
                     "preparer_id_1",
                     "ai_inference_service_id_1",
@@ -166,7 +166,7 @@ class TestOpenTicketAIConfig:
 
         Args:
             list_name_to_alter (str): Component list to modify.
-            pipe_index (int): Index in pipeline's pipes to modify.
+            pipe_index (int): Index in pipeline's pipe_ids to modify.
             expected_error_message_part (str): Expected substring in error message.
             minimal_config_dict (dict): Minimal valid configuration fixture.
         """
@@ -175,7 +175,7 @@ class TestOpenTicketAIConfig:
         minimal_config_dict[list_name_to_alter][0]["id"] = "invalid_id_for_ref"
 
         # Update the pipeline's reference to a non-existent ID
-        minimal_config_dict["pipelines"][0]["pipes"][pipe_index] = "non_existent_id"
+        minimal_config_dict["pipelines"][0]["pipe_ids"][pipe_index] = "non_existent_id"
 
         with pytest.raises(ValueError) as exc:
             config_models.OpenTicketAIConfig(**minimal_config_dict)
@@ -188,7 +188,7 @@ class TestOpenTicketAIConfig:
         # Restore original id to prevent interference with other parametrized tests if dict is somehow reused
         # (though pytest fixtures should typically prevent this for dicts)
         minimal_config_dict[list_name_to_alter][0]["id"] = original_id
-        minimal_config_dict["pipelines"][0]["pipes"][pipe_index] = original_id
+        minimal_config_dict["pipelines"][0]["pipe_ids"][pipe_index] = original_id
 
     def test_duplicate_ids_in_component_list_allowed_by_b_but_picked_by_set_logic(self,
                                                                                           minimal_config_dict):
@@ -216,9 +216,9 @@ class TestOpenTicketAIConfig:
 
         # Cross-validation will use the set of IDs, so "fetcher_id_1" is known.
         # If a pipeline references "fetcher_id_1" it should still be considered valid.
-        minimal_config_dict["pipelines"][0]["pipes"][0] = "fetcher_id_1"
+        minimal_config_dict["pipelines"][0]["pipe_ids"][0] = "fetcher_id_1"
         cfg_instance_ref_ok = config_models.OpenTicketAIConfig(**minimal_config_dict)
-        assert cfg_instance_ref_ok.pipelines[0].pipes[0] == "fetcher_id_1"
+        assert cfg_instance_ref_ok.pipelines[0].pipe_ids[0] == "fetcher_id_1"
         # Note: To strictly prevent duplicate IDs within a single list (e.g., two fetchers with the same ID),
         # a dedicated validator in `OpenTicketAIConfig` would be needed.
 

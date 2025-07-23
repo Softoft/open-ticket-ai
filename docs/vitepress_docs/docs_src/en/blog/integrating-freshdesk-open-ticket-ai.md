@@ -15,7 +15,7 @@ Open Ticket AI (OTAI) is a local, on-premise **ticket classification** system (a
 ```python
 import aiohttp
 
-from open_ticket_ai.src.ce.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
+from open_ticket_ai.src.ticket_system_integration.ticket_system_adapter import TicketSystemAdapter
 
 
 class FreshdeskAdapter(TicketSystemAdapter):
@@ -34,7 +34,7 @@ class FreshdeskAdapter(TicketSystemAdapter):
         params = {k: v for k, v in query.items()}
         url = f"{base}/api/v2/tickets"
         async with aiohttp.ClientSession(
-            auth=aiohttp.BasicAuth(self.config.freshdesk_api_key, password="X"),
+                auth=aiohttp.BasicAuth(self.config.freshdesk_api_key, password="X"),
         ) as session:
             async with session.get(url, params=params) as resp:
                 data = await resp.json()

@@ -7,14 +7,13 @@ The tests include:
 The tests are designed to run without requiring a real OTOBO server connection.
 """
 import dataclasses
-from unittest.mock import AsyncMock
 
 from otobo import OTOBOClient, OTOBOClientConfig
 import pytest
 
-from open_ticket_ai.src.ce.core.config.config_models import SystemConfig
-from open_ticket_ai.src.ce.ticket_system_integration.otobo_adapter import OTOBOAdapter
-from open_ticket_ai.src.ce.ticket_system_integration.otobo_adapter_config import OTOBOAdapterConfig
+from open_ticket_ai.src.core.config.config_models import SystemConfig
+from open_ticket_ai.src.ticket_system_integration import OTOBOAdapter
+from open_ticket_ai.src.otobo_integration.otobo_adapter_config import OTOBOAdapterConfig
 
 
 @dataclasses.dataclass

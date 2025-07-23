@@ -149,7 +149,3 @@ from otobo import FullTicketSearchResponse
 
 full_res: FullTicketSearchResponse = await client.search_and_get(search_params)
 ```
-
-### License
-
-MIT © Softoft, Tobias A. Bueck
