@@ -1,10 +1,12 @@
 import {generateNavbar} from './navbarUtil.js'
 import {defineConfig} from "vitepress";
 import {generateMultiSidebar} from "./siedebarUtil";
+import { withMermaid } from "vitepress-plugin-mermaid";
 
 var __VUE_PROD_DEVTOOLS__ = false
 console.log(__VUE_PROD_DEVTOOLS__)
-export default defineConfig({
+export default withMermaid(defineConfig({
+
     title: 'AI Ticket Classification',
     srcDir: './docs_src',
     head: [
@@ -51,7 +53,30 @@ export default defineConfig({
                 ],
                 sidebar: generateMultiSidebar("de")
             }
+        },
+        fr: {
+            label: 'French',
+            lang: 'fr',
+            link: '/fr/',
+            themeConfig: {
+                nav: [
+                    ...generateNavbar('fr'),
+                ],
+                sidebar: generateMultiSidebar("fr")
+            }
+        },
+        es: {
+            label: 'Spanish',
+            lang: 'es',
+            link: '/es/',
+            themeConfig: {
+                nav: [
+                    ...generateNavbar('es'),
+                ],
+                sidebar: generateMultiSidebar("es")
+            }
         }
+
     },
     themeConfig: {
         footer: {
@@ -71,4 +96,4 @@ export default defineConfig({
             ]
         },
     }
-})
+}))

@@ -6,8 +6,8 @@ structured representation of the source code. The final output is a JSON file
 ready for consumption by front-end frameworks like VitePress/Vue.
 """
 import ast
+from dataclasses import asdict, dataclass, field
 import json
-from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Optional, Union
 
@@ -277,6 +277,5 @@ def generate_documentation(
         json.dump(all_module_data, f, indent=2, cls=DataClassJSONEncoder)
 
     print(f"\n✅ JSON documentation successfully generated at: {output_path.resolve()}")
-
 
 # --- Example Usage ---

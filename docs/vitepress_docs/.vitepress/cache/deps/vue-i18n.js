@@ -15,7 +15,7 @@ import {
   shallowRef,
   watch
 } from "./chunk-VJWGEPT5.js";
-import "./chunk-PZ5AY32C.js";
+import "./chunk-HKJ2B2AA.js";
 
 // node_modules/@intlify/shared/dist/shared.mjs
 var inBrowser = typeof window !== "undefined";

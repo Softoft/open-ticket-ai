@@ -1,3 +1,5 @@
+import AIClassificationAnimation from "../components/AIClassificationAnimation.vue";
+
 var __VUE_PROD_DEVTOOLS__ = false
 console.log(__VUE_PROD_DEVTOOLS__)
 import {h, nextTick, onMounted, watch} from 'vue'
@@ -49,6 +51,7 @@ export default {
         app.component('AppTabs', Tabs)
         app.component('FeatureGrid', FeatureGrid)
         app.component('Accordion', Accordion)
+        app.component('AIClassificationAnimation', AIClassificationAnimation)
     },
     setup() {
         const {isDark} = useData()

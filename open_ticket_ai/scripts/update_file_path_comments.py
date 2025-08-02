@@ -8,8 +8,8 @@ first line with the relative path of the file to the project root.
 """
 from __future__ import annotations
 
-import re
 from pathlib import Path
+import re
 
 from open_ticket_ai.src.core.util.path_util import find_python_code_root_path
 

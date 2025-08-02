@@ -61,14 +61,14 @@ class DocumentationSummarizer:
     async def create_summary_dict(self, model: str) -> dict[str, str]:
         """Create a mapping of relative file paths to summaries.
 
-        Walks ``docs_dir`` recursively, summarizing all ``.md`` files concurrently.
+        Walks ``docs_src`` recursively, summarizing all ``.md`` files concurrently.
 
         Args:
             model: OpenAI model identifier used for summarization.
 
         Returns:
             dict[str, str]: Dictionary mapping relative file paths (as strings) to their summaries.
-                Paths are relative to ``docs_dir``.
+                Paths are relative to ``docs_src``.
 
         Raises:
             OSError: Propagated from file reading errors in ``summarize_file``.

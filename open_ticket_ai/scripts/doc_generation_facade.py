@@ -82,7 +82,6 @@ class DocGenerationFacade:
         )
         await docstring_generator.run()
 
-
     async def translate_docs(
         self,
         docs_dir: Path,
@@ -156,6 +155,7 @@ def generate_markdown():
         exclude_patterns=EXCLUDE_PATTERNS,
     )
 
+
 # --- Reusable Core Functions for CLI ---
 async def _generate_reference_api_markdown(model: str):
     """Generates API reference documentation in Markdown format."""
@@ -181,7 +181,7 @@ def _add_frontmatter_meta_seo_descriptions(summaries: dict):
 async def _translate_to_multi_lang_docs(model: str):
     """Translates documentation files to multiple languages."""
     await generator.translate_docs(
-        docs_src_path, "en", ["en", "de"], model, docs_src_path,
+        docs_src_path, "en", ["fr", "es"], model, docs_src_path.parent,
     )
 
 
@@ -195,11 +195,11 @@ async def _update_ai_readme(model: str):
     )
     await updater.update_ai_prompt()
 
+
 @app.command(name="gen-md-from-docstrings")
 def generate_markdown_from_docstrings():
     """Generates docstrings and converts them to API reference markdown files."""
     generate_markdown()
-
 
 
 # --- CLI Commands ---

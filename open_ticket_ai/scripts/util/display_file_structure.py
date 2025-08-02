@@ -6,12 +6,14 @@ representation of the structure using the `rich` library.
 """
 from io import StringIO
 from pathlib import Path
+
 from pathspec import PathSpec
 from pathspec.patterns import GitWildMatchPattern
 from pathspec.util import normalize_file
-from rich.tree import Tree
 from rich import print
 from rich.console import Console
+from rich.tree import Tree
+
 from open_ticket_ai.src.core.util.path_util import find_python_code_root_path
 
 

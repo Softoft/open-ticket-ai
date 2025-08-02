@@ -17,8 +17,8 @@ Typical usage:
 
 from __future__ import annotations
 
-import re
 from pathlib import Path
+import re
 from typing import Dict, Tuple
 
 import yaml
@@ -44,7 +44,7 @@ def _parse_frontmatter(content: str) -> Tuple[dict, str]:
     match = _FRONTMATTER_PATTERN.match(content)
     if match:
         frontmatter_text = match.group(1)
-        body = content[match.end() :]
+        body = content[match.end():]
         data = yaml.safe_load(frontmatter_text) or {}
         return data, body
     return {}, content
