@@ -1,31 +1,31 @@
 <!-- TicketRouterTopDown.vue -->
 <template>
     <ClientOnly>
-        <svg ref="svgEl" :viewBox="`0 0 1000 500`" class="router-svg">
+        <svg ref="svgEl" :viewBox="`0 0 1000 400`" class="router-svg">
             <!-- ① Queue & AI boxes -->
-            <g v-for="n in nodes" :key="n.id">
+            <g v-for="node in nodes" :key="node.id">
                 <rect
-                    :id="n.id==='inbox' ? 'inbox-box'
-               : n.id==='ai'    ? 'ai-box'
+                    :id="node.id==='inbox' ? 'inbox-box'
+               : node.id==='ai'    ? 'ai-box'
                : null"
-                    :fill="n.fill"
-                    :fill-opacity="n.alpha"
+                    :fill="node.fill"
+                    :fill-opacity="node.alpha"
                     :height="nodeH"
                     :stroke="stroke"
                     :width="nodeW"
-                    :x="n.x - nodeW / 2"
-                    :y="n.y - nodeH / 2"
+                    :x="node.x - nodeW / 2"
+                    :y="node.y - nodeH / 2"
                     rx="6"
                 />
                 <text
                     :fill="text"
-                    :x="n.x"
-                    :y="n.y + 5"
+                    :x="node.x"
+                    :y="node.y + 5"
                     font-size="13"
                     style="user-select:none"
                     text-anchor="middle"
                 >
-                    {{ n.label }}
+                    {{ node.label }}
                 </text>
             </g>
 
@@ -58,10 +58,10 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, onMounted, reactive, ref, watchEffect} from 'vue'
+import {onMounted, reactive, ref, watchEffect} from 'vue'
 import * as d3 from 'd3'
 
-const size = ref({w: 1000, h: 500})
+const size = ref({w: 1000, h: 400})
 
 /* ── canvas & layout ────────────────────────────── */
 const nodeW = 150, nodeH = 44
@@ -70,25 +70,29 @@ const svgEl = ref(null)
 /* mail starts just above the canvas */
 const mailPos = {x: size.value.w * 0.5, y: -size.value.h * 0.1}
 
+const queues = [
+    {id: 'billing', label: 'Billing', color: {light: '#ffb703', dark: '#ffd366'}},
+    {id: 'it', label: 'IT', color: {light: '#36cfc9', dark: '#6be6e1'}},
+    {id: 'hr', label: 'HR', color: {light: '#a259ff', dark: '#c599ff'}},
+    {id: 'sales', label: 'Sales', color: {light: '#ff6b6b', dark: '#ff9292'}}
+]
 /* ── colour themes ──────────────────────────────── */
 const light = {
     stroke: '#444',
     text: '#212121',
     alpha: 0.20,
-    palette: {
-        billing: '#ffb703', it: '#36cfc9', hr: '#a259ff',
-        sales: '#ff6b6b', manual: '#9e9e9e'
-    }
+    palette: {}
 }
 const dark = {
     stroke: '#9ca3af',
     text: '#e6e6e6',
     alpha: 0.35,
-    palette: {
-        billing: '#ffd366', it: '#6be6e1', hr: '#c599ff',
-        sales: '#ff9292', manual: '#b3b3b3'
-    }
+    palette: {}
 }
+queues.forEach(q => {
+    light.palette[q.id] = q.color.light
+    dark.palette[q.id] = q.color.dark
+})
 const theme = ref(light)
 
 /* Tailwind / VitePress dark-mode toggle support */
@@ -101,20 +105,24 @@ new MutationObserver(detectTheme)
     .observe(document.documentElement, {attributes: true, attributeFilter: ['class']})
 
 /* ── node positions (top-down) ───────────────────── */
-const topH = size.value.h * 0.10,
+const topH = size.value.h * 0.20,
     midH = size.value.h * 0.50,
-    downH = size.value.h * 0.60,
     bottomH = size.value.h * 0.90
 
 const nodes = reactive([
     {id: 'inbox', label: 'New Ticket', x: size.value.w * 0.5, y: topH},
     {id: 'ai', label: 'Open Ticket AI', x: size.value.w * 0.5, y: midH},
-    {id: 'billing', label: 'Billing', x: size.value.w * 0.10, y: bottomH},
-    {id: 'it', label: 'IT', x: size.value.w * 0.30, y: bottomH},
-    {id: 'hr', label: 'HR', x: size.value.w * 0.50, y: bottomH},
-    {id: 'sales', label: 'Sales', x: size.value.w * 0.70, y: bottomH},
-    {id: 'manual', label: 'Manual', x: size.value.w * 0.90, y: downH}
+
 ])
+queues.forEach((q, i) => {
+    const x = size.value.w * (0.2 + i * 0.2)
+    nodes.push({
+        id: q.id,
+        label: q.label,
+        x: x,
+        y: bottomH,
+    })
+});
 const nodesMap = Object.fromEntries(nodes.map(n => [n.id, n]))
 
 /* Bézier helper */
@@ -125,10 +133,10 @@ function quad(a, b, lift = -60) {
 }
 
 /* AI → queue curves */
-const outEdges = ['billing', 'it', 'hr', 'sales', 'manual'].map(to => ({
-    id: `ai-${to}`,
-    to,
-    d: quad(nodesMap.ai, nodesMap[to], -80)
+const outEdges = queues.map(queue => ({
+    id: `ai-${queue.id}`,
+    to: queue.id,
+    d: quad(nodesMap.ai, nodesMap[queue.id], -80)
 }))
 
 /* ── reactive colours ───────────────────────────── */
@@ -137,7 +145,7 @@ watchEffect(() => {
     stroke = theme.value.stroke
     text = theme.value.text
     nodes.forEach(n => {
-        n.fill = theme.value.palette[n.id] ?? theme.value.palette.manual
+        n.fill = theme.value.palette[n.id]
         n.alpha = theme.value.alpha
     })
 })
@@ -172,7 +180,6 @@ function launchEmail(dest) {
         return `translate(${pt.x},${pt.y}) scale(1.2)`
     }
 
-    /* envelope → inbox */
     env.transition()
         .duration(1000)
         .ease(d3.easeCubicOut)
@@ -193,15 +200,16 @@ function launchTicket(dest) {
     const p2 = d3.select(`#ai-${dest}`).node()
     const dot = g.append('circle')
         .attr('r', 7)
-        .attr('fill', theme.value.palette[dest])
+        .attr('fill', '#9ca3af')
         .attr('opacity', 0)
 
     const along = p => t => {
-        const len = p.getTotalLength(), pt = p.getPointAtLength(t * len)
+        const len = p.getTotalLength()
+        const pt = p.getPointAtLength(t * len)
         return `translate(${pt.x},${pt.y})`
     }
 
-    dot.transition()                       /* inbox → AI */
+    dot.transition()
         .duration(800)
         .ease(d3.easeCubicOut)
         .attr('opacity', 1)
@@ -211,7 +219,7 @@ function launchTicket(dest) {
             d3.select('#ai-box')
                 .transition().duration(160).attr('stroke-width', 6)
                 .transition().duration(160).attr('stroke-width', 1)
-
+            dot.attr('fill', theme.value.palette[dest])
             dot.transition()                  /* AI → queue */
                 .duration(1200)
                 .ease(d3.easeCubicInOut)
@@ -221,11 +229,9 @@ function launchTicket(dest) {
         })
 }
 
-/* ── demo driver: launch an email every 3 s ─────── */
 onMounted(() => {
-    const queues = ['billing', 'it', 'hr', 'sales', 'manual']
     setInterval(() => {
-        launchEmail(queues[Math.random() * queues.length | 0])
+        launchEmail(queues[Math.random() * queues.length | 0].id)
     }, 3000)
 })
 </script>
@@ -234,7 +240,7 @@ onMounted(() => {
 svg.router-svg {
     width: 100%;
     height: auto;
-    max-width: 1100px;
+    max-width: 1000px;
     display: block;
 }
 </style>
