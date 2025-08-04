@@ -32,9 +32,9 @@
                     />
                     <text
                         :fill="text"
+                        :font-size="Math.round(nodeH * 0.25)"
                         :x="node.x"
                         :y="node.y + 5"
-                        font-size="13"
                         style="user-select:none"
                         text-anchor="middle"
                     >
@@ -66,30 +66,60 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref, watch, watchEffect} from 'vue'
+import {computed, onMounted, ref, watchEffect} from 'vue'
 import * as d3 from 'd3'
 import {useWindowSize} from '../composables/useWindowSize'
 
 const {windowHeight, windowWidth} = useWindowSize()
 console.log(windowWidth, windowHeight)
-const size = ref({w: 1000, h: 300})
 const busy = ref(false)
 /* ── canvas & layout ────────────────────────────── */
-const defaultNodeWidth = 150;
-const defaultNodeHeight = 44;
+const defaultNodeWidth = 130;
+const defaultNodeHeight = 40;
+const widthBreakpointMd = 1000;
+const widthBreakpointSm = 700;
 
-const widthBreakpoint = 1000
+
+const numberQueues = computed(() => {
+    if (windowWidth.value < widthBreakpointSm) {
+        return 2
+    } else if (windowWidth.value < widthBreakpointMd) {
+        return 3
+    }
+    return 4
+})
+
+
+const size = computed(() => {
+    return {
+        w: Math.min(windowWidth.value * 0.8, widthBreakpointMd),
+        h: Math.min(windowHeight.value * 0.5, 600)
+    }
+})
 
 const nodeW = computed(() => {
-    return defaultNodeWidth * (windowWidth.value < widthBreakpoint ? 1.5 : 1)
+    const queueWidthFullWidth = size.value.w / numberQueues.value
+    if (windowWidth.value < widthBreakpointSm) {
+        return queueWidthFullWidth * 0.8
+    } else if (windowWidth.value < widthBreakpointMd) {
+        return queueWidthFullWidth * 0.7
+    }
+    return queueWidthFullWidth * 0.6
 })
+
 const nodeH = computed(() => {
-    return defaultNodeHeight * (windowWidth.value < widthBreakpoint ? 1.5 : 1)
+    return defaultNodeHeight * (800 / size.value.h)
 })
 const svgEl = ref(null)
 
+
 /* mail starts just above the canvas */
-const mailPos = {x: size.value.w * 0.5, y: -size.value.h * 0.1}
+const mailPos = computed(() => {
+    return {
+        x: size.value.w * 0.5,
+        y: -size.value.h * 0.1
+    }
+})
 
 const allQueues = [
     {id: 'billing', label: 'Billing', color: {light: '#ffb703', dark: '#ffd366'}},
@@ -98,7 +128,7 @@ const allQueues = [
     {id: 'sales', label: 'Sales', color: {light: '#ff6b6b', dark: '#ff9292'}}
 ]
 const queues = computed(() => {
-    return windowWidth.value < widthBreakpoint ? allQueues.slice(0, 2) : allQueues
+    return windowWidth.value < widthBreakpointMd ? allQueues.slice(0, numberQueues.value) : allQueues
 })
 /* ── colour themes ──────────────────────────────── */
 const light = {
@@ -130,23 +160,24 @@ new MutationObserver(detectTheme)
 /* ── node positions (top-down) ───────────────────── */
 const topH = size.value.h * 0.30,
     bottomH = size.value.h * 0.90
-const coreNodes = [
+const coreNodes = computed(() => [
     {
         id: 'ai', label: 'Open Ticket AI',
         x: 0.5 * size.value.w, y: size.value.h * 0.30
     }
-]
+])
 
 /* 2) alle Nodes als computed  – reagiert automatisch auf breakpoints */
 const nodes = computed(() => {
     const between = 1 / (queues.value.length - 1 || 1)
+    const maxWidth = size.value.w - nodeW.value
     const queueNodes = queues.value.map((q, i) => ({
         id: q.id,
         label: q.label,
-        x: size.value.w * (i * between),
-        y: size.value.h * 0.90
+        x: maxWidth * i * between + (nodeW.value * 0.5),
+        y: size.value.h * 0.8
     }))
-    return [...coreNodes, ...queueNodes]
+    return [...coreNodes.value, ...queueNodes]
 })
 
 /* 3) Map + Edges bauen ebenfalls als computed */
@@ -160,19 +191,6 @@ const outEdges = computed(() =>
         d: quad(nodesMap.value.ai, nodesMap.value[q.id], -80)
     }))
 )
-watch(queues, () => {
-    queues.value.forEach((queue, index) => {
-        const between = 1 / (queues.value.length - 1)
-
-        const x = size.value.w * (index * between)
-        nodes.push({
-            id: queue.id,
-            label: queue.label,
-            x: x,
-            y: bottomH,
-        })
-    });
-})
 
 
 /* Bézier helper */
@@ -274,7 +292,7 @@ function launchTicket(dest) {
 function handleClick() {
     if (busy.value) return
     busy.value = true
-    launchEmail(queues[Math.random() * queues.length | 0].id)
+    launchEmail(queues.value[Math.random() * queues.value.length | 0].id)
 
     setTimeout(() => (busy.value = false), 1800)
 }
