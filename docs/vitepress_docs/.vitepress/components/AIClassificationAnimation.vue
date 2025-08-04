@@ -150,6 +150,21 @@ watchEffect(() => {
     })
 })
 
+/**
+ * Returns an attrTween-compatible interpolator for a path.
+ * @param {SVGPathElement} path   the rail to follow
+ * @param {number} scale          optional uniform scale
+ */
+function alongPath(path, scale = 1) {
+  const L = path.getTotalLength()
+  const suffix = scale !== 1 ? ` scale(${scale})` : ''
+  return t => {
+    const pt = path.getPointAtLength(t * L)
+    return `translate(${pt.x},${pt.y})${suffix}`
+  }
+}
+
+
 /* ── envelope + ticket animation ────────────────── */
 function launchEmail(dest) {
     const envLayer = d3.select(svgEl.value).select('#envelopes')
@@ -175,17 +190,12 @@ function launchEmail(dest) {
         .attr('stroke-width', 2)
 
     const pMail = d3.select('#mail-in').node()
-    const along = p => t => {
-        const len = p.getTotalLength(), pt = p.getPointAtLength(t * len)
-        return `translate(${pt.x},${pt.y}) scale(1.2)`
-    }
 
     env.transition()
         .duration(1000)
         .ease(d3.easeCubicOut)
-        .attrTween('transform', () => along(pMail))
+        .attrTween('transform', () => alongPath(pMail, 1.2))
         .on('end', () => {
-            /* flash inbox */
             d3.select('#inbox-box')
                 .transition().duration(160).attr('stroke-width', 6)
                 .transition().duration(160).attr('stroke-width', 1)
@@ -196,34 +206,27 @@ function launchEmail(dest) {
 
 function launchTicket(dest) {
     const g = d3.select(svgEl.value).select('#tickets')
-    const p1 = d3.select('#inbox-ai').node()
-    const p2 = d3.select(`#ai-${dest}`).node()
+    const inboxToAI = d3.select('#inbox-ai').node()
+    const aiToQueue = d3.select(`#ai-${dest}`).node()
     const dot = g.append('circle')
         .attr('r', 7)
         .attr('fill', '#9ca3af')
         .attr('opacity', 0)
 
-    const along = p => t => {
-        const len = p.getTotalLength()
-        const pt = p.getPointAtLength(t * len)
-        return `translate(${pt.x},${pt.y})`
-    }
-
     dot.transition()
         .duration(800)
         .ease(d3.easeCubicOut)
         .attr('opacity', 1)
-        .attrTween('transform', () => along(p1))
+        .attrTween('transform', () => alongPath(inboxToAI))
         .on('end', () => {
-            /* flash AI box */
             d3.select('#ai-box')
                 .transition().duration(160).attr('stroke-width', 6)
                 .transition().duration(160).attr('stroke-width', 1)
             dot.attr('fill', theme.value.palette[dest])
-            dot.transition()                  /* AI → queue */
+            dot.transition()
                 .duration(1200)
                 .ease(d3.easeCubicInOut)
-                .attrTween('transform', () => along(p2))
+                .attrTween('transform', () => alongPath(aiToQueue))
                 .attr('opacity', 0)
                 .remove()
         })

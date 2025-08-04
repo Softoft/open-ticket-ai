@@ -55,17 +55,8 @@ hero:
 layout: home
 ---
 
-Open Ticket AI is like a smart assistant for your helpdesk. It reads each incoming support request, cleans up the text,
-uses AI to decide which team should handle it and how urgent it is, then automatically routes it—all on your own servers
-to keep data private.
 
 <AIClassificationAnimation/>
-
-Speed: No more manual sorting—tickets land where they belong instantly.
-
-Consistency: Every ticket is handled by the same AI “rules,” reducing mistakes.
-
-Privacy: Runs 100% on-premise, so sensitive data never leaves your network.
 
 
 <OTAIPredictionDemo/>
