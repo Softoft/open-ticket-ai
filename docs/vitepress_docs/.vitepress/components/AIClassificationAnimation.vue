@@ -2,79 +2,90 @@
 <template>
     <ClientOnly>
         <div class="my-8">
-            <div class="text-center mb-3">
-                <button
-                    :disabled="busy"
-                    class="inline-flex items-center justify-center
+            <h3 class="text-2xl font-bold mb-4 border-none p-0">
+                {{ t('otai_animation.title') }}
+            </h3>
+            <div class="border p-4 rounded-lg dark:border-gray-500 border-gray-700">
+                <div class="text-center mb-3">
+                    <button
+
+                        :disabled="busy"
+                        class="inline-flex items-center justify-center
              rounded-md bg-blue-600 px-8 py-3 font-semibold text-white
              transition-colors hover:bg-blue-700
              disabled:cursor-not-allowed disabled:opacity-40"
-                    @click="handleClick">
-                    <span v-if="busy">Processing</span>
-                    <span v-else>Send Email</span>
-                </button>
-            </div>
-            <svg ref="svgEl" :viewBox="`0 0 ${size.w} ${size.h}`" class="router-svg">
-                <!-- ① Queue & AI boxes -->
-                <g v-for="node in nodes" :key="node.id">
-                    <rect
-                        :id="node.id==='inbox' ? 'inbox-box'
+                        @click="handleClick">
+                        <span v-if="busy">{{ t('otai_animation.processingText') }}</span>
+                        <span v-else>{{ t('otai_animation.startAnimationText') }}</span>
+                    </button>
+                </div>
+                <svg ref="svgEl" :viewBox="`0 0 ${size.w} ${size.h}`" class="router-svg">
+                    <!-- ① Queue & AI boxes -->
+                    <g v-for="node in nodes" :key="node.id">
+                        <rect
+                            :id="node.id==='inbox' ? 'inbox-box'
                : node.id==='ai'    ? 'ai-box'
                : null"
-                        :fill="node.fill"
-                        :fill-opacity="node.alpha"
-                        :height="nodeH"
-                        :stroke="stroke"
-                        :width="nodeW"
-                        :x="node.x - nodeW / 2"
-                        :y="node.y - nodeH / 2"
-                        rx="6"
+                            :fill="node.fill"
+                            :fill-opacity="node.alpha"
+                            :height="nodeH"
+                            :stroke="strokeColor"
+                            :width="nodeW"
+                            :x="node.x - nodeW / 2"
+                            :y="node.y - nodeH / 2"
+                            rx="6"
+                        />
+                        <text
+                            :fill="textColor"
+                            :font-size="Math.round(nodeH * 0.25)"
+                            :x="node.x"
+                            :y="node.y + 5"
+                            style="user-select:none"
+                            text-anchor="middle"
+                        >
+                            {{ node.label }}
+                        </text>
+                    </g>
+
+                    <path
+                        id="inbox-ai"
+                        :d="quad(mailPos, nodesMap.ai, -40)"
+                        fill="none"
+                        stroke="transparent"
                     />
-                    <text
-                        :fill="text"
-                        :font-size="Math.round(nodeH * 0.25)"
-                        :x="node.x"
-                        :y="node.y + 5"
-                        style="user-select:none"
-                        text-anchor="middle"
-                    >
-                        {{ node.label }}
-                    </text>
-                </g>
+                    <path
+                        v-for="e in outEdges"
+                        :id="e.id"
+                        :key="e.id"
+                        :d="e.d"
+                        fill="none"
+                        stroke="transparent"
+                    />
 
-                <path
-                    id="inbox-ai"
-                    :d="quad(mailPos, nodesMap.ai, -40)"
-                    fill="none"
-                    stroke="transparent"
-                />
-                <path
-                    v-for="e in outEdges"
-                    :id="e.id"
-                    :key="e.id"
-                    :d="e.d"
-                    fill="none"
-                    stroke="transparent"
-                />
-
-                <!-- ③ Dynamic layers -->
-                <g id="envelopes"/> <!-- flying mail icon -->
-                <g id="tickets"/> <!-- coloured ticket dots -->
-            </svg>
+                    <!-- ③ Dynamic layers -->
+                    <g id="envelopes"/> <!-- flying mail icon -->
+                    <g id="tickets"/> <!-- coloured ticket dots -->
+                </svg>
+            </div>
         </div>
     </ClientOnly>
+    <div ref="el" class="w-100 h-2"></div>
 </template>
 
-<script setup>
-import {computed, onMounted, ref, watchEffect} from 'vue'
+<script lang="ts" setup>
+import {computed, onMounted, ref, useTemplateRef, watch, watchEffect} from 'vue'
 import * as d3 from 'd3'
 import {useWindowSize} from '../composables/useWindowSize'
+import {useI18n} from 'vue-i18n'
+import {useElementVisibility} from '@vueuse/core'
+
+const target = useTemplateRef<HTMLDivElement>('el')
+const targetIsVisible = useElementVisibility(target)
 
 const {windowHeight, windowWidth} = useWindowSize()
-console.log(windowWidth, windowHeight)
+const {t} = useI18n()
 const busy = ref(false)
 /* ── canvas & layout ────────────────────────────── */
-const defaultNodeWidth = 130;
 const defaultNodeHeight = 40;
 const widthBreakpointMd = 1000;
 const widthBreakpointSm = 700;
@@ -158,8 +169,6 @@ new MutationObserver(detectTheme)
     .observe(document.documentElement, {attributes: true, attributeFilter: ['class']})
 
 /* ── node positions (top-down) ───────────────────── */
-const topH = size.value.h * 0.30,
-    bottomH = size.value.h * 0.90
 const coreNodes = computed(() => [
     {
         id: 'ai', label: 'Open Ticket AI',
@@ -202,21 +211,18 @@ function quad(a, b, lift = -60) {
 
 
 /* ── reactive colours ───────────────────────────── */
-let stroke = '', text = ''
+let strokeColor = ''
+let textColor = ''
 watchEffect(() => {
-    stroke = theme.value.stroke
-    text = theme.value.text
+    strokeColor = theme.value.stroke
+    textColor = theme.value.text
     nodes.value.forEach(n => {
         n.fill = theme.value.palette[n.id]
         n.alpha = theme.value.alpha
     })
 })
 
-/**
- * Returns an attrTween-compatible interpolator for a path.
- * @param {SVGPathElement} path   the rail to follow
- * @param {number} scale          optional uniform scale
- */
+
 function alongPath(path, scale = 1) {
     const L = path.getTotalLength()
     const suffix = scale !== 1 ? ` scale(${scale})` : ''
@@ -254,6 +260,8 @@ function createEnvelope() {
 
 /* ── envelope + ticket animation ────────────────── */
 function launchEmail(dest) {
+    if (busy.value) return
+    busy.value = true
     const envelope = createEnvelope()
     const mailInPath = d3.select('#inbox-ai').node()
 
@@ -286,19 +294,26 @@ function launchTicket(dest) {
         .duration(1200)
         .ease(d3.easeCubicInOut)
         .attrTween('transform', () => alongPath(aiToQueue))
+        .on('end', () => {
+            busy.value = false
+        })
         .remove()
+
+
 }
 
 function handleClick() {
-    if (busy.value) return
-    busy.value = true
     launchEmail(queues.value[Math.random() * queues.value.length | 0].id)
-
-    setTimeout(() => (busy.value = false), 1800)
 }
+
 
 onMounted(() => {
     detectTheme()
+});
+watch(targetIsVisible, (isVisible) => {
+    if (isVisible) {
+        launchEmail(queues.value[Math.random() * queues.value.length | 0].id)
+    }
 })
 </script>
 

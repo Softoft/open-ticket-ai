@@ -17,6 +17,11 @@ export default {
         queueRowHeader: 'Queue',
         priorityRowHeader: 'Priority',
     },
+    otai_animation: {
+        startAnimationText: 'Send Email',
+        processingText: 'Processing...',
+        title: 'OTAI Animation',
+    },
     servicePackages: {
         title: 'Support Packages',
         buttonText: 'Choose Plan',
