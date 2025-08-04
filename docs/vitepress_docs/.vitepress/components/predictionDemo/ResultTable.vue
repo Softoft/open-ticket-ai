@@ -1,18 +1,24 @@
 <template>
     <div v-if="queueResult && prioResult" class="mt-6">
-        <h3 class="text-2xl font-semibold text-center text-vp-text mb-6">
+        <span class="text-2xl font-semibold text-center text-vp-text my-6">
             {{ t('otai_prediction_demo_component.resultTitle') }}
-        </h3>
+        </span>
 
-        <div class="grid gap-6 sm:grid-cols-2">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <!-- Queue Card -->
-            <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg flex flex-col items-center">
-                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+                <span
+                    class="text-lg font-medium text-gray-500 dark:text-gray-400 mb-4 min-h-[3rem] flex items-center justify-center"
+                >
                     {{ t('otai_prediction_demo_component.queueRowHeader') }}
-                </h4>
-                <p class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-                    {{ queueResult[0].label }}
-                </p>
+                </span>
+                <span class="flex-1 text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+                    {{ mainQueue }}
+                </span>
+                <span class="flex-1 text-md font-bold text-gray-900 dark:text-gray-100 mb-4">
+                    > {{ subQueue }}
+                </span>
+                Confidence:
                 <span
                     :class="[
             'inline-block px-4 py-1 rounded-full text-sm font-medium',
@@ -23,30 +29,38 @@
         </span>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg flex flex-col items-center">
-                <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+            <!-- Priority Card -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col items-center text-center">
+                <span
+                    class="text-lg font-medium text-gray-500 dark:text-gray-400 mb-4 min-h-[3rem] flex items-center justify-center"
+                >
                     {{ t('otai_prediction_demo_component.priorityRowHeader') }}
-                </h4>
-                <p class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                </span>
+                <p class="flex-1 text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                     {{ prioResult[0].label }}
                 </p>
-                <span
-                    :class="[
-            'inline-block px-4 py-1 rounded-full text-sm font-medium',
+                <div class="flex-1 text-md text-gray-900 dark:text-gray-100">
+                    Confidence:
+
+                    <span
+                        :class="[
+            'px-4 py-1 rounded-full text-sm font-medium',
             badgeClass(prioResult[0].score)
           ]"
-                >
+                    >
           {{ asPercent(prioResult[0].score) }}
         </span>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
+import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 
-const props = defineProps<{
+const {queueResult, prioResult} = defineProps<{
     queueResult: { label: string; score: number }[] | null
     prioResult: { label: string; score: number }[] | null
 }>()
@@ -54,8 +68,20 @@ const props = defineProps<{
 const {t} = useI18n()
 
 function asPercent(s: number) {
-    return (s * 100).toFixed(1) + '%'
+    return `${(s * 100).toFixed(1)}%`
 }
+
+// Split at /
+const mainQueue = computed(() => {
+    if (!queueResult || queueResult.length === 0) return null
+    return queueResult[0].label.split('/')[0]
+})
+
+const subQueue = computed(() => {
+    if (!queueResult || queueResult.length === 0) return null
+    const parts = queueResult[0].label.split('/')
+    return parts.length > 1 ? parts.slice(1).join('/') : null
+})
 
 function badgeClass(s: number) {
     const p = s * 100

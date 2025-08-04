@@ -2,10 +2,10 @@
 <template>
     <ClientOnly>
         <div class="my-8">
-            <h3 class="text-2xl font-bold mb-4 border-none p-0">
+            <h3 class="text-2xl font-bold mb-5 border-none p-0">
                 {{ t('otai_animation.title') }}
             </h3>
-            <div class="border p-4 rounded-lg dark:border-gray-500 border-gray-700">
+            <div class="border p-4 md:p-5 rounded-lg dark:border-gray-500 border-gray-700">
                 <div class="text-center mb-3">
                     <button
 
