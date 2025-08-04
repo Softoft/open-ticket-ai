@@ -1,6 +1,6 @@
 <template>
     <h2 class="mb-4 w-full text-center text-vp-text">{{
-        t('otai_prediction_demo_component.title')
+            t('otai_prediction_demo_component.title')
         }}</h2>
     <div class="my-3 mx-auto max-w-4xl">
         <div class="flex justify-center">
@@ -13,7 +13,7 @@
                     <select
                         id="demo-example-select"
                         v-model="selected"
-            class="block w-full rounded border border-vp-border p-3 bg-vp-bg-soft"
+                        class="block w-full rounded border border-vp-border p-3 bg-vp-bg-soft"
                         @change="applyExample"
                     >
                         <option :value="-1" disabled>
@@ -33,7 +33,7 @@
                         id="demo-subject"
                         v-model="subject"
                         :placeholder="t('otai_prediction_demo_component.subjectPlaceholder')"
-            class="block w-full rounded border border-vp-border p-3 bg-vp-bg-soft"
+                        class="block w-full rounded border border-vp-border p-3 bg-vp-bg-soft"
                         type="text"
                     />
                 </div>
@@ -46,7 +46,7 @@
                         id="demo-body"
                         v-model="body"
                         :placeholder="t('otai_prediction_demo_component.messagePlaceholder')"
-            class="block w-full rounded border border-vp-border p-3 bg-vp-bg-soft"
+                        class="block w-full rounded border border-vp-border p-3 bg-vp-bg-soft"
                         rows="6"
                     ></textarea>
                 </div>
@@ -70,55 +70,7 @@
                     {{ errorMessage }}
                 </div>
 
-                <div v-if="queueResult && prioResult" class="mt-4">
-        <h3 class="mb-3 font-bold text-vp-text">
-                        {{ t('otai_prediction_demo_component.resultTitle') }}</h3>
-                    <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-vp-border">
-                <thead class="bg-vp-bg-soft">
-                            <tr>
-                                <th scope="col">
-                                    {{ t('otai_prediction_demo_component.typeColumnHeader') }}
-                                </th>
-                                <th scope="col">
-                                    {{ t('otai_prediction_demo_component.predictionColumnHeader') }}
-                                </th>
-                                <th class="text-center" scope="col">
-                                    {{ t('otai_prediction_demo_component.confidenceColumnHeader') }}
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">
-                                    {{ t('otai_prediction_demo_component.queueRowHeader') }}
-                                </th>
-                                <td>{{ queueResult[0].label }}</td>
-                                <td class="text-center">
-                                    <span
-                                        :class="['inline-block px-2 py-1 rounded-full text-white text-sm',
-                                         confidenceBadge(queueResult[0].score)]">
-                                        {{ formatScore(queueResult[0].score) }}
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    {{ t('otai_prediction_demo_component.priorityRowHeader') }}
-                                </th>
-                                <td>{{ prioResult[0].label }}</td>
-                                <td class="text-center">
-                                    <span
-                                        :class="['inline-block px-2 py-1 rounded-full text-white text-sm',
-                                         confidenceBadge(prioResult[0].score)]">
-                                        {{ formatScore(prioResult[0].score) }}
-                                    </span>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <ResultTable v-if="queueResult && prioResult" :prio-result="prioResult" :queue-result="queueResult"/>
 
             </div>
         </div>
@@ -128,14 +80,14 @@
 <script lang="ts" setup>
 
 import {ref} from 'vue'
-import Button from './core/Button.vue'
-import {examples} from "./demoExamples";
+import Button from '../core/Button.vue'
+import {examples} from "../demoExamples";
 import {useI18n} from 'vue-i18n'
+import ResultTable from "./ResultTable.vue";
 
 const {t} = useI18n()
 
 async function query(endpoint: string, payload: any) {
-    // ... (rest of the function is unchanged)
     const res = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -207,19 +159,4 @@ async function predict() {
     loading.value = false
 }
 
-function confidenceBadge(score: number): string {
-    const pct = score * 100;
-    if (pct > 90) return 'bg-green-600';
-    if (pct > 80) return 'bg-vp-brand';
-    if (pct > 50) return 'bg-yellow-400 text-black';
-    return 'bg-red-600';
-}
-
-/**
- * Formats a 0–1 score as a percent string with one decimal
- */
-function formatScore(score: number): string {
-    // ... (function is unchanged)
-    return (score * 100).toFixed(1) + '%';
-}
 </script>

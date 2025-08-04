@@ -66,24 +66,40 @@
 </template>
 
 <script setup>
-import {onMounted, reactive, ref, watchEffect} from 'vue'
+import {computed, onMounted, ref, watch, watchEffect} from 'vue'
 import * as d3 from 'd3'
+import {useWindowSize} from '../composables/useWindowSize'
 
+const {windowHeight, windowWidth} = useWindowSize()
+console.log(windowWidth, windowHeight)
 const size = ref({w: 1000, h: 300})
 const busy = ref(false)
 /* ── canvas & layout ────────────────────────────── */
-const nodeW = 150, nodeH = 44
+const defaultNodeWidth = 150;
+const defaultNodeHeight = 44;
+
+const widthBreakpoint = 1000
+
+const nodeW = computed(() => {
+    return defaultNodeWidth * (windowWidth.value < widthBreakpoint ? 1.5 : 1)
+})
+const nodeH = computed(() => {
+    return defaultNodeHeight * (windowWidth.value < widthBreakpoint ? 1.5 : 1)
+})
 const svgEl = ref(null)
 
 /* mail starts just above the canvas */
 const mailPos = {x: size.value.w * 0.5, y: -size.value.h * 0.1}
 
-const queues = [
+const allQueues = [
     {id: 'billing', label: 'Billing', color: {light: '#ffb703', dark: '#ffd366'}},
     {id: 'it', label: 'IT', color: {light: '#36cfc9', dark: '#6be6e1'}},
     {id: 'hr', label: 'HR', color: {light: '#a259ff', dark: '#c599ff'}},
     {id: 'sales', label: 'Sales', color: {light: '#ff6b6b', dark: '#ff9292'}}
 ]
+const queues = computed(() => {
+    return windowWidth.value < widthBreakpoint ? allQueues.slice(0, 2) : allQueues
+})
 /* ── colour themes ──────────────────────────────── */
 const light = {
     stroke: '#444',
@@ -97,7 +113,7 @@ const dark = {
     alpha: 0.35,
     palette: {}
 }
-queues.forEach(q => {
+allQueues.forEach(q => {
     light.palette[q.id] = q.color.light
     dark.palette[q.id] = q.color.dark
 })
@@ -114,21 +130,50 @@ new MutationObserver(detectTheme)
 /* ── node positions (top-down) ───────────────────── */
 const topH = size.value.h * 0.30,
     bottomH = size.value.h * 0.90
+const coreNodes = [
+    {
+        id: 'ai', label: 'Open Ticket AI',
+        x: 0.5 * size.value.w, y: size.value.h * 0.30
+    }
+]
 
-const nodes = reactive([
-    {id: 'ai', label: 'Open Ticket AI', x: size.value.w * 0.5, y: topH},
-
-])
-queues.forEach((q, i) => {
-    const x = size.value.w * (0.2 + i * 0.2)
-    nodes.push({
+/* 2) alle Nodes als computed  – reagiert automatisch auf breakpoints */
+const nodes = computed(() => {
+    const between = 1 / (queues.value.length - 1 || 1)
+    const queueNodes = queues.value.map((q, i) => ({
         id: q.id,
         label: q.label,
-        x: x,
-        y: bottomH,
-    })
-});
-const nodesMap = Object.fromEntries(nodes.map(n => [n.id, n]))
+        x: size.value.w * (i * between),
+        y: size.value.h * 0.90
+    }))
+    return [...coreNodes, ...queueNodes]
+})
+
+/* 3) Map + Edges bauen ebenfalls als computed */
+const nodesMap = computed(() =>
+    Object.fromEntries(nodes.value.map(n => [n.id, n]))
+)
+
+const outEdges = computed(() =>
+    queues.value.map(q => ({
+        id: `ai-${q.id}`,
+        d: quad(nodesMap.value.ai, nodesMap.value[q.id], -80)
+    }))
+)
+watch(queues, () => {
+    queues.value.forEach((queue, index) => {
+        const between = 1 / (queues.value.length - 1)
+
+        const x = size.value.w * (index * between)
+        nodes.push({
+            id: queue.id,
+            label: queue.label,
+            x: x,
+            y: bottomH,
+        })
+    });
+})
+
 
 /* Bézier helper */
 function quad(a, b, lift = -60) {
@@ -137,19 +182,13 @@ function quad(a, b, lift = -60) {
     return `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`
 }
 
-/* AI → queue curves */
-const outEdges = queues.map(queue => ({
-    id: `ai-${queue.id}`,
-    to: queue.id,
-    d: quad(nodesMap.ai, nodesMap[queue.id], -80)
-}))
 
 /* ── reactive colours ───────────────────────────── */
 let stroke = '', text = ''
 watchEffect(() => {
     stroke = theme.value.stroke
     text = theme.value.text
-    nodes.forEach(n => {
+    nodes.value.forEach(n => {
         n.fill = theme.value.palette[n.id]
         n.alpha = theme.value.alpha
     })
@@ -237,7 +276,6 @@ function handleClick() {
     busy.value = true
     launchEmail(queues[Math.random() * queues.length | 0].id)
 
-    /* 2,5 s ≈ Laufzeit der Animation – danach Button wieder aktiv */
     setTimeout(() => (busy.value = false), 1800)
 }
 
