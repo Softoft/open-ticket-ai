@@ -1,59 +1,67 @@
 <!-- TicketRouterTopDown.vue -->
 <template>
     <ClientOnly>
-        <svg ref="svgEl" :viewBox="`0 0 1000 400`" class="router-svg">
-            <!-- ① Queue & AI boxes -->
-            <g v-for="node in nodes" :key="node.id">
-                <rect
-                    :id="node.id==='inbox' ? 'inbox-box'
+        <div class="my-8">
+            <div class="text-center mb-3">
+                <button
+                    :disabled="busy"
+                    class="inline-flex items-center justify-center
+             rounded-md bg-blue-600 px-8 py-3 font-semibold text-white
+             transition-colors hover:bg-blue-700
+             disabled:cursor-not-allowed disabled:opacity-40"
+                    @click="handleClick">
+                    <span v-if="busy">Processing</span>
+                    <span v-else>Send Email</span>
+                </button>
+            </div>
+            <svg ref="svgEl" :viewBox="`0 0 ${size.w} ${size.h}`" class="router-svg">
+                <!-- ① Queue & AI boxes -->
+                <g v-for="node in nodes" :key="node.id">
+                    <rect
+                        :id="node.id==='inbox' ? 'inbox-box'
                : node.id==='ai'    ? 'ai-box'
                : null"
-                    :fill="node.fill"
-                    :fill-opacity="node.alpha"
-                    :height="nodeH"
-                    :stroke="stroke"
-                    :width="nodeW"
-                    :x="node.x - nodeW / 2"
-                    :y="node.y - nodeH / 2"
-                    rx="6"
+                        :fill="node.fill"
+                        :fill-opacity="node.alpha"
+                        :height="nodeH"
+                        :stroke="stroke"
+                        :width="nodeW"
+                        :x="node.x - nodeW / 2"
+                        :y="node.y - nodeH / 2"
+                        rx="6"
+                    />
+                    <text
+                        :fill="text"
+                        :x="node.x"
+                        :y="node.y + 5"
+                        font-size="13"
+                        style="user-select:none"
+                        text-anchor="middle"
+                    >
+                        {{ node.label }}
+                    </text>
+                </g>
+
+                <path
+                    id="inbox-ai"
+                    :d="quad(mailPos, nodesMap.ai, -40)"
+                    fill="none"
+                    stroke="transparent"
                 />
-                <text
-                    :fill="text"
-                    :x="node.x"
-                    :y="node.y + 5"
-                    font-size="13"
-                    style="user-select:none"
-                    text-anchor="middle"
-                >
-                    {{ node.label }}
-                </text>
-            </g>
+                <path
+                    v-for="e in outEdges"
+                    :id="e.id"
+                    :key="e.id"
+                    :d="e.d"
+                    fill="none"
+                    stroke="transparent"
+                />
 
-            <path
-                id="mail-in"
-                :d="quad(mailPos, nodesMap.inbox, -40)"
-                fill="none"
-                stroke="transparent"
-            />
-            <path
-                id="inbox-ai"
-                :d="quad(nodesMap.inbox, nodesMap.ai, -60)"
-                fill="none"
-                stroke="transparent"
-            />
-            <path
-                v-for="e in outEdges"
-                :id="e.id"
-                :key="e.id"
-                :d="e.d"
-                fill="none"
-                stroke="transparent"
-            />
-
-            <!-- ③ Dynamic layers -->
-            <g id="envelopes"/> <!-- flying mail icon -->
-            <g id="tickets"/> <!-- coloured ticket dots -->
-        </svg>
+                <!-- ③ Dynamic layers -->
+                <g id="envelopes"/> <!-- flying mail icon -->
+                <g id="tickets"/> <!-- coloured ticket dots -->
+            </svg>
+        </div>
     </ClientOnly>
 </template>
 
@@ -61,8 +69,8 @@
 import {onMounted, reactive, ref, watchEffect} from 'vue'
 import * as d3 from 'd3'
 
-const size = ref({w: 1000, h: 400})
-
+const size = ref({w: 1000, h: 300})
+const busy = ref(false)
 /* ── canvas & layout ────────────────────────────── */
 const nodeW = 150, nodeH = 44
 const svgEl = ref(null)
@@ -95,23 +103,20 @@ queues.forEach(q => {
 })
 const theme = ref(light)
 
-/* Tailwind / VitePress dark-mode toggle support */
 function detectTheme() {
     theme.value = document.documentElement.classList.contains('dark') ? dark : light
 }
 
-detectTheme()
+
 new MutationObserver(detectTheme)
     .observe(document.documentElement, {attributes: true, attributeFilter: ['class']})
 
 /* ── node positions (top-down) ───────────────────── */
-const topH = size.value.h * 0.20,
-    midH = size.value.h * 0.50,
+const topH = size.value.h * 0.30,
     bottomH = size.value.h * 0.90
 
 const nodes = reactive([
-    {id: 'inbox', label: 'New Ticket', x: size.value.w * 0.5, y: topH},
-    {id: 'ai', label: 'Open Ticket AI', x: size.value.w * 0.5, y: midH},
+    {id: 'ai', label: 'Open Ticket AI', x: size.value.w * 0.5, y: topH},
 
 ])
 queues.forEach((q, i) => {
@@ -156,25 +161,24 @@ watchEffect(() => {
  * @param {number} scale          optional uniform scale
  */
 function alongPath(path, scale = 1) {
-  const L = path.getTotalLength()
-  const suffix = scale !== 1 ? ` scale(${scale})` : ''
-  return t => {
-    const pt = path.getPointAtLength(t * L)
-    return `translate(${pt.x},${pt.y})${suffix}`
-  }
+    const L = path.getTotalLength()
+    const suffix = scale !== 1 ? ` scale(${scale})` : ''
+    return t => {
+        const pt = path.getPointAtLength(t * L)
+        return `translate(${pt.x},${pt.y})${suffix}`
+    }
 }
 
 
-/* ── envelope + ticket animation ────────────────── */
-function launchEmail(dest) {
-    const envLayer = d3.select(svgEl.value).select('#envelopes')
+function createEnvelope() {
+    const envelopeLayer = d3.select(svgEl.value).select('#envelopes')
 
     /* g wrapper so rect & flap move together */
-    const env = envLayer.append('g')
+    const envelope = envelopeLayer.append('g')
         .attr('transform', `translate(${mailPos.x},${mailPos.y}) scale(1.2)`)
 
     /* envelope body */
-    env.append('rect')
+    envelope.append('rect')
         .attr('x', -14).attr('y', -10)
         .attr('width', 28).attr('height', 20)
         .attr('rx', 3)
@@ -183,59 +187,62 @@ function launchEmail(dest) {
         .attr('stroke-width', 2)
 
     /* envelope flap line */
-    env.append('polyline')
+    envelope.append('polyline')
         .attr('points', '-14,-10 0,2 14,-10')
         .attr('fill', 'none')
         .attr('stroke', theme.value.stroke)
         .attr('stroke-width', 2)
+    return envelope
+}
 
-    const pMail = d3.select('#mail-in').node()
+/* ── envelope + ticket animation ────────────────── */
+function launchEmail(dest) {
+    const envelope = createEnvelope()
+    const mailInPath = d3.select('#inbox-ai').node()
 
-    env.transition()
+    envelope.transition()
         .duration(1000)
         .ease(d3.easeCubicOut)
-        .attrTween('transform', () => alongPath(pMail, 1.2))
+        .attrTween('transform', () => alongPath(mailInPath, 1.2))
         .on('end', () => {
-            d3.select('#inbox-box')
+            d3.select('#ai-box')
                 .transition().duration(160).attr('stroke-width', 6)
                 .transition().duration(160).attr('stroke-width', 1)
-            env.remove()
+            envelope.remove()
             launchTicket(dest)
         })
 }
 
 function launchTicket(dest) {
     const g = d3.select(svgEl.value).select('#tickets')
-    const inboxToAI = d3.select('#inbox-ai').node()
     const aiToQueue = d3.select(`#ai-${dest}`).node()
     const dot = g.append('circle')
         .attr('r', 7)
         .attr('fill', '#9ca3af')
-        .attr('opacity', 0)
 
+
+    d3.select('#ai-box')
+        .transition().duration(160).attr('stroke-width', 6)
+        .transition().duration(160).attr('stroke-width', 1)
+    dot.attr('fill', theme.value.palette[dest])
     dot.transition()
-        .duration(800)
-        .ease(d3.easeCubicOut)
-        .attr('opacity', 1)
-        .attrTween('transform', () => alongPath(inboxToAI))
-        .on('end', () => {
-            d3.select('#ai-box')
-                .transition().duration(160).attr('stroke-width', 6)
-                .transition().duration(160).attr('stroke-width', 1)
-            dot.attr('fill', theme.value.palette[dest])
-            dot.transition()
-                .duration(1200)
-                .ease(d3.easeCubicInOut)
-                .attrTween('transform', () => alongPath(aiToQueue))
-                .attr('opacity', 0)
-                .remove()
-        })
+        .duration(1200)
+        .ease(d3.easeCubicInOut)
+        .attrTween('transform', () => alongPath(aiToQueue))
+        .remove()
+}
+
+function handleClick() {
+    if (busy.value) return
+    busy.value = true
+    launchEmail(queues[Math.random() * queues.length | 0].id)
+
+    /* 2,5 s ≈ Laufzeit der Animation – danach Button wieder aktiv */
+    setTimeout(() => (busy.value = false), 1800)
 }
 
 onMounted(() => {
-    setInterval(() => {
-        launchEmail(queues[Math.random() * queues.length | 0].id)
-    }, 3000)
+    detectTheme()
 })
 </script>
 
@@ -243,7 +250,7 @@ onMounted(() => {
 svg.router-svg {
     width: 100%;
     height: auto;
-    max-width: 1000px;
     display: block;
 }
 </style>
+
