@@ -7,22 +7,14 @@
             <div class="w-full max-w-3xl">
 
                 <div class="mb-3">
-                    <label class="block mb-1 font-bold" for="demo-example-select">
-                        {{ t('otai_prediction_demo_component.pickExampleText') }}
-                    </label>
-                    <select
-                        id="demo-example-select"
+                    <SelectComponent
                         v-model="selected"
-                        class="block w-full rounded border border-vp-border p-3 bg-vp-bg-soft"
-                        @change="applyExample"
+                        @update:modelValue="applyExample"
+                        :label="t('otai_prediction_demo_component.pickExampleText')"
+                        :placeholder="t('otai_prediction_demo_component.exampleSelectDefault')"
+                        :options="exampleOptions"
                     >
-                        <option :value="-1" disabled>
-                            {{ t('otai_prediction_demo_component.exampleSelectDefault') }}
-                        </option>
-                        <option v-for="(ex, i) in examples" :key="i" :value="i">
-                            {{ ex.name }}
-                        </option>
-                    </select>
+                    </SelectComponent>
                 </div>
 
                 <div class="mb-3">
@@ -84,8 +76,16 @@ import Button from '../core/Button.vue'
 import {examples} from "../demoExamples";
 import {useI18n} from 'vue-i18n'
 import ResultTable from "./ResultTable.vue";
+import SelectComponent from "../core/SelectComponent.vue";
 
 const {t} = useI18n()
+
+const exampleOptions = examples.map(ex => ({
+    value: ex.name,
+    label: ex.name,
+    subject: ex.subject,
+    body: ex.body
+}))
 
 async function query(endpoint: string, payload: any) {
     const res = await fetch(endpoint, {
@@ -114,12 +114,12 @@ const queueResult = ref<any>(null)
 const prioResult = ref<any>(null)
 
 // select logic
-const selected = ref(-1)
+const selected = ref(exampleOptions[0].value)
 
 function applyExample() {
-    const ex = examples[selected.value]
-    subject.value = ex.subject
-    body.value = ex.body
+    const selectedOption = exampleOptions.find(opt => opt.value === selected.value)
+    subject.value = selectedOption.subject
+    body.value = selectedOption.body
     queueResult.value = null
     prioResult.value = null
     errorMessage.value = null

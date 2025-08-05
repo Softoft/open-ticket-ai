@@ -21,28 +21,26 @@
           leave-to-class="opacity-0"
         >
           <ListboxOptions
-            class="absolute mt-0 w-full overflow-auto rounded-md bg-gray-700 text-base shadow-lg ring-1 ring-black/20 focus:outline-none list-none p-0"
+            class="absolute mt-0 w-full overflow-auto rounded-md bg-gray-700 shadow-lg ring-1 ring-black/20 focus:outline-none list-none p-0 m-0 z-10"
           >
             <ListboxOption
               v-for="option in options"
               :key="option.value"
               :value="option.value"
-              :disabled="option.disabled"
               as="template"
-              v-slot="{ active, selected: isSelected, disabled: isDisabled }"
+              v-slot="{ active, selected: isSelected }"
+              class="p-0 m-0"
             >
               <li
                 :class="[
-                  'relative cursor-default select-none py-2 pl-10 mx-0 pr-4 rounded-md transition-colors',
-                  // UPDATED: Added styles for active and disabled states for better hierarchy
+                  'p-0 m-0 relative cursor-default select-none py-1 pl-10 pr-4 rounded-md transition-colors list-none',
                   {
-                    'bg-indigo-500 text-white': active && !isDisabled,
+                    'bg-indigo-500 text-white': active,
                     'text-gray-300': !active,
-                    'opacity-50 cursor-not-allowed': isDisabled,
                   }
                 ]"
               >
-                <span :class="[isSelected ? 'font-semibold' : 'font-normal', 'block truncate']">
+                <span :class="[isSelected ? 'font-semibold' : '', 'block truncate']">
                   {{ option.label }}
                 </span>
                 <span
@@ -72,11 +70,9 @@ import {
 } from '@headlessui/vue'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
-// UPDATED: Option can now be disabled
 interface Option {
   value: string | number
   label: string
-  disabled?: boolean
 }
 
 const props = withDefaults(

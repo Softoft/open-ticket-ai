@@ -70,7 +70,6 @@ export const Default: Story = {
       // This setup allows the story to be interactive
       const onUpdate = (value: string | number | null) => {
         // This function is provided by Storybook to update the args
-        updateArgs({ modelValue: value })
       }
       return { args, onUpdate }
     },
