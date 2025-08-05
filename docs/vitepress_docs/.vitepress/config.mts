@@ -9,6 +9,7 @@ export default withMermaid(defineConfig({
 
     title: 'AI Ticket Classification',
     srcDir: './docs_src',
+    appearance: 'force-dark',
     head: [
         [
             'link',

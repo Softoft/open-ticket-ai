@@ -150,7 +150,7 @@ async function predict() {
                 // Use the t() function for the error message
                 errorMessage.value = t('otai_prediction_demo_component.predictionError')
             } else {
-                const delay = 1000 * Math.pow(2, attempt - 1)
+                const delay = 500 * Math.pow(2, attempt - 1)
                 await new Promise(res => setTimeout(res, delay))
             }
         }
