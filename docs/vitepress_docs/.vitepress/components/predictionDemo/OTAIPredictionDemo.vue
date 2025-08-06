@@ -2,71 +2,65 @@
     <h2 class="mb-4 w-full text-center text-vp-text">{{
             t('otai_prediction_demo_component.title')
         }}</h2>
-    <div class="my-3 mx-auto max-w-4xl">
-        <div class="flex justify-center">
-            <div class="w-full max-w-3xl">
+    <section class="max-w-3xl mx-auto my-6 px-4">
 
-                <div class="mb-3">
-                    <SelectComponent
-                        v-model="selected"
-                        @update:modelValue="applyExample"
-                        :label="t('otai_prediction_demo_component.pickExampleText')"
-                        :placeholder="t('otai_prediction_demo_component.exampleSelectDefault')"
-                        :options="exampleOptions"
-                    >
-                    </SelectComponent>
-                </div>
+        <div class="mb-3">
+            <SelectComponent
+                v-model="selected"
+                :label="t('otai_prediction_demo_component.pickExampleText')"
+                :options="exampleOptions"
+                :placeholder="t('otai_prediction_demo_component.exampleSelectDefault')"
+                @update:modelValue="applyExample"
+            >
+            </SelectComponent>
+        </div>
 
-                <div class="mb-3">
-                    <label class="block mb-1 font-bold" for="demo-subject">{{
-                        t('otai_prediction_demo_component.subjectLabel')
-                        }}</label>
-                    <input
-                        id="demo-subject"
-                        v-model="subject"
-                        :placeholder="t('otai_prediction_demo_component.subjectPlaceholder')"
-                        class="block w-full rounded border border-vp-border p-3 bg-vp-bg-soft"
-                        type="text"
-                    />
-                </div>
+        <div class="mb-3">
+            <label class="block mb-1 font-bold" for="demo-subject">{{
+                    t('otai_prediction_demo_component.subjectLabel')
+                }}</label>
+            <TextField
+                id="demo-subject"
+                v-model="subject"
+                :placeholder="t('otai_prediction_demo_component.subjectPlaceholder')"
+                type="text"
+            />
+        </div>
 
-                <div class="mb-3">
-                    <label class="block mb-1 font-bold" for="demo-body">{{
-                        t('otai_prediction_demo_component.messageLabel')
-                        }}</label>
-                    <textarea
-                        id="demo-body"
-                        v-model="body"
-                        :placeholder="t('otai_prediction_demo_component.messagePlaceholder')"
-                        class="block w-full rounded border border-vp-border p-3 bg-vp-bg-soft"
-                        rows="6"
-                    ></textarea>
-                </div>
+        <div class="mb-3">
+            <label class="block mb-1 font-bold" for="demo-body">{{
+                    t('otai_prediction_demo_component.messageLabel')
+                }}</label>
+            <TextArea
+                id="demo-body"
+                v-model="body"
+                :placeholder="t('otai_prediction_demo_component.messagePlaceholder')"
+                class="min-h-40"
+            ></TextArea>
+        </div>
 
-                <Button
-                    :disabled="loading"
-                    class="px-4 py-2 mt-1 mb-4 bg-vp-brand-1 text-white hover:bg-vp-brand-light disabled:opacity-50"
-                    @click="predict"
-                >
+        <Button
+            :disabled="loading"
+            class="px-4 py-2 mt-1 mb-4 bg-vp-brand-1 text-white hover:bg-vp-brand-light disabled:opacity-50"
+            @click="predict"
+        >
                     <span v-if="loading" aria-hidden="true"
                           class="animate-spin h-4 w-4 mr-1 border-2 border-white border-t-transparent rounded-full">
 
                     </span>
-                    <span v-if="loading"
-                          role="status">{{ t('otai_prediction_demo_component.loadingText') }}</span>
-                    <span v-else
-                          class="text-white">{{ t('otai_prediction_demo_component.submitButtonText') }}</span>
-                </Button>
+            <span v-if="loading"
+                  role="status">{{ t('otai_prediction_demo_component.loadingText') }}</span>
+            <span v-else
+                  class="text-white">{{ t('otai_prediction_demo_component.submitButtonText') }}</span>
+        </Button>
 
-                <div v-if="errorMessage" class="mt-4 rounded bg-red-100 p-3 text-red-700" role="alert">
-                    {{ errorMessage }}
-                </div>
+        <Callout v-if="errorMessage" type="danger">
+            {{ errorMessage }}
+        </Callout>
 
-                <ResultTable v-if="queueResult && prioResult" :prio-result="prioResult" :queue-result="queueResult"/>
+        <ResultTable v-if="queueResult && prioResult" :prio-result="prioResult" :queue-result="queueResult"/>
 
-            </div>
-        </div>
-    </div>
+    </section>
 </template>
 
 <script lang="ts" setup>
@@ -76,7 +70,10 @@ import Button from '../core/Button.vue'
 import {examples} from "../demoExamples";
 import {useI18n} from 'vue-i18n'
 import ResultTable from "./ResultTable.vue";
-import SelectComponent from "../core/SelectComponent.vue";
+import SelectComponent from "../core/forms/SelectComponent.vue";
+import TextField from "../core/forms/TextField.vue";
+import TextArea from "../core/forms/TextArea.vue";
+import Callout from "../core/Callout.vue";
 
 const {t} = useI18n()
 
