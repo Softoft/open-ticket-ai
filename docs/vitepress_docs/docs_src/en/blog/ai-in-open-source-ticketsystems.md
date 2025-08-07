@@ -29,7 +29,6 @@ platforms. This choice is driven by strategic business advantages: cost, control
 
 > **Hidden costs**: implementation, maintenance, security patching, custom development, community-only support can add
 > up.
->
 > **Trade-off**: freedom vs. “enterprise-grade” support guarantees and built-in AI/automation.
 
 ---
