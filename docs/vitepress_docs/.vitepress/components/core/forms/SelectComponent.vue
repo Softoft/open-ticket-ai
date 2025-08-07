@@ -21,7 +21,7 @@
           leave-to-class="opacity-0"
         >
           <ListboxOptions
-            class="absolute mt-0 w-full overflow-auto rounded-md bg-gray-700 shadow-lg ring-1 ring-black/20 focus:outline-none list-none p-0 m-0 z-10"
+            class="absolute !pl-0 !ml-0 mt-0 w-full overflow-auto rounded-md bg-gray-700 shadow-lg ring-1 ring-black/20 focus:outline-none list-none p-0 m-0 z-10"
           >
             <ListboxOption
               v-for="option in options"
@@ -29,11 +29,11 @@
               :value="option.value"
               as="template"
               v-slot="{ active, selected: isSelected }"
-              class="p-0 m-0"
+              class="!ml-0"
             >
               <li
                 :class="[
-                  'p-0 m-0 relative cursor-default select-none py-1 pl-10 pr-4 rounded-md transition-colors list-none',
+                  'relative cursor-default select-none py-1 pl-10 pr-4 rounded-md transition-colors list-none',
                   {
                     'bg-indigo-500 text-white': active,
                     'text-gray-300': !active,
