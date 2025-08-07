@@ -4,23 +4,38 @@ command = "npm run docs:build"
 publish = ".vitepress/dist"
 
 [[redirects]]
-  from = "/"
-  to = "/de"
-  status = 302
-  force = true
-  conditions = {Language = ["de"]}
+from = "/"
+to = "/de"
+status = 302
+force = true
+conditions = { Language = ["de"] }
 
 # Redirect English language users to the /en subdirectory
 [[redirects]]
-  from = "/"
-  to = "/en"
-  status = 302
-  force = true
-  conditions = {Language = ["en"]}
+from = "/"
+to = "/en"
+status = 302
+force = true
+conditions = { Language = ["en"] }
 
+# Redirect French language users to the /fr subdirectory
+[[redirects]]
+from = "/"
+to = "/fr"
+status = 302
+force = true
+conditions = { Language = ["fr"] }
+
+# Redirect Spanish language users to the /es subdirectory
+[[redirects]]
+from = "/"
+to = "/es"
+status = 302
+force = true
+conditions = { Language = ["es"] }
 # Fallback redirect for all other languages to the /en subdirectory
 [[redirects]]
-  from = "/"
-  to = "/en"
-  status = 302
-  force = true
+from = "/"
+to = "/en"
+status = 302
+force = true

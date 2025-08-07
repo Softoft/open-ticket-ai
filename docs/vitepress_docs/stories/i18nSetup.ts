@@ -1,6 +1,6 @@
 import { createI18n } from 'vue-i18n'
-import en from '../docs_src/en/messages.ts'
-import de from '../docs_src/de/messages.ts'
+import en from '../docs_src/en/messages'
+import de from '../docs_src/de/messages'
 
 export const i18n = createI18n({
   legacy: false,

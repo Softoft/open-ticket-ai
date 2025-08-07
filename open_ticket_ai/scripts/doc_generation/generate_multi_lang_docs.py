@@ -14,7 +14,7 @@ Example usage:
     client = AsyncOpenAI(api_key="your_api_key")
     translator = Translator(client, base_language="en")
     asyncio.run(translator.translate_directory(
-        docs_dir=Path("docs"),
+        docs_src=Path("docs"),
         languages=["es", "fr", "de"],
         model="gpt-4",
         out_dir=Path("translated_docs")
@@ -30,10 +30,9 @@ import asyncio
 from pathlib import Path
 from typing import List
 
-import tenacity
 from openai import AsyncOpenAI
+import tenacity
 from tenacity import stop_after_attempt, wait_exponential
-
 
 
 class Translator:
@@ -52,7 +51,7 @@ class Translator:
         client = AsyncOpenAI(api_key="your_api_key")
         translator = Translator(client, base_language="en")
         asyncio.run(translator.translate_directory(
-            docs_dir=Path("docs"),
+            docs_src=Path("docs"),
             languages=["es", "fr", "de"],
             model="gpt-4",
             out_dir=Path("translated_docs")
@@ -161,7 +160,7 @@ class Translator:
 
     async def translate_directory(
         self,
-        docs_dir: Path,
+        docs_src: Path,
         languages: List[str],
         model: str,
         out_dir: Path,
@@ -172,7 +171,7 @@ class Translator:
         for each file, and processes them asynchronously.
 
         Args:
-            docs_dir: Directory containing source Markdown files.
+            docs_src: Directory containing source Markdown files.
             languages: List of target language codes for translation.
             model: OpenAI model identifier for translation.
             out_dir: Base output directory for translated files.
@@ -182,6 +181,6 @@ class Translator:
             OSError: If any file I/O operation fails during processing.
         """
         tasks = []
-        for md_file in docs_dir.rglob("*.md"):
-            tasks.append(self.process_file(md_file, docs_dir, languages, model, out_dir))
+        for md_file in docs_src.rglob("*.md"):
+            tasks.append(self.process_file(md_file, docs_src, languages, model, out_dir))
         await asyncio.gather(*tasks)

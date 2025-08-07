@@ -2,8 +2,8 @@
 """Automatically adds long Google style docstrings to Python files using AI."""
 
 import asyncio
-import re
 from pathlib import Path
+import re
 
 from openai import AsyncOpenAI
 
@@ -237,7 +237,7 @@ async def main() -> None:
         SystemExit: If base_path doesn't exist or OPENAI_API_KEY is missing.
     """
     parser = argparse.ArgumentParser(
-        description="Automatically add Google-style docstrings to Python files using AI."
+        description="Automatically add Google-style docstrings to Python files using AI.",
     )
     parser.add_argument(
         "--base_path",

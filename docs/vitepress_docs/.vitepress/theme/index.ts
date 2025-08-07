@@ -1,11 +1,14 @@
+import AIClassificationAnimation from "../components/AIClassificationAnimation.vue";
+import YoutubeVideo from '../components/YoutubeVideo.vue'
+
 var __VUE_PROD_DEVTOOLS__ = false
 console.log(__VUE_PROD_DEVTOOLS__)
 import {h, nextTick, onMounted, watch} from 'vue'
 import type {Theme} from 'vitepress'
 import {useData} from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
-import ProductCards from '../components/ProductCards.vue'
-import OTAIPredictionDemo from '../components/OTAIPredictionDemo.vue'
+import ProductCards from '../components/product/ProductCards.vue'
+import OTAIPredictionDemo from '../components/predictionDemo/OTAIPredictionDemo.vue'
 import ServicePackagesComponent from '../components/ServicePackagesComponent.vue'
 import SupportPlansComponent from '../components/SupportPlansComponent.vue'
 import CodeDocumentation from '../components/CodeDocumentation.vue'
@@ -21,6 +24,7 @@ import './styles/index.scss'
 import {createI18n, useI18n} from 'vue-i18n'
 import deMessages from '../../docs_src/de/messages'
 import enMessages from '../../docs_src/en/messages'
+import ContactForm from "../components/ContactForm.vue";
 
 const i18n = createI18n({
     legacy: false,
@@ -49,6 +53,9 @@ export default {
         app.component('AppTabs', Tabs)
         app.component('FeatureGrid', FeatureGrid)
         app.component('Accordion', Accordion)
+        app.component('AIClassificationAnimation', AIClassificationAnimation)
+        app.component('ContactForm', ContactForm)
+        app.component('YoutubeVideo', YoutubeVideo)
     },
     setup() {
         const {isDark} = useData()

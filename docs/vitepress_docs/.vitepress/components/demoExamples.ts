@@ -47,25 +47,11 @@ bei meinem Miele G 7310 SC (Seriennr. 1234567890) tritt seit heute früh währen
 meine EC2-Instance mit der ID i-0abcd1234ef567890 im us-east-1 Cluster reagiert seit dem letzten Sicherheits-Update nicht mehr auf SSH-Verbindungen (Port 22). Ich habe die Security Group geprüft, der Key-Pair passt und der Instance-Status ist “running”. Bitte prüfen Sie die Netzwerkkonfiguration oder einen möglichen Hypervisor-Fehler. Vielen Dank!`
     },
     {
-        name: 'Booking.com–Reservierung',
-        subject: 'Umbuchung Reservierung 1122334455 im Hotel Grand Central',
-        body: `Sehr geehrtes Booking.com-Team,
-
-ich möchte meine Reservierung Nr. 1122334455 für das Hotel Grand Central in München vom 15.07.2025 auf den 18.07.2025 verschieben. Die Buchung steht auf den Namen „Müller“. Bitte teilen Sie mir mit, ob der neue Zeitraum verfügbar ist und welche Tarifänderungen anfallen.`
-    },
-    {
         name: 'SAP Concur API',
         subject: 'Concur-API (v4) gibt 401 Unauthorized zurück',
         body: `Hallo IT-Team,
 
 unsere Anwendung nutzt die SAP Concur REST-API v4 mit Client-ID ABC123 und Secret DEF456. Seit gestern erhalten wir beim Aufruf von /expense/expensereports den HTTP-Status 401 Unauthorized. Token-Refresh schlägt ebenfalls fehl. Bitte prüfen Sie, ob unser Service-Account gesperrt wurde.`
-    },
-    {
-        name: 'Outlook 365 Kalender',
-        subject: 'Outlook 365 kalendersync schlägt fehl mit iOS Mail-App',
-        body: `Guten Tag Microsoft-Support,
-
-mein Office 365 Business-Account (user@domain.com) synchronisiert den Kalender nicht in der iOS-Mail-App. Ich sehe die Einträge in Outlook Web, aber auf iPhone (iOS 15.6) und iPad (iPadOS 15.6) tauchen sie nicht auf. Ich habe bereits das Konto neu hinzugefügt. Bitte prüfen Sie die OAuth- oder Exchange-Einstellungen.`
     },
     {
         name: 'Garmin Forerunner Update abgebrochen',
@@ -80,13 +66,6 @@ mein Forerunner 945 (SN G123456789) will seit dem letzten Garmin Connect Update 
         body: `Liebes Shopify-Team,
 
 mein Kunde versucht, im Shop my-shop.myshopify.com per Kreditkarte (Mastercard) zu zahlen. Die Fehlermeldung lautet “Payment declined: 2004”. In Stripe-Dashboard sehe ich keinen Eintrag. Bitte untersuchen Sie den Zahlungsfluss oder ob es ein Gateway-Problem gibt.`
-    },
-    {
-        name: 'Photoshop',
-        subject: 'Adobe Photoshop CC 2022 friert bei großen PSD-Dateien ein',
-        body: `Hallo Adobe-Support,
-
-wenn ich in Photoshop CC 2022 (Version 23.4.2) große PSD-Dateien (>1,5 GB) mit mehreren Smart-Objekten öffne, reagiert das Programm nach ~10 Sekunden nicht mehr und wird als “Nicht antwortend” gekennzeichnet. Mein System: Windows 11, 32 GB RAM, RTX 3060. Bitte um Performance-Tipps oder Hotfix.`
     },
     {
         name: 'Tesla Model 3',

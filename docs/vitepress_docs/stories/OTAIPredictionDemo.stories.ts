@@ -1,4 +1,4 @@
-import OTAIPredictionDemo from '../.vitepress/components/OTAIPredictionDemo.vue'
+import OTAIPredictionDemo from '../.vitepress/components/predictionDemo/OTAIPredictionDemo.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 import { i18n } from './i18nSetup'
 
