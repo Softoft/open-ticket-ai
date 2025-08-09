@@ -9,8 +9,8 @@ import {useData} from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import ProductCards from '../components/product/ProductCards.vue'
 import OTAIPredictionDemo from '../components/predictionDemo/OTAIPredictionDemo.vue'
-import ServicePackages from '../components/ServicePackages.vue'
-import SupportPlans from '../components/SupportPlans.vue'
+import ServicePackages from '../components/product/ServicePackages.vue'
+import SupportPlans from '../components/product/SupportPlans.vue'
 import CodeDocumentation from '../components/autoDocs/CodeDocumentation.vue'
 import Button from '../components/core/Button.vue'
 import Card from '../components/core/Card.vue'
@@ -25,7 +25,7 @@ import {createI18n, useI18n} from 'vue-i18n'
 import deMessages from '../../docs_src/de/messages'
 import enMessages from '../../docs_src/en/messages'
 import ContactForm from "../components/ContactForm.vue";
-import SyntheticDataPackages from "../components/SyntheticDataPackages.vue";
+import SyntheticDataPackages from "../components/product/SyntheticDataPackages.vue";
 
 const i18n = createI18n({
     legacy: false,

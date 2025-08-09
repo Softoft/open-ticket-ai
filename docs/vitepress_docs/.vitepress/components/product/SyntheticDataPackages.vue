@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts" setup>
-import ProductCards from './product/ProductCards.vue'
-import type {Product} from './product/product.types'
+import ProductCards from './ProductCards.vue'
+import type {Product} from './product.types'
 
 // define your three tiers, matching the Service Packages style
 const syntheticPackages: Product[] = [

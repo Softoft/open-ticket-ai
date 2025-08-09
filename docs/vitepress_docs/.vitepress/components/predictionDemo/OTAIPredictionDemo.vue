@@ -67,15 +67,19 @@
 
 import {ref} from 'vue'
 import Button from '../core/Button.vue'
-import {examples} from "../demoExamples";
+import {examples} from "./demoExamples";
 import {useI18n} from 'vue-i18n'
 import ResultTable from "./ResultTable.vue";
 import SelectComponent from "../core/forms/SelectComponent.vue";
 import TextField from "../core/forms/TextField.vue";
 import TextArea from "../core/forms/TextArea.vue";
 import Callout from "../core/Callout.vue";
+import {useHumanLoadedPage} from "../../composables/useHumanLoadedPage";
 
 const {t} = useI18n()
+const QUEUE_EP = 'https://uwlzdugezcmrk5vk.eu-west-1.aws.endpoints.huggingface.cloud'
+const PRIORITY_EP = 'https://rxnypflnfgdbgoxr.us-east-1.aws.endpoints.huggingface.cloud'
+
 
 const exampleOptions = examples.map(ex => ({
     value: ex.name,
@@ -97,8 +101,22 @@ async function query(endpoint: string, payload: any) {
     return res.json()
 }
 
-const QUEUE_EP = 'https://uwlzdugezcmrk5vk.eu-west-1.aws.endpoints.huggingface.cloud'
-const PRIORITY_EP = 'https://rxnypflnfgdbgoxr.us-east-1.aws.endpoints.huggingface.cloud'
+function constructModelInput(subject: string, body: string) {
+    return {
+        inputs: (subject + ' ').repeat(2) + body,
+        parameters: {}
+    }
+}
+
+
+async function predictQueue(subject: string, body: string) {
+    return query(QUEUE_EP, constructModelInput(subject, body))
+}
+
+async function predictPriority(subject: string, body: string) {
+    return query(PRIORITY_EP, constructModelInput(subject, body))
+}
+
 
 // form state
 const subject = ref('')
@@ -122,38 +140,56 @@ function applyExample() {
     errorMessage.value = null
 }
 
+async function warmupHuggingfaceEndpoints() {
+    // Warmup the endpoints to avoid cold start issues
+    try {
+        await Promise.all([
+            predictQueue('Warmup', 'This is a warmup message'),
+            predictPriority('Warmup', 'This is a warmup message')
+        ])
+        console.log('Endpoints warmed up successfully')
+    } catch (e) {
+        console.error('Error during warmup:', e)
+    }
+}
+
 // retry+backoff prediction
-async function predict() {
+async function predict(attempt = 1) {
+    const maxAttempts = 8
+
     loading.value = true
     errorMessage.value = null
     queueResult.value = null
+
     prioResult.value = null
 
-    const text = (subject.value + ' ').repeat(2) + body.value
-    const maxAttempts = 8
-
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-        try {
-            const [q, p] = await Promise.all([
-                query(QUEUE_EP, {inputs: text, parameters: {}}),
-                query(PRIORITY_EP, {inputs: text, parameters: {}})
-            ])
-            queueResult.value = q
-            prioResult.value = p
-            break
-        } catch (e) {
-            console.error(`Attempt ${attempt} failed`, e)
-            if (attempt === maxAttempts) {
-                // Use the t() function for the error message
-                errorMessage.value = t('otai_prediction_demo_component.predictionError')
-            } else {
-                const delay = 500 * Math.pow(2, attempt - 1)
-                await new Promise(res => setTimeout(res, delay))
-            }
+    try {
+        const [q, p] = await Promise.all([
+            predictQueue(subject.value, body.value),
+            predictPriority(subject.value, body.value)
+        ])
+        queueResult.value = q
+        prioResult.value = p
+        loading.value = false
+    } catch (e) {
+        console.error(`Attempt ${attempt} failed`, e)
+        if (attempt >= maxAttempts) {
+            errorMessage.value = t('otai_prediction_demo_component.predictionError')
+            loading.value = false
+        } else {
+            const delay = 500 * Math.pow(2, attempt - 1)
+            await new Promise(res => setTimeout(res, delay))
+            return predict(attempt + 1)
         }
     }
-
-    loading.value = false
 }
+
+useHumanLoadedPage(() => {
+    warmupHuggingfaceEndpoints().then(() => {
+        console.log('Warmup complete')
+    }).catch(err => {
+        console.error('Warmup failed:', err)
+    })
+})
 
 </script>
