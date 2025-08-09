@@ -1,4 +1,4 @@
-import FunctionDoc from '../.vitepress/components/FunctionDoc.vue'
+import FunctionDoc from '../.vitepress/components/autoDocs/FunctionDoc.vue'
 import type {Meta, StoryObj} from '@storybook/vue3'
 import {FunctionData} from "../.vitepress/composables/useApiDocs";
 

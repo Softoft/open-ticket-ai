@@ -64,9 +64,10 @@ layout: home
     videoId="Kz5kWb8w5Bg"
     title="Open Ticket AI — The Open-Source Solution for Automated Ticket Classification"
 />
-<ServicePackagesComponent/>
+<ServicePackages/>
 
-<SupportPlansComponent/>
+<SyntheticDataPackages/>
+<SupportPlans/>
 
 ## Contact
 
