@@ -1,7 +1,7 @@
 import {generateNavbar} from './navbarUtil.js'
 import {defineConfig} from "vitepress";
 import {generateMultiSidebar} from "./siedebarUtil";
-import { withMermaid } from "vitepress-plugin-mermaid";
+import {withMermaid} from "vitepress-plugin-mermaid";
 
 var __VUE_PROD_DEVTOOLS__ = false
 console.log(__VUE_PROD_DEVTOOLS__)
@@ -29,8 +29,10 @@ export default withMermaid(defineConfig({
         ],
     ],
     description: '',
+    lastUpdated: true,
+    cleanUrls: true,
     sitemap: {
-        hostname: 'https://ai-ticket-classification.softoft.de'
+        hostname: 'https://open-ticket-ai.com',
     },
     locales: {
         root: {

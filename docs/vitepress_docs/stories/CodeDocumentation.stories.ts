@@ -1,4 +1,4 @@
-import CodeDocumentation from '../.vitepress/components/CodeDocumentation.vue'
+import CodeDocumentation from '../.vitepress/components/autoDocs/CodeDocumentation.vue'
 import type { Meta, StoryObj } from '@storybook/vue3'
 
 const meta: Meta<typeof CodeDocumentation> = {
