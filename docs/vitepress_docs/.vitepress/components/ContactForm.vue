@@ -28,7 +28,6 @@
           id="email"
           v-model="email"
           placeholder="you@domain.com"
-          :disabled="isSubmitting"
         />
       </div>
 

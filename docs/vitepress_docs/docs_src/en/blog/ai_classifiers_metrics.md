@@ -149,6 +149,6 @@ visible. By focusing on the right metrics from day one, support teams can iterat
 ticket classifiers and deliver more reliable automation.
 
 Want to try these ideas on your own data? Check
-out [Softoft’s Ticket Classification](https://ticket-classification.softoft.de) platform to
+out [Open Ticket AI Demo](https://open-ticket-ai.com) platform to
 experiment with real ticket datasets and built-in evaluation tools.
 

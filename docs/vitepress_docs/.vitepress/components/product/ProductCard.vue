@@ -13,7 +13,7 @@
         </template>
 
         <template #default>
-            <div class="px-2 flex-1 flex flex-col">
+            <div class="px-5 flex-1 flex flex-col">
                 <p class="text-gray-400 mb-2 leading-relaxed">
                     {{ product.description }}
                 </p>

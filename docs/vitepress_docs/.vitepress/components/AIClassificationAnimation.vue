@@ -20,12 +20,11 @@
                     </button>
                 </div>
                 <svg ref="svgEl" :viewBox="`0 0 ${size.w} ${size.h}`" class="router-svg">
-                    <!-- ① Queue & AI boxes -->
                     <g v-for="node in nodes" :key="node.id">
                         <rect
                             :id="node.id==='inbox' ? 'inbox-box'
-               : node.id==='ai'    ? 'ai-box'
-               : null"
+                                : node.id==='ai'    ? 'ai-box'
+                                : null"
                             :fill="node.fill"
                             :fill-opacity="node.alpha"
                             :height="nodeH"
