@@ -65,7 +65,7 @@
 
 <script lang="ts" setup>
 
-import {ref} from 'vue'
+import {onMounted, ref} from 'vue'
 import Button from '../core/Button.vue'
 import {examples} from "./demoExamples";
 import {useI18n} from 'vue-i18n'
@@ -184,12 +184,15 @@ async function predict(attempt = 1) {
     }
 }
 
-useHumanLoadedPage(() => {
-    warmupHuggingfaceEndpoints().then(() => {
-        console.log('Warmup complete')
-    }).catch(err => {
-        console.error('Warmup failed:', err)
+onMounted(() => {
+    useHumanLoadedPage(() => {
+        warmupHuggingfaceEndpoints().then(() => {
+            console.log('Warmup complete')
+        }).catch(err => {
+            console.error('Warmup failed:', err)
+        })
     })
 })
+
 
 </script>
