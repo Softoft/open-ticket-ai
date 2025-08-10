@@ -1,7 +1,5 @@
 ---
-description: Documentación oficial para el punto de entrada de la interfaz de línea de comandos
-  (CLI) de Open Ticket AI. Esta guía cubre main.py, detallando cómo configurar los
-  niveles de registro y lanzar la aplicación.
+description: Documentación oficial para el punto de entrada de la interfaz de línea de comandos (CLI) de Open Ticket AI. Esta guía cubre main.py, detallando cómo configurar los niveles de registro y lanzar la aplicación.
 ---
 # Documentación para `**/ce/*.py`
 
@@ -20,14 +18,13 @@ Configura los niveles de registro (logging) y lanza la aplicación principal.
 
 ### <span class='text-warning'>def</span> `main(verbose: bool, debug: bool)`
 
-Configura el registro (logging) según las opciones de la CLI.
-Esta función establece el nivel de registro para la aplicación basándose en los indicadores (flags) de la línea de comandos proporcionados.
+Configura el registro (logging) basado en las opciones de la CLI.
+Esta función establece el nivel de registro para la aplicación basándose en las banderas (flags) de la línea de comandos proporcionadas.
 Soporta dos niveles de verbosidad:
 - `--verbose` para el nivel de registro INFO
 - `--debug` para el nivel de registro DEBUG
 
-Si no se proporcionan indicadores, el nivel de registro por defecto es WARNING. La función también configura
-el formato de los registros y suprime las bibliotecas ruidosas (p. ej., urllib3).
+Si no se proporcionan banderas, el nivel de registro por defecto es WARNING. La función también configura el formato de los registros y suprime las bibliotecas ruidosas (p. ej., urllib3).
 
 **Parámetros:**
 
@@ -45,8 +42,7 @@ Este comando realiza las siguientes acciones:
 3. Ejecuta la aplicación
 4. Muestra un banner de inicio estilizado usando `pyfiglet`
 
-La aplicación sigue un patrón de inyección de dependencias donde todas las dependencias requeridas
-se resuelven a través del `DIContainer`.
+La aplicación sigue un patrón de inyección de dependencias donde todas las dependencias requeridas se resuelven a través del `DIContainer`.
 
 
 

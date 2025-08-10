@@ -1,10 +1,11 @@
 ---
-description: Entdecken Sie unsere Python-Bibliothek für die nahtlose Integration von Ticketsystemen.
-  Diese Dokumentation beschreibt den `TicketSystemAdapter`, eine abstrakte Basisklasse
-  zur Erstellung benutzerdefinierter Konnektoren, und stellt einen einsatzbereiten
-  `OTOBOAdapter` zur Verfügung. Lernen Sie, wie Sie Tickets über verschiedene Plattformen
-  hinweg mit einheitlichen Modellen wie `UnifiedTicket`, `UnifiedNote` und `SearchCriteria`
-  zum Erstellen, Aktualisieren und Suchen von Support-Tickets verwalten.
+description: Entdecken Sie unsere Python-Bibliothek für die nahtlose Integration von
+  Ticketsystemen. Diese Dokumentation beschreibt den `TicketSystemAdapter`, eine
+  abstrakte Basisklasse zum Erstellen benutzerdefinierter Konnektoren, und stellt
+  einen einsatzbereiten `OTOBOAdapter` zur Verfügung. Lernen Sie, wie Sie Tickets
+  über verschiedene Plattformen hinweg verwalten, indem Sie einheitliche Modelle
+  wie `UnifiedTicket`, `UnifiedNote` und `SearchCriteria` zum Erstellen, Aktualisieren
+  und Suchen von Support-Tickets verwenden.
 ---
 # Dokumentation für `**/ce/ticket_system_integration/*.py`
 
@@ -12,7 +13,7 @@ description: Entdecken Sie unsere Python-Bibliothek für die nahtlose Integratio
 
 Paket zur Integration mit OTOBO-Systemen.
 Dieses Modul stellt die primäre Schnittstelle für die OTOBO-Integration bereit, indem es
-die `OTOBOAdapter`-Klasse verfügbar macht. Es dient als öffentlicher API-Einstiegspunkt für
+die Klasse `OTOBOAdapter` verfügbar macht. Es dient als öffentlicher API-Einstiegspunkt für
 die Interaktion mit OTOBO-Diensten.
 
 
@@ -31,8 +32,8 @@ die Interaktion mit OTOBO-Diensten.
 ### <span style='text-info'>class</span> `TicketSystemAdapter`
 
 Eine abstrakte Basisklasse für Ticketsystem-Adapter.
-Diese Klasse definiert die Schnittstelle, die alle konkreten Ticketsystem-Adapter implementieren müssen,
-um mit verschiedenen Ticketsystemen zu interagieren. Sie bietet eine gemeinsame
+Diese Klasse definiert die Schnittstelle, die alle konkreten Ticketsystem-Adapter
+implementieren müssen, um mit verschiedenen Ticketsystemen zu interagieren. Sie bietet eine gemeinsame
 Konfigurationsbehandlung durch Dependency Injection und erfordert, dass Unterklassen
 die Kernoperationen für Tickets implementieren.
 
@@ -41,11 +42,11 @@ die Kernoperationen für Tickets implementieren.
 - **`config`** (`SystemConfig`) - Systemkonfigurationsobjekt, das die Adapter-Einstellungen enthält.
 
 
-::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `__init__(self, config: SystemConfig)`
+::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `__init__(self, config: SystemConfig)`
 Initialisiert den Adapter mit der Systemkonfiguration.
-Dieser Konstruktor wird automatisch über das Dependency-Injection-Framework mit der Systemkonfiguration
-versorgt. Er initialisiert den Adapter mit der bereitgestellten
-Konfiguration und stellt die ordnungsgemäße Einrichtung der geerbten
+Diesem Konstruktor wird die Systemkonfiguration automatisch über das
+Dependency-Injection-Framework injiziert. Er initialisiert den Adapter
+mit der bereitgestellten Konfiguration und stellt die korrekte Einrichtung der geerbten
 Komponenten sicher.
 
 **Parameter:**
@@ -56,7 +57,7 @@ alle notwendigen Einstellungen und Parameter für den Adapter enthält.
 :::
 
 
-::: details #### <Badge type="info" text="Methode"/> <span class="text-warning">async def</span> `update_ticket(self, ticket_id: str, updates: dict) -> bool`
+::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `update_ticket(self, ticket_id: str, updates: dict) -> bool`
 Aktualisiert ein Ticket im System.
 Diese Methode muss von konkreten Adaptern implementiert werden, um die Aktualisierung
 von Ticket-Attributen im Ziel-Ticketsystem zu handhaben. Sie sollte Teilaktualisierungen
@@ -72,12 +73,12 @@ unterstützen und die aktualisierte Ticket-Darstellung zurückgeben.
 :::
 
 
-::: details #### <Badge type="info" text="Methode"/> <span class="text-warning">async def</span> `find_tickets(self, criteria: SearchCriteria) -> list[UnifiedTicket]`
+::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `find_tickets(self, criteria: SearchCriteria) -> list[UnifiedTicket]`
 Sucht nach Tickets, die den ``criteria`` entsprechen.
 Diese Methode muss von konkreten Adaptern implementiert werden, um
 komplexe Suchen im Ziel-Ticketsystem durchzuführen. Die Abfragestruktur
-ist adapter-spezifisch, sollte aber gängige Filter-
-und Suchoperationen unterstützen.
+ist adapter-spezifisch, sollte aber gängige Filter- und
+Suchoperationen unterstützen.
 
 **Parameter:**
 
@@ -89,7 +90,7 @@ Gibt eine leere Liste zurück, wenn keine Übereinstimmungen gefunden werden.
 :::
 
 
-::: details #### <Badge type="info" text="Methode"/> <span class="text-warning">async def</span> `find_first_ticket(self, criteria: SearchCriteria) -> UnifiedTicket | None`
+::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `find_first_ticket(self, criteria: SearchCriteria) -> UnifiedTicket | None`
 Gibt das erste Ticket zurück, das den ``criteria`` entspricht, falls vorhanden.
 Dies ist eine Hilfsmethode, die das erste passende
 Ticket aus einer Suchoperation zurückgeben sollte. Sie sollte die Leistung
@@ -104,7 +105,7 @@ optimieren, indem sie die Ergebnisse intern begrenzt.
 :::
 
 
-::: details #### <Badge type="info" text="Methode"/> <span class="text-warning">async def</span> `create_ticket(self, ticket_data: UnifiedTicket) -> UnifiedTicket`
+::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `create_ticket(self, ticket_data: UnifiedTicket) -> UnifiedTicket`
 Erstellt ein neues Ticket im System.
 Diese Methode muss von konkreten Adaptern implementiert werden, um die Ticketerstellung
 im Ziel-Ticketsystem zu handhaben. Die Ticketdaten werden in einem einheitlichen Format bereitgestellt.
@@ -114,22 +115,22 @@ im Ziel-Ticketsystem zu handhaben. Die Ticketdaten werden in einem einheitlichen
 - **`ticket_data`** (`UnifiedTicket`) - Die zu erstellenden Ticketdaten. Enthält alle notwendigen Felder in einem 
 systemunabhängigen Format.
 
-**Rückgabe:** (`UnifiedTicket`) - Das erstellte Ticketobjekt mit systemgenerierten Bezeichnern und Feldern.
+**Rückgabe:** (`UnifiedTicket`) - Das erstellte Ticket-Objekt mit systemgenerierten Bezeichnern und Feldern.
 
 :::
 
 
-::: details #### <Badge type="info" text="Methode"/> <span class="text-warning">async def</span> `add_note(self, ticket_id: str, note: UnifiedNote) -> UnifiedNote`
-Fügt eine Notiz zu einem bestehenden Ticket hinzu.
+::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `add_note(self, ticket_id: str, note: UnifiedNote) -> UnifiedNote`
+Fügt einem bestehenden Ticket eine Notiz hinzu.
 Diese Methode muss von konkreten Adaptern implementiert werden, um Notizen/Kommentare
-an Tickets im Zielsystem anzuhängen. Der Notizinhalt wird in einem einheitlichen Format bereitgestellt.
+an Tickets im Zielsystem anzuhängen. Der Inhalt der Notiz wird in einem einheitlichen Format bereitgestellt.
 
 **Parameter:**
 
 - **`ticket_id`** (`str`) - Eindeutiger Bezeichner des Ziel-Tickets.
-- **`note`** (`UnifiedNote`) - Der hinzuzufügende Notizinhalt und die Metadaten.
+- **`note`** (`UnifiedNote`) - Der Inhalt und die Metadaten der hinzuzufügenden Notiz.
 
-**Rückgabe:** (`UnifiedNote`) - Das hinzugefügte Notizobjekt mit systemgenerierten Metadaten (z. B. Zeitstempel, ID).
+**Rückgabe:** (`UnifiedNote`) - Das hinzugefügte Notiz-Objekt mit systemgenerierten Metadaten (z.B. Zeitstempel, ID).
 
 :::
 
@@ -207,9 +208,9 @@ Kriterien zum Suchen/Filtern von Tickets.
 **Parameter:**
 
 - **`id`** (`Optional[str]`) (default: `None`) - Ticket-ID, nach der gesucht werden soll. Standardwert ist None.
-- **`subject`** (`Optional[str]`) (default: `None`) - Text, der im Ticket-Betreff gesucht werden soll. Standardwert ist None.
+- **`subject`** (`Optional[str]`) (default: `None`) - Text, der im Betreff von Tickets gesucht werden soll. Standardwert ist None.
 - **`queue`** (`Optional[UnifiedQueue]`) (default: `None`) - Warteschlange, nach der gefiltert werden soll. Standardwert ist None.
-- **`user`** (`Optional[UnifiedUser]`) (default: `None`) - Benutzer, nach dem gefiltert werden soll (z. B. Besitzer). Standardwert ist None.
+- **`user`** (`Optional[UnifiedUser]`) (default: `None`) - Benutzer, nach dem gefiltert werden soll (z.B. Besitzer). Standardwert ist None.
 
 
 ---

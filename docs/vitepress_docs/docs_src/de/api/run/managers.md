@@ -1,20 +1,20 @@
 ---
 description: Erkunden Sie die OpenTicketAI `Orchestrator`-Klasse, eine Kernkomponente zur Automatisierung
   von Ticketverarbeitungs-Workflows. Dieses Python-Modul verwaltet den gesamten Lebenszyklus
-  von Pipelines, einschließlich der Instanziierung mittels Dependency Injection, der
-  Verarbeitung einzelner Tickets und der geplanten Ausführung für eine kontinuierliche Automatisierung.
+  von Pipelines, einschließlich der Instanziierung über Dependency Injection, der Verarbeitung
+  einzelner Tickets und der geplanten Ausführung für eine kontinuierliche Automatisierung.
 ---
 # Dokumentation für `**/ce/run/managers/*.py`
 
 ## Modul: `open_ticket_ai\src\ce\run\managers\orchestrator.py`
 
-Orchestrierungs-Hilfsprogramme auf höchster Ebene.
+Orchestrierungs-Hilfsprogramme der obersten Ebene.
 
 ### <span style='text-info'>class</span> `Orchestrator`
 
 Orchestriert die Ausführung von Ticketverarbeitungs-Pipelines.
 Diese Klasse verwaltet den Lebenszyklus von Pipelines, einschließlich:
-- Instanziierung von Pipelines mittels Dependency Injection
+- Instanziierung der Pipeline über Dependency Injection
 - Verarbeitung einzelner Tickets
 - Geplante Ausführung von Pipelines
 
@@ -65,9 +65,9 @@ mit Zuordnungen von Pipeline-IDs zu Instanzen.
 ::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `set_schedules(self) -> None`
 Konfiguriert die geplante Ausführung für alle Pipelines.
 Führt die folgenden Operationen aus:
-1. Erstellt Pipelines, falls diese noch nicht instanziiert wurden
+1. Erstellt Pipelines, falls diese noch nicht instanziiert sind
 2. Konfiguriert die periodische Ausführung für jede Pipeline gemäß ihrer
-   Zeitplan-Konfiguration unter Verwendung der `schedule`-Bibliothek
+   Zeitplankonfiguration unter Verwendung der `schedule`-Bibliothek
 
 Die Zeitplanung verwendet die folgenden Konfigurationsparameter:
 - interval: Numerischer Intervallwert

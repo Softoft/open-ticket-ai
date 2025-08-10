@@ -1,9 +1,9 @@
 ---
-description: Explorez la classe `Orchestrator` d'OpenTicketAI, un composant essentiel pour
-  automatiser les flux de travail de traitement des tickets. Ce module Python gère
-  le cycle de vie complet des pipelines, y compris l'instanciation via l'injection
-  de dépendances, le traitement individuel des tickets et l'exécution planifiée pour
-  une automatisation continue.
+description: Découvrez la class `Orchestrator` d'OpenTicketAI, un composant essentiel
+  pour automatiser les flux de travail de traitement des tickets. Ce module Python
+  gère le cycle de vie complet des pipelines, y compris l'instanciation via l'injection
+  de dépendances, le traitement individuel des tickets et l'exécution planifiée
+  pour une automatisation continue.
 ---
 # Documentation pour `**/ce/run/managers/*.py`
 
@@ -14,7 +14,7 @@ Utilitaires d'orchestration de haut niveau.
 ### <span style='text-info'>class</span> `Orchestrator`
 
 Orchestre l'exécution des pipelines de traitement de tickets.
-Cette classe gère le cycle de vie des pipelines, y compris :
+Cette `class` gère le cycle de vie des pipelines, y compris :
 - L'instanciation des pipelines via l'injection de dépendances
 - Le traitement individuel des tickets
 - L'exécution planifiée des pipelines
@@ -24,11 +24,11 @@ Cette classe gère le cycle de vie des pipelines, y compris :
 - **`config`** () - Paramètres de configuration pour l'orchestrateur
 - **`container`** () - Conteneur d'injection de dépendances fournissant les instances de pipeline
 - **`_logger`** () - Instance de logger pour les opérations d'orchestration
-- **`_pipelines`** () - Dictionnaire associant les identifiants de pipeline aux instances de pipeline
+- **`_pipelines`** () - Dictionnaire associant les ID de pipeline aux instances de pipeline
 
 
 ::: details #### <Badge type="info" text="méthode"/> <span class='text-warning'>def</span> `__init__(self, config: OpenTicketAIConfig, container: AbstractContainer)`
-Initialise l'Orchestrator avec la configuration et le conteneur d'injection de dépendances.
+Initialise l'Orchestrator avec la configuration et le conteneur d'injection de dépendances (DI).
 
 **Paramètres :**
 
@@ -58,7 +58,7 @@ après l'exécution du pipeline.
 Instancie tous les objets pipeline configurés.
 Utilise le conteneur d'injection de dépendances pour créer des instances de pipeline
 basées sur la configuration. Remplit le registre interne des pipelines
-avec les correspondances entre les identifiants de pipeline et les instances.
+avec les correspondances entre les ID de pipeline et les instances.
 
 :::
 

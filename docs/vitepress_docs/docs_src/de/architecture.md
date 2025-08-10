@@ -1,8 +1,8 @@
 ---
 description: Erkunden Sie die technische Architektur von Open Ticket AI. Erfahren Sie,
-  wie die modulare Datenpipeline, Dependency Injection und die Hugging Face-Modelle
-  eine intelligente Ticket-Klassifizierung und -Weiterleitung für Helpdesk-Systeme
-  wie OTOBO ermöglichen.
+  wie die modulare Datenpipeline, Dependency Injection und Hugging Face-Modelle eine
+  intelligente Ticket-Klassifizierung und -Weiterleitung für Helpdesk-Systeme wie
+  OTOBO ermöglichen.
 title: Open Ticket AI Architekturübersicht
 layout: page
 pageClass: full-page

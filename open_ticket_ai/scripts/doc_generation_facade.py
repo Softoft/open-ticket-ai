@@ -181,7 +181,7 @@ def _add_frontmatter_meta_seo_descriptions(summaries: dict):
 async def _translate_to_multi_lang_docs(model: str):
     """Translates documentation files to multiple languages."""
     await generator.translate_docs(
-        docs_src_path, "en", ["fr", "es"], model, docs_src_path.parent,
+        docs_src_path, "en", ["de", "fr", "es"], model, docs_src_path.parent,
     )
 
 

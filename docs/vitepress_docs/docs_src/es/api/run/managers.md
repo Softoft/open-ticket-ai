@@ -1,11 +1,14 @@
 ---
-description: Explore la clase `Orchestrator` de OpenTicketAI, un componente central para automatizar los flujos de trabajo de procesamiento de tickets. Este módulo de Python gestiona el ciclo de vida completo de los pipelines, incluyendo la instanciación mediante inyección de dependencias, el procesamiento individual de tickets y la ejecución programada para una automatización continua.
+description: Explora la clase `Orchestrator` de OpenTicketAI, un componente central para automatizar
+  los flujos de trabajo de procesamiento de tickets. Este módulo de Python gestiona el ciclo de vida completo de
+  los pipelines, incluyendo la instanciación mediante inyección de dependencias, el procesamiento individual de tickets
+  y la ejecución programada para una automatización continua.
 ---
 # Documentación para `**/ce/run/managers/*.py`
 
 ## Módulo: `open_ticket_ai\src\ce\run\managers\orchestrator.py`
 
-Utilidades de orquestación de nivel superior.
+Utilidades de orquestación de alto nivel.
 
 ### <span style='text-info'>class</span> `Orchestrator`
 
@@ -18,8 +21,8 @@ Esta clase gestiona el ciclo de vida de los pipelines, incluyendo:
 **Parámetros:**
 
 - **`config`** () - Ajustes de configuración para el orquestador
-- **`container`** () - Contenedor de inyección de dependencias que proporciona instancias de pipeline
-- **`_logger`** () - Instancia de logger para operaciones de orquestación
+- **`container`** () - Contenedor de inyección de dependencias que proporciona las instancias de los pipelines
+- **`_logger`** () - Instancia de logger para las operaciones de orquestación
 - **`_pipelines`** () - Diccionario que mapea los IDs de los pipelines a sus instancias
 
 
@@ -29,7 +32,7 @@ Inicializa el Orchestrator con la configuración y el contenedor de DI.
 **Parámetros:**
 
 - **`config`** () - Ajustes de configuración para el orquestador.
-- **`container`** () - Contenedor de inyección de dependencias que proporciona instancias de pipeline.
+- **`container`** () - Contenedor de inyección de dependencias que proporciona las instancias de los pipelines.
 
 :::
 
@@ -63,8 +66,8 @@ con los mapeos de ID de pipeline a instancia.
 Configura la ejecución programada para todos los pipelines.
 Realiza las siguientes operaciones:
 1. Construye los pipelines si no han sido instanciados previamente
-2. Configura la ejecución periódica para cada pipeline de acuerdo con su
-   configuración de programación, utilizando la librería `schedule`
+2. Configura la ejecución periódica para cada pipeline según su
+   configuración de programación utilizando la librería `schedule`
 
 La programación utiliza los siguientes parámetros de configuración:
 - interval: Valor numérico del intervalo

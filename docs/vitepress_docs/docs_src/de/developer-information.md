@@ -1,15 +1,15 @@
 ---
-description: Entwicklerleitfaden für die ATC Community Edition, ein On-Premise-Tool zur Ticket-Klassifizierung.
+description: Entwicklerhandbuch für die ATC Community Edition, ein On-Premise-Tool zur Ticket-Klassifizierung.
     Lernen Sie, das System mit YAML zu konfigurieren, es über die CLI auszuführen und seine
-    Architektur mit benutzerdefinierten Python-Komponenten, pipe_ids und Ticketsystem-Adaptern zu erweitern.
-title: Entwicklerinformationen
+    Architektur durch benutzerdefinierte Python-Komponenten, Pipe-IDs und Adapter für Ticketsysteme zu erweitern.
+title: Informationen für Entwickler
 ---
 
-# Entwicklerinformationen für die ATC Community Edition
+# Informationen für Entwickler zur ATC Community Edition
 
-## Übersicht
+## Überblick
 
-Die ATC Community Edition ist eine On-Premise-Lösung zur automatisierten Klassifizierung von Support-Tickets. Die aktuelle MVP-Version wird über eine YAML-Konfigurationsdatei gesteuert und per CLI gestartet. Es gibt keine REST API zum Hochladen von Trainingsdaten oder zum Anstoßen eines Trainingslaufs.
+Die ATC Community Edition ist eine On-Premise-Lösung zur automatisierten Klassifizierung von Support-Tickets. Die aktuelle MVP-Version wird über eine YAML-Konfigurationsdatei gesteuert und per CLI gestartet. Es gibt keine REST API zum Hochladen von Trainingsdaten oder zum Auslösen eines Trainingslaufs.
 
 ## Softwarearchitektur
 
@@ -30,7 +30,7 @@ python -m open_ticket_ai.src.ce.main start
 
 ## Training benutzerdefinierter Modelle
 
-Ein direktes Training durch die Anwendung ist im MVP nicht vorgesehen. Vortrainierte Modelle können in der Konfiguration angegeben und verwendet werden. Wenn ein Modell angepasst oder neu erstellt werden muss, muss dies außerhalb der Anwendung geschehen.
+Ein direktes Training über die Anwendung ist im MVP nicht vorgesehen. Vortrainierte Modelle können in der Konfiguration spezifiziert und verwendet werden. Muss ein Model angepasst oder neu erstellt werden, muss dies außerhalb der Anwendung geschehen.
 
 ## Erweiterung
 
@@ -44,10 +44,10 @@ Pipes erben von der `Pipe`-Basisklasse, die bereits
 das `Providable`-Mixin implementiert.
 
 1.  **Erstellen Sie ein Konfigurationsmodell** für Ihre Pipe, falls diese Parameter benötigt.
-2.  **Leiten Sie von `Pipe` ab** und implementieren Sie die `process`-Methode.
+2.  **Bilden Sie eine Unterklasse von `Pipe`** und implementieren Sie die `process`-Methode.
 3.  **Überschreiben Sie `get_provider_key()`**, wenn Sie einen benutzerdefinierten Schlüssel wünschen.
 
-Das folgende vereinfachte Beispiel aus der `AI_README` zeigt eine Pipe zur Stimmungsanalyse:
+Das folgende vereinfachte Beispiel aus der `AI_README` zeigt eine Pipe für die Sentiment-Analyse:
 
 ```python
 class SentimentPipeConfig(BaseModel):
@@ -76,31 +76,31 @@ class SentimentAnalysisPipe(Pipe, Providable):
 ```
 
 Nach der Implementierung der Klasse registrieren Sie diese in Ihrer Dependency-Injection-Registry
-und referenzieren sie in der `config.yml` unter Verwendung des von
-`get_provider_key()` zurückgegebenen Provider-Schlüssels.
+und referenzieren sie in der `config.yml` über den von
+`get_provider_key()` zurückgegebenen Provider-Schlüssel.
 
 ## Wie man ein neues Ticketsystem integriert
 
 Um ein anderes Helpdesk-System anzubinden, implementieren Sie einen neuen Adapter, der von
 `TicketSystemAdapter` erbt. Der Adapter konvertiert zwischen der externen API und den
-einheitlichen Modellen des Projekts.
+vereinheitlichten Modellen des Projekts.
 
 1.  **Erstellen Sie eine Adapter-Klasse**, z.B. `FreshdeskAdapter(TicketSystemAdapter)`.
 2.  **Implementieren Sie alle abstrakten Methoden**:
-    *   `find_tickets`
-    *   `find_first_ticket`
-    *   `create_ticket`
-    *   `update_ticket`
-    *   `add_note`
-3.  **Übersetzen Sie Daten** in die und aus den `UnifiedTicket`- und `UnifiedNote`-Modellen.
-4.  **Stellen Sie ein Konfigurationsmodell** für Anmeldeinformationen oder API-Einstellungen bereit.
+    - `find_tickets`
+    - `find_first_ticket`
+    - `create_ticket`
+    - `update_ticket`
+    - `add_note`
+3.  **Übersetzen Sie Daten** zu und von den `UnifiedTicket`- und `UnifiedNote`-Modellen.
+4.  **Stellen Sie ein Konfigurationsmodell** für Zugangsdaten oder API-Einstellungen bereit.
 5.  **Registrieren Sie den Adapter** in `create_registry.py`, damit er aus der
     YAML-Konfiguration instanziiert werden kann.
 
-Sobald der Adapter registriert ist, geben Sie ihn im `system`-Abschnitt der `config.yml` an, und
-der Orchestrator wird ihn zur Kommunikation mit dem Ticketsystem verwenden.
+Nach der Registrierung geben Sie den Adapter im `system`-Abschnitt der `config.yml` an,
+und der Orchestrator wird ihn zur Kommunikation mit dem Ticketsystem verwenden.
 
 ## Zusammenfassung
 
 Die ATC Community Edition bietet in ihrer MVP-Version einen lokal ausgeführten Workflow zur automatischen Ticket-Klassifizierung. Alle
-Einstellungen werden über YAML-Dateien verwaltet; es steht keine REST API zur Verfügung. Für das Training müssen externe Prozesse oder Skripte verwendet werden.
+Einstellungen werden über YAML-Dateien verwaltet; es ist keine REST API verfügbar. Für das Training müssen externe Prozesse oder Skripte verwendet werden.

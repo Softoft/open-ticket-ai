@@ -1,8 +1,8 @@
 ---
-description: Documentación oficial de los módulos de utilidades principales de OpenTicketAI.
-  Aprende a generar un `config.schema.json` para la validación y autocompletado de
-  la configuración, y descubre otras utilidades de Python para gestionar la configuración
-  del proyecto.
+description: Documentación oficial para los módulos de utilidad principales de OpenTicketAI.
+  Aprenda cómo generar un `config.schema.json` para la validación y autocompletado
+  de la configuración, y descubra otras utilidades de Python para gestionar los
+  ajustes del proyecto.
 pageClass: wide-page
 layout: page
 ---

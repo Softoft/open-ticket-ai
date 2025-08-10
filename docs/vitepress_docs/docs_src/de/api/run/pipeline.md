@@ -1,5 +1,10 @@
 ---
-description: 'Entdecken Sie ein modulares Python-Pipeline-Framework zum Erstellen robuster Datenverarbeitungs-Workflows. Diese Dokumentation behandelt die Kernkomponenten: den `Pipeline`-Orchestrator, einzelne `Pipe`-Stufen und den `PipelineContext` für die Zustandsverwaltung. Lernen Sie, wie Sie sequentielle Verarbeitung implementieren, Fehler elegant behandeln, den Ausführungsstatus (RUNNING, SUCCESS, FAILED, STOPPED) verwalten und die Typsicherheit mit Pydantic gewährleisten.'
+description: 'Entdecken Sie ein modulares Python-Pipeline-Framework zum Erstellen robuster
+  Datenverarbeitungs-Workflows. Diese Dokumentation behandelt die Kernkomponenten:
+  den `Pipeline`-Orchestrator, einzelne `Pipe`-Stufen und den `PipelineContext`
+  für die Zustandsverwaltung. Lernen Sie, wie Sie eine sequenzielle Verarbeitung
+  implementieren, Fehler elegant behandeln, den Ausführungsstatus (RUNNING, SUCCESS,
+  FAILED, STOPPED) verwalten und die Typsicherheit mit Pydantic gewährleisten.'
 ---
 # Dokumentation für `**/ce/run/pipeline/*.py`
 
@@ -9,9 +14,9 @@ description: 'Entdecken Sie ein modulares Python-Pipeline-Framework zum Erstelle
 ### <span style='text-info'>class</span> `PipelineContext`
 
 Kontextobjekt, das zwischen den Pipeline-Stufen übergeben wird.
-Diese generische Klasse dient als Container zum Teilen von Zustand und Daten über verschiedene
-Stufen einer Verarbeitungspipeline hinweg. Sie nutzt Pydantic zur Datenvalidierung
-und -serialisierung.
+Diese generische Klasse dient als Container zum Teilen von Zustand und Daten über
+verschiedene Stufen einer Verarbeitungspipeline hinweg. Sie nutzt Pydantic zur Daten-
+validierung und -serialisierung.
 
 Der generische Typparameter `DataT` muss eine Unterklasse von `BaseModel` sein,
 um die Typsicherheit für die Hauptdatennutzlast zu gewährleisten.
@@ -28,7 +33,7 @@ Statusinformationen und operativen Details.
 Signalisiert der Pipeline, die Verarbeitung anzuhalten.
 Diese Methode bietet eine kontrollierte Möglichkeit für Pipeline-Stufen, anzuzeigen,
 dass die Verarbeitung gestoppt werden soll. Sie aktualisiert die Status-Metadaten
-des Kontexts auf `STOPPED`, was nachfolgende Stufen prüfen können, um vorzeitig zu beenden.
+des Kontexts auf `STOPPED`, was nachfolgende Stufen prüfen können, um frühzeitig zu beenden.
 
 Hinweis:
     Diese Methode ändert den Zustand des Kontexts, gibt aber keinen Wert zurück.
@@ -49,9 +54,9 @@ falls Fehler auftreten.
 
 **Parameter:**
 
-- **`status`** () (Standard: `RUNNING`) - Aktueller Ausführungsstatus der Pipeline. Standardmäßig RUNNING.
-- **`error_message`** () - Detaillierte Fehlermeldung, falls die Pipeline fehlgeschlagen ist. None bei Erfolg.
-- **`failed_pipe`** () - Bezeichner der spezifischen Pipe, die den Fehler verursacht hat. None bei Erfolg.
+- **`status`** () (Standard: `RUNNING`) - Aktueller Ausführungsstatus der Pipeline. Standardmäßig `RUNNING`.
+- **`error_message`** () - Detaillierte Fehlermeldung, falls die Pipeline fehlgeschlagen ist. `None` bei Erfolg.
+- **`failed_pipe`** () - Bezeichner der spezifischen Pipe, die den Fehler verursacht hat. `None` bei Erfolg.
 
 
 ---
@@ -62,8 +67,8 @@ falls Fehler auftreten.
 ### <span style='text-info'>class</span> `Pipe`
 
 Schnittstelle für alle Pipeline-Komponenten.
-Diese abstrakte Basisklasse definiert die gemeinsame Schnittstelle, die alle Pipeline-Komponenten
-implementieren müssen. Sie erbt von `Providable`,
+Diese abstrakte Basisklasse definiert die gemeinsame Schnittstelle, die alle Pipeline-
+Komponenten implementieren müssen. Sie erbt von `Providable`,
 um die automatische Registrierung in einer Komponenten-Registry zu ermöglichen, und von `ABC`,
 um die Implementierung abstrakter Methoden zu erzwingen.
 
@@ -72,9 +77,9 @@ Datenverarbeitungslogik innerhalb der Pipeline zu definieren.
 
 Attribute:
     Erbt Attribute von `Providable` für die Registry-Verwaltung.
-    InputDataType (type[InputDataT]): Der Typ des Eingabedatenmodells, 
+    InputDataType (type[InputDataT]): Der Typ des Eingabedatenmodells,
         das von dieser Pipe-Komponente erwartet wird.
-    OutputDataType (type[OutputDataT]): Der Typ des Ausgabedatenmodells, 
+    OutputDataType (type[OutputDataT]): Der Typ des Ausgabedatenmodells,
         das von dieser Pipe-Komponente erzeugt wird.
 
 
@@ -85,13 +90,13 @@ Sie nimmt ein `PipelineContext`-Objekt entgegen, das den gemeinsamen Pipeline-Zu
 führt Transformationen oder Operationen auf diesem Kontext durch und gibt den
 aktualisierten Kontext für die nächste Komponente in der Pipeline zurück.
 
-Argumente:
+Args:
     context: Der aktuelle Pipeline-Kontext, der die gemeinsamen Zustandsdaten enthält.
 
-Rückgabe:
+Returns:
     Das aktualisierte `PipelineContext`-Objekt nach der Verarbeitung.
 
-Löst aus:
+Raises:
     Implementierungsspezifische Ausnahmen können von Unterklassen ausgelöst werden, um
     Verarbeitungsfehler oder ungültige Zustände anzuzeigen.
 
@@ -108,9 +113,9 @@ und den Status während der gesamten Ausführung und behandelt Fehler und Stopp-
 
 ### <span style='text-info'>class</span> `Pipeline`
 
-Eine Pipeline, die eine Sequenz von Pipes nacheinander ausführt.
-Diese Klasse verwaltet den Ausführungsfluss mehrerer Pipes und behandelt dabei Statusübergänge,
-Fehlerweitergabe und Stopp-Anfragen während der Verarbeitung.
+Eine Pipeline, die eine Sequenz von Pipes sequenziell ausführt.
+Diese Klasse verwaltet den Ausführungsfluss mehrerer Pipes und behandelt während der Verarbeitung
+Statusübergänge, Fehlerweitergabe und Stopp-Anfragen.
 
 **Parameter:**
 
@@ -129,32 +134,32 @@ Initialisiert die Pipeline mit Konfiguration und Pipe-Sequenz.
 
 
 ::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `execute(self, context: PipelineContext) -> PipelineContext`
-Führt alle Pipes nacheinander mit Fehlerbehandlung und Statusweitergabe aus.
-Verarbeitet jede Pipe nacheinander und:
+Führt alle Pipes sequenziell mit Fehlerbehandlung und Statusweitergabe aus.
+Verarbeitet jede Pipe nacheinander und dabei:
 - Validiert Eingabedaten mithilfe des Eingabemodells jeder Pipe
-- Behandelt STOPPED-Statusanfragen von Pipes
-- Fängt Ausnahmen während der Pipe-Ausführung ab und protokolliert sie
+- Behandelt `STOPPED`-Statusanfragen von Pipes
+- Fängt und protokolliert Ausnahmen während der Pipe-Ausführung
 - Aktualisiert den Kontextstatus entsprechend (RUNNING, SUCCESS, FAILED, STOPPED)
 
 **Parameter:**
 
 - **`context`** () - Der Pipeline-Kontext, der den Ausführungszustand und die Daten enthält.
 
-**Rückgabe:** () - Aktualisierter PipelineContext, der den endgültigen Ausführungszustand nach der Verarbeitung widerspiegelt.
+**Returns:** () - Aktualisierter PipelineContext, der den endgültigen Ausführungszustand nach der Verarbeitung widerspiegelt.
 
 :::
 
 
 ::: details #### <Badge type="info" text="Methode"/> <span class='text-warning'>def</span> `process(self, context: PipelineContext) -> PipelineContext`
 Verarbeitet den Kontext durch die gesamte Pipeline-Sequenz.
-Implementiert die abstrakte Methode der Pipe-Basisklasse. Delegiert die
+Implementiert die abstrakte Methode aus der Pipe-Basisklasse. Delegiert die
 eigentliche Pipeline-Verarbeitung an die `execute()`-Methode.
 
 **Parameter:**
 
 - **`context`** () - Der Pipeline-Kontext, der den Ausführungszustand und die Daten enthält.
 
-**Rückgabe:** () - Aktualisierter PipelineContext nach der Verarbeitung durch alle Pipes.
+**Returns:** () - Aktualisierter PipelineContext nach der Verarbeitung durch alle Pipes.
 
 :::
 

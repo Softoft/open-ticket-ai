@@ -27,6 +27,7 @@ Note:
 from __future__ import annotations
 
 import asyncio
+from hashlib import sha256
 from pathlib import Path
 from typing import List
 
@@ -81,6 +82,71 @@ class Translator:
         self.client = client
         self.base_language = base_language
         self.translation_instruction = translation_file_path.read_text(encoding="utf-8").strip()
+
+    def initialize_hash_file(self, root: Path) -> None:
+        """Initializes the hash file to track changes in Markdown files.
+
+        Creates a `.hashes.json` file in the root directory if it does not exist.
+        This file will store the SHA-256 hashes of the Markdown files to detect changes.
+
+        Args:
+            root: The root directory where the `.hashes.json` file should be created.
+
+        Raises:
+            OSError: If there is an issue creating or writing to the hash file.
+        """
+        hash_file = root / ".hashes.json"
+        if not hash_file.exists():
+            hash_file.write_text("{}", encoding="utf-8")
+
+    def create_hash_for_file(self, path: Path) -> str:
+        """Creates a SHA-256 hash for the content of a file.
+
+        Args:
+
+            """
+        return sha256(path.read_bytes()).hexdigest()
+
+    def update_hash_file(self, root: Path, relative: Path, new_hash: str) -> None:
+        """Updates the hash file with a new hash for a specific file.
+
+        Args:
+            root: The root directory where the `.hashes.json` file is located.
+            relative: The relative path of the file whose hash is being updated.
+            new_hash: The new SHA-256 hash to store for the file.
+
+        Raises:
+            OSError: If there is an issue writing to the hash file.
+        """
+        hash_file = root / ".hashes.json"
+        import json
+        with hash_file.open(encoding="utf-8") as f:
+            previous_hashes = json.load(f)
+        previous_hashes[str(relative)] = new_hash
+        with hash_file.open("w", encoding="utf-8") as f:
+            json.dump(previous_hashes, f, indent=2)
+
+    def has_file_changed(
+        self, root: Path, relative: Path, new_text_hash: str
+    ) -> bool:
+        """Checks if a file has changed by comparing its current hash with the stored hash.
+
+        Args:
+            root: The root directory where the `.hashes.json` file is located.
+            relative: The relative path of the file to check.
+            new_text_hash: The new SHA-256 hash of the file content.
+
+        Returns:
+            bool: True if the file has changed, False otherwise.
+        """
+        previous_hash_file = root / ".hashes.json"
+        if previous_hash_file.exists():
+            import json
+            with previous_hash_file.open(encoding="utf-8") as f:
+                previous_hashes = json.load(f)
+            old_text_hash = previous_hashes.get(str(relative), None)
+            return old_text_hash != new_text_hash
+        return True
 
     @tenacity.retry(
         wait=wait_exponential(multiplier=2, min=2, max=60),
@@ -148,6 +214,11 @@ class Translator:
         """
         text = path.read_text(encoding="utf-8")
         relative = path.relative_to(root)
+        new_text_hash = self.create_hash_for_file(path)
+        if not self.has_file_changed(root, relative, new_text_hash):
+            print(f"Skipping {relative} as it has not changed.")
+            return
+        self.update_hash_file(root, relative, new_text_hash)
         for lang in languages:
             if lang == self.base_language:
                 translated = text
@@ -180,6 +251,7 @@ class Translator:
             tenacity.RetryError: If translation of any file fails after retries.
             OSError: If any file I/O operation fails during processing.
         """
+        self.initialize_hash_file(docs_src)
         tasks = []
         for md_file in docs_src.rglob("*.md"):
             tasks.append(self.process_file(md_file, docs_src, languages, model, out_dir))

@@ -1,8 +1,8 @@
 ---
-description: Erfahren Sie, wie Sie Python-Anwendungen mit OTOBO, Znuny und OTRS mithilfe
+description: Lernen Sie, wie Sie Python-Anwendungen mit OTOBO, Znuny und OTRS mithilfe
   einer asynchronen Client-Bibliothek integrieren. Diese Anleitung bietet schrittweise
   Anweisungen und Codebeispiele für die Verwaltung von Helpdesk-Tickets über die REST
-  API, einschließlich Erstellen, Suchen, Aktualisieren und Abrufen des Ticket-Verlaufs.
+  API, einschließlich Erstellen, Suchen, Aktualisieren und Abrufen des Ticketverlaufs.
 ---
 # OTOBO Znuny OTRS Integrationsanleitung
 
@@ -15,17 +15,17 @@ und einfache Bedienung.
 
 ### Funktionen
 
-* **Asynchrone** HTTP-Anfragen mit `httpx.AsyncClient`
-* **Pydantic**-Modelle zur Validierung von Anfrage- und Antwortdaten
-* Vollständige CRUD-Operationen für Tickets:
+*   **Asynchrone** HTTP-Anfragen mit `httpx.AsyncClient`
+*   **Pydantic**-Modelle zur Validierung von Anfrage- und Antwortdaten
+*   Vollständige CRUD-Operationen für Tickets:
 
-  * `TicketCreate`
-  * `TicketSearch`
-  * `TicketGet`
-  * `TicketUpdate`
-  * `TicketHistoryGet`
-* **Fehlerbehandlung** über `OTOBOError` für API-Fehler
-* Hilfsmethode `search_and_get` zur Kombination von Suchergebnissen mit detailliertem Abruf
+    *   `TicketCreate`
+    *   `TicketSearch`
+    *   `TicketGet`
+    *   `TicketUpdate`
+    *   `TicketHistoryGet`
+*   **Fehlerbehandlung** über `OTOBOError` für API-Fehler
+*   Hilfsmethode `search_and_get`, um Suchergebnisse mit detailliertem Abruf zu kombinieren
 
 ### Installation
 
@@ -44,7 +44,7 @@ Siehe Installationsanleitung.
 
 #### Einen neuen Agenten erstellen
 
-Erstellen Sie einen neuen Otobo-Agenten mit einem sicheren Passwort und geben Sie ihm die Berechtigungen, die für die zu erledigende Aufgabe erforderlich sind.
+Erstellen Sie einen neuen Otobo-Agenten mit einem sicheren Passwort und geben Sie ihm die Berechtigungen, die für die gewünschte Aufgabe erforderlich sind.
 
 
 #### 1. Den Client konfigurieren
@@ -132,7 +132,7 @@ update_params = TicketUpdateParams(
 await client.update_ticket(update_params)
 ```
 
-#### 6. Ticket-Verlauf abrufen
+#### 6. Ticketverlauf abrufen
 
 ```python
 from otobo import TicketHistoryParams

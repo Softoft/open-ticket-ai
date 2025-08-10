@@ -1,9 +1,5 @@
 ---
-description: Découvrez notre bibliothèque Python pour une intégration transparente des systèmes de tickets. Cette
-  documentation détaille le `TicketSystemAdapter`, une classe de base abstraite pour construire
-  des connecteurs personnalisés, et fournit un `OTOBOAdapter` prêt à l'emploi. Apprenez à
-  gérer les tickets sur différentes plateformes en utilisant des modèles unifiés comme `UnifiedTicket`, `UnifiedNote`,
-  et `SearchCriteria` pour créer, mettre à jour et rechercher des tickets de support.
+description: Découvrez notre bibliothèque Python pour une intégration transparente des systèmes de tickets. Cette documentation détaille le `TicketSystemAdapter`, une classe de base abstraite pour construire des connecteurs personnalisés, et fournit un `OTOBOAdapter` prêt à l'emploi. Apprenez à gérer les tickets sur différentes plateformes en utilisant des modèles unifiés comme `UnifiedTicket`, `UnifiedNote` et `SearchCriteria` pour créer, mettre à jour et rechercher des tickets de support.
 ---
 # Documentation pour `**/ce/ticket_system_integration/*.py`
 
@@ -32,7 +28,7 @@ interagir avec les services OTOBO.
 Une classe de base abstraite pour les adaptateurs de système de tickets.
 Cette classe définit l'interface que tous les adaptateurs de système de tickets concrets doivent
 implémenter pour interagir avec différents systèmes de billetterie. Elle fournit une gestion
-de configuration commune par injection de dépendances et exige que les sous-classes
+de configuration commune via l'injection de dépendances et exige que les sous-classes
 implémentent les opérations de base sur les tickets.
 
 **Paramètres :**
@@ -40,10 +36,10 @@ implémentent les opérations de base sur les tickets.
 - **`config`** (`SystemConfig`) - Objet de configuration système contenant les paramètres de l'adaptateur.
 
 
-::: details #### <Badge type="info" text="method"/> <span class='text-warning'>def</span> `__init__(self, config: SystemConfig)`
+::: details #### <Badge type="info" text="méthode"/> <span class='text-warning'>def</span> `__init__(self, config: SystemConfig)`
 Initialise l'adaptateur avec la configuration système.
 Ce constructeur est automatiquement injecté avec la configuration système
-en utilisant le framework d'injection de dépendances. Il initialise l'adaptateur
+à l'aide du framework d'injection de dépendances. Il initialise l'adaptateur
 avec la configuration fournie et assure la configuration correcte des
 composants hérités.
 
@@ -55,7 +51,7 @@ tous les réglages et paramètres nécessaires pour l'adaptateur.
 :::
 
 
-::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `update_ticket(self, ticket_id: str, updates: dict) -> bool`
+::: details #### <Badge type="info" text="méthode"/> <span class="text-warning">async def</span> `update_ticket(self, ticket_id: str, updates: dict) -> bool`
 Met à jour un ticket dans le système.
 Cette méthode doit être implémentée par les adaptateurs concrets pour gérer la mise à jour
 des attributs de ticket dans le système de billetterie cible. Elle doit prendre en charge les mises à jour
@@ -71,8 +67,8 @@ partielles et retourner la représentation du ticket mis à jour.
 :::
 
 
-::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `find_tickets(self, criteria: SearchCriteria) -> list[UnifiedTicket]`
-Recherche les tickets correspondant aux ``criteria``.
+::: details #### <Badge type="info" text="méthode"/> <span class="text-warning">async def</span> `find_tickets(self, criteria: SearchCriteria) -> list[UnifiedTicket]`
+Recherche les tickets correspondant à ``criteria``.
 Cette méthode doit être implémentée par les adaptateurs concrets pour effectuer
 des recherches complexes dans le système de billetterie cible. La structure de la
 requête est spécifique à l'adaptateur mais doit prendre en charge les opérations de filtrage
@@ -88,8 +84,8 @@ Retourne une liste vide si aucune correspondance n'est trouvée.
 :::
 
 
-::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `find_first_ticket(self, criteria: SearchCriteria) -> UnifiedTicket | None`
-Retourne le premier ticket qui correspond aux ``criteria``, s'il y en a.
+::: details #### <Badge type="info" text="méthode"/> <span class="text-warning">async def</span> `find_first_ticket(self, criteria: SearchCriteria) -> UnifiedTicket | None`
+Retourne le premier ticket qui correspond à ``criteria``, s'il y en a.
 Ceci est une méthode de commodité qui doit retourner le premier ticket correspondant
 d'une opération de recherche. Elle doit optimiser les performances
 en limitant les résultats en interne.
@@ -103,7 +99,7 @@ en limitant les résultats en interne.
 :::
 
 
-::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `create_ticket(self, ticket_data: UnifiedTicket) -> UnifiedTicket`
+::: details #### <Badge type="info" text="méthode"/> <span class="text-warning">async def</span> `create_ticket(self, ticket_data: UnifiedTicket) -> UnifiedTicket`
 Crée un nouveau ticket dans le système.
 Cette méthode doit être implémentée par les adaptateurs concrets pour gérer la création de tickets
 dans le système de billetterie cible. Les données du ticket sont fournies dans un format unifié.
@@ -118,7 +114,7 @@ format indépendant du système.
 :::
 
 
-::: details #### <Badge type="info" text="method"/> <span class="text-warning">async def</span> `add_note(self, ticket_id: str, note: UnifiedNote) -> UnifiedNote`
+::: details #### <Badge type="info" text="méthode"/> <span class="text-warning">async def</span> `add_note(self, ticket_id: str, note: UnifiedNote) -> UnifiedNote`
 Ajoute une note à un ticket existant.
 Cette méthode doit être implémentée par les adaptateurs concrets pour joindre des notes/commentaires
 aux tickets dans le système cible. Le contenu de la note est fourni dans un format unifié.
@@ -149,7 +145,7 @@ Entité de base avec ID et nom optionnels.
 
 ### <span style='text-info'>class</span> `UnifiedUser`
 
-Représente un utilisateur dans le système.
+Représente un utilisateur au sein du système.
 Hérite des attributs de `UnifiedEntity` et ajoute :
 
 **Paramètres :**
@@ -191,7 +187,7 @@ Représentation unifiée d'un ticket de support.
 
 - **`id`** (`str`) - Identifiant unique pour le ticket.
 - **`subject`** (`str`) - Ligne d'objet du ticket.
-- **`body`** (`str`) - Contenu/description principal du ticket.
+- **`body`** (`str`) - Contenu principal/description du ticket.
 - **`custom_fields`** (`Dict`) - Données de champs personnalisés supplémentaires associées au ticket.
 - **`queue`** (`UnifiedQueue`) - File d'attente à laquelle le ticket appartient.
 - **`priority`** (`UnifiedPriority`) - Niveau de priorité du ticket.

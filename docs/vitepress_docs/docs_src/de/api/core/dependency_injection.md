@@ -1,5 +1,5 @@
 ---
-description: API-Dokumentation für die Dependency Injection des Core-Moduls.
+description: Dependency Injection API-Dokumentation für das Core-Modul.
 pageClass: wide-page
 layout: page
 ---

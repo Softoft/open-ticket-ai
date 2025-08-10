@@ -2,6 +2,8 @@
 base = "docs/vitepress_docs"
 command = "npm run docs:build"
 publish = ".vitepress/dist"
+functions = "netlify/functions"
+
 
 [[redirects]]
 from = "/"
@@ -39,3 +41,8 @@ from = "/"
 to = "/en"
 status = 302
 force = true
+
+[[redirects]]
+  from = "/api/german_prediction/v1/classify"
+  to = "/.netlify/functions/classify"
+  status = 200
