@@ -8,10 +8,10 @@ Predict **Queue** and **Priority** for **German-language** support tickets with 
 This API is **free** to use and ideal for integrations with **OTOBO**, **Znuny**, **Zammad**, or custom helpdesks.
 
 > **Language Support:** Optimized for **German** texts (subject + body).
-English Model is in development, will be realeased soon.
----
+> English Model is in development, will be realeased soon.
 
 ## Try it out!
+
 <OTAIPredictionDemo/>
 
 ## 📍 Endpoint
@@ -21,10 +21,11 @@ English Model is in development, will be realeased soon.
 **Headers:** `Content-Type: application/json`
 
 ### Request body
+
 ```json
 {
-  "subject": "VPN Verbindungsproblem",
-  "body": "Kann nach dem Update keine Verbindung zum Unternehmens-VPN herstellen. Vor dem letzten Update funktionierte es einwandfrei."
+    "subject": "VPN Verbindungsproblem",
+    "body": "Kann nach dem Update keine Verbindung zum Unternehmens-VPN herstellen. Vor dem letzten Update funktionierte es einwandfrei."
 }
 ````
 
@@ -32,10 +33,10 @@ English Model is in development, will be realeased soon.
 
 ```json
 {
-  "queue": "IT & Technology/Network Infrastructure",
-  "queue_conf": 0.94,
-  "priority": "high",
-  "priority_conf": 0.88
+    "queue": "IT & Technology/Network Infrastructure",
+    "queue_conf": 0.94,
+    "priority": "high",
+    "priority_conf": 0.88
 }
 ```
 
@@ -60,12 +61,12 @@ curl -X POST "https://open-ticket-ai.com/api/german_prediction/v1/classify" \
 
 ```js
 const res = await fetch("https://open-ticket-ai.com/api/german_prediction/v1/classify", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    subject: "VPN Verbindungsproblem",
-    body: "Kann nach dem Update keine Verbindung zum Unternehmens-VPN herstellen. Vor dem letzten Update funktionierte es einwandfrei."
-  })
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+        subject: "VPN Verbindungsproblem",
+        body: "Kann nach dem Update keine Verbindung zum Unternehmens-VPN herstellen. Vor dem letzten Update funktionierte es einwandfrei."
+    })
 });
 const data = await res.json();
 console.log(data);
@@ -95,49 +96,52 @@ print(r.json())
 ## 🎯 Queues
 
 The API may return any of the following **queue labels**:
-
-* Pets & Animals/Pet Services
-* News
-* IT & Technology/Security Operations
-* Autos & Vehicles/Sales
-* Health/Medical Services
-* Home & Garden/Home Improvement
-* Pets & Animals/Veterinary Care
-* Health/Mental Health
-* Business & Industrial/Manufacturing
-* Online Communities/Forums
-* Shopping/E-commerce
-* Food & Drink/Groceries
-* Travel & Transportation/Land Travel
-* Jobs & Education/Online Courses
-* Finance/Investments
-* Law & Government/Government Services
-* Hobbies & Leisure/Collectibles
-* Online Communities/Social Networks
-* Books & Literature/Non-Fiction
-* Science/Environmental Science
-* Hobbies & Leisure/Crafts
-* Finance/Personal Finance
-* Science/Research
-* IT & Technology/Network Infrastructure
-* Games
-* Travel & Transportation/Air Travel
-* Beauty & Fitness/Cosmetics
-* Arts & Entertainment/Music
-* Food & Drink/Restaurants
-* Law & Government/Legal Advice
-* Autos & Vehicles/Maintenance
-* IT & Technology/Hardware Support
-* Jobs & Education/Recruitment
-* Books & Literature/Fiction
-* Beauty & Fitness/Fitness Training
-* Shopping/Retail Stores
-* People & Society/Culture & Society
-* Arts & Entertainment/Movies
-* IT & Technology/Software Development
-* Home & Garden/Landscaping
-* Sports
-* Real Estate
+<AccordionItem title="Full Queue List" open>
+    <ul>
+        <li>Arts &amp; Entertainment/Movies</li>
+        <li>Arts &amp; Entertainment/Music</li>
+        <li>Autos &amp; Vehicles/Maintenance</li>
+        <li>Autos &amp; Vehicles/Sales</li>
+        <li>Beauty &amp; Fitness/Cosmetics</li>
+        <li>Beauty &amp; Fitness/Fitness Training</li>
+        <li>Books &amp; Literature/Fiction</li>
+        <li>Books &amp; Literature/Non-Fiction</li>
+        <li>Business &amp; Industrial/Manufacturing</li>
+        <li>Finance/Investments</li>
+        <li>Finance/Personal Finance</li>
+        <li>Food &amp; Drink/Groceries</li>
+        <li>Food &amp; Drink/Restaurants</li>
+        <li>Games</li>
+        <li>Health/Medical Services</li>
+        <li>Health/Mental Health</li>
+        <li>Hobbies &amp; Leisure/Collectibles</li>
+        <li>Hobbies &amp; Leisure/Crafts</li>
+        <li>Home &amp; Garden/Home Improvement</li>
+        <li>Home &amp; Garden/Landscaping</li>
+        <li>IT &amp; Technology/Hardware Support</li>
+        <li>IT &amp; Technology/Network Infrastructure</li>
+        <li>IT &amp; Technology/Security Operations</li>
+        <li>IT &amp; Technology/Software Development</li>
+        <li>Jobs &amp; Education/Online Courses</li>
+        <li>Jobs &amp; Education/Recruitment</li>
+        <li>Law &amp; Government/Government Services</li>
+        <li>Law &amp; Government/Legal Advice</li>
+        <li>News</li>
+        <li>Online Communities/Forums</li>
+        <li>Online Communities/Social Networks</li>
+        <li>People &amp; Society/Culture &amp; Society</li>
+        <li>Pets &amp; Animals/Pet Services</li>
+        <li>Pets &amp; Animals/Veterinary Care</li>
+        <li>Real Estate</li>
+        <li>Science/Environmental Science</li>
+        <li>Science/Research</li>
+        <li>Shopping/E-commerce</li>
+        <li>Shopping/Retail Stores</li>
+        <li>Sports</li>
+        <li>Travel &amp; Transportation/Air Travel</li>
+        <li>Travel &amp; Transportation/Land Travel</li>
+    </ul>
+</AccordionItem>
 
 ---
 
@@ -146,7 +150,7 @@ The API may return any of the following **queue labels**:
 The API predicts one of the following **priority levels**:
 
 | Priority  | Numeric |
-| --------- | ------- |
+|-----------|---------|
 | very\_low | 0       |
 | low       | 1       |
 | medium    | 2       |

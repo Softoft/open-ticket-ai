@@ -1,10 +1,24 @@
-import {generateNavbar} from './navbarUtil.js'
 import {defineConfig} from "vitepress";
-import {generateMultiSidebar} from "./siedebarUtil";
+import {NavGenerator, NavGeneratorOptions} from "./util/navgen.ts";
 import {withMermaid} from "vitepress-plugin-mermaid";
 
 var __VUE_PROD_DEVTOOLS__ = false
 console.log(__VUE_PROD_DEVTOOLS__)
+
+const navGeneratorOptions: NavGeneratorOptions = {
+    rootPath: './docs_src',
+    allowedExtensions: ['.md'],
+    excludePatterns: [/^_/, /\/_/, /\/\./],
+    hideHiddenEntries: true,
+    includeIndexAsFolderLink: false,
+    includeEmptyDirectories: false,
+    stripExtensionsInLinks: true,
+    sidebarCollapsible: true,
+    sidebarCollapsed: true,
+    sortComparator: (a: string, b: string) => a.localeCompare(b, undefined, {numeric: true, sensitivity: 'base'})
+}
+
+const navGenerator = new NavGenerator(navGeneratorOptions);
 export default withMermaid(defineConfig({
 
     title: 'AI Ticket Classification',
@@ -34,6 +48,9 @@ export default withMermaid(defineConfig({
     sitemap: {
         hostname: 'https://open-ticket-ai.com',
     },
+    mermaid: {
+        securityLevel: 'loose', // needed for `click` links to work
+    },
     locales: {
         root: {
             label: 'English',
@@ -41,9 +58,9 @@ export default withMermaid(defineConfig({
             link: '/en/',
             themeConfig: {
                 nav: [
-                    ...generateNavbar('en'),
+                    ...navGenerator.generateNavbar('en'),
                 ],
-                sidebar: generateMultiSidebar("en")
+                sidebar: navGenerator.generateSidebar("en")
             }
         },
         de: {
@@ -52,9 +69,9 @@ export default withMermaid(defineConfig({
             link: '/de/',
             themeConfig: {
                 nav: [
-                    ...generateNavbar('de'),
+                    ...navGenerator.generateNavbar('de'),
                 ],
-                sidebar: generateMultiSidebar("de")
+                sidebar: navGenerator.generateSidebar("de")
             }
         },
         fr: {
@@ -63,9 +80,9 @@ export default withMermaid(defineConfig({
             link: '/fr/',
             themeConfig: {
                 nav: [
-                    ...generateNavbar('fr'),
+                    ...navGenerator.generateNavbar('fr'),
                 ],
-                sidebar: generateMultiSidebar("fr")
+                sidebar: navGenerator.generateSidebar("fr")
             }
         },
         es: {
@@ -74,9 +91,9 @@ export default withMermaid(defineConfig({
             link: '/es/',
             themeConfig: {
                 nav: [
-                    ...generateNavbar('es'),
+                    ...navGenerator.generateNavbar('es'),
                 ],
-                sidebar: generateMultiSidebar("es")
+                sidebar: navGenerator.generateSidebar("es")
             }
         }
 

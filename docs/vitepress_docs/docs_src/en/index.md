@@ -62,8 +62,9 @@ layout: home
 <OTAIPredictionDemo/>
 
 You can use the Model that powers this demo through our API:
-[German Ticket Classification API](prediction-api/overview.md).
+[German Ticket Classification API](products/prediction-api/overview.md).
 
+---
 <YoutubeVideo
     videoId="Kz5kWb8w5Bg"
     title="Open Ticket AI — The Open-Source Solution for Automated Ticket Classification"

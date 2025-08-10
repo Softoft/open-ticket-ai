@@ -1,8 +1,8 @@
 <template>
-    <h2 class="mb-4 w-full text-center text-vp-text">{{
+    <h2 class="mb-4 w-full text-center text-vp-text border-0 !border-t-0">{{
             t('otai_prediction_demo_component.title')
         }}</h2>
-    <section class="max-w-3xl mx-auto my-6 px-4">
+    <section class="max-w-3xl mx-auto my-6">
 
         <div class="mb-3">
             <SelectComponent

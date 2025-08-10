@@ -41,15 +41,15 @@
         @apply text-5xl font-semibold mb-6;
     }
 
-    ul {
+    .VPDoc .main ul {
         @apply list-disc list-inside mb-4 mt-1 space-y-2;
     }
 
-    ol {
+    .VPDoc .main ol {
         @apply list-decimal list-inside mb-4 mt-1 space-y-2;
     }
 
-    li {
+    .VPDoc .main li {
         @apply ml-4;
     }
 

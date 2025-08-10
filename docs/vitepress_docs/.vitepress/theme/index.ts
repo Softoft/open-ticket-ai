@@ -19,6 +19,7 @@ import Callout from '../components/core/Callout.vue'
 import Tabs from '../components/core/Tabs.vue'
 import FeatureGrid from '../components/core/FeatureGrid.vue'
 import Accordion from '../components/core/Accordion.vue'
+import AccordionItem from '../components/core/AccordionItem.vue'
 import './styles/index.scss'
 
 import {createI18n, useI18n} from 'vue-i18n'
@@ -55,6 +56,7 @@ export default {
         app.component('AppTabs', Tabs)
         app.component('FeatureGrid', FeatureGrid)
         app.component('Accordion', Accordion)
+        app.component('AccordionItem', AccordionItem)
         app.component('AIClassificationAnimation', AIClassificationAnimation)
         app.component('ContactForm', ContactForm)
         app.component('YoutubeVideo', YoutubeVideo)

@@ -4,7 +4,48 @@ command = "npm run docs:build"
 publish = ".vitepress/dist"
 functions = "netlify/functions"
 
+# --- API function (keep above catch-alls) ---
+[[redirects]]
+from = "/api/german_prediction/v1/classify"
+to = "/.netlify/functions/classify"
+status = 200
 
+# --- Passthrough for already-localized routes (avoid loops) ---
+[[redirects]]
+from = "/de"
+to = "/de"
+status = 200
+[[redirects]]
+from = "/en"
+to = "/en"
+status = 200
+[[redirects]]
+from = "/fr"
+to = "/fr"
+status = 200
+[[redirects]]
+from = "/es"
+to = "/es"
+status = 200
+
+[[redirects]]
+from = "/de/*"
+to = "/de/:splat"
+status = 200
+[[redirects]]
+from = "/en/*"
+to = "/en/:splat"
+status = 200
+[[redirects]]
+from = "/fr/*"
+to = "/fr/:splat"
+status = 200
+[[redirects]]
+from = "/es/*"
+to = "/es/:splat"
+status = 200
+
+# --- Root language redirects ---
 [[redirects]]
 from = "/"
 to = "/de"
@@ -12,7 +53,6 @@ status = 302
 force = true
 conditions = { Language = ["de"] }
 
-# Redirect English language users to the /en subdirectory
 [[redirects]]
 from = "/"
 to = "/en"
@@ -20,7 +60,6 @@ status = 302
 force = true
 conditions = { Language = ["en"] }
 
-# Redirect French language users to the /fr subdirectory
 [[redirects]]
 from = "/"
 to = "/fr"
@@ -28,21 +67,52 @@ status = 302
 force = true
 conditions = { Language = ["fr"] }
 
-# Redirect Spanish language users to the /es subdirectory
 [[redirects]]
 from = "/"
 to = "/es"
 status = 302
 force = true
 conditions = { Language = ["es"] }
-# Fallback redirect for all other languages to the /en subdirectory
+
+# Fallback for other languages -> English
 [[redirects]]
 from = "/"
 to = "/en"
 status = 302
 force = true
 
+# --- Catch-all: any non-prefixed path -> language-prefixed path ---
 [[redirects]]
-  from = "/api/german_prediction/v1/classify"
-  to = "/.netlify/functions/classify"
-  status = 200
+from = "/*"
+to = "/de/:splat"
+status = 302
+force = true
+conditions = { Language = ["de"] }
+
+[[redirects]]
+from = "/*"
+to = "/en/:splat"
+status = 302
+force = true
+conditions = { Language = ["en"] }
+
+[[redirects]]
+from = "/*"
+to = "/fr/:splat"
+status = 302
+force = true
+conditions = { Language = ["fr"] }
+
+[[redirects]]
+from = "/*"
+to = "/es/:splat"
+status = 302
+force = true
+conditions = { Language = ["es"] }
+
+# Fallback catch-all -> English
+[[redirects]]
+from = "/*"
+to = "/en/:splat"
+status = 302
+force = true
