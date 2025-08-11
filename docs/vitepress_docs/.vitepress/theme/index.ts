@@ -12,14 +12,13 @@ import OTAIPredictionDemo from '../components/predictionDemo/OTAIPredictionDemo.
 import ServicePackages from '../components/product/ServicePackages.vue'
 import SupportPlans from '../components/product/SupportPlans.vue'
 import CodeDocumentation from '../components/autoDocs/CodeDocumentation.vue'
-import Button from '../components/core/Button.vue'
-import Card from '../components/core/Card.vue'
-import Badge from '../components/core/Badge.vue'
-import Callout from '../components/core/Callout.vue'
-import Tabs from '../components/core/Tabs.vue'
-import FeatureGrid from '../components/core/FeatureGrid.vue'
-import Accordion from '../components/core/Accordion.vue'
-import AccordionItem from '../components/core/AccordionItem.vue'
+import Tabs from '../components/core/basic/Tabs.vue'
+import FeatureGrid from '../components/core/basic/FeatureGrid.vue'
+import Accordion from '../components/core/accordion/Accordion.vue'
+import AccordionItem from '../components/core/accordion/AccordionItem.vue'
+import Table from '../components/core/table/Table.vue'
+import Row from '../components/core/table/Row.vue'
+import C from '../components/core/table/C.vue'
 import './styles/index.scss'
 
 import {createI18n, useI18n} from 'vue-i18n'
@@ -49,11 +48,10 @@ export default {
         app.component('SupportPlans', SupportPlans)
         app.component('SyntheticDataPackages', SyntheticDataPackages)
         app.component('CodeDocumentation', CodeDocumentation)
-        app.component('AppButton', Button)
-        app.component('AppCard', Card)
-        app.component('AppBadge', Badge)
-        app.component('AppCallout', Callout)
         app.component('AppTabs', Tabs)
+        app.component('Table', Table)
+        app.component('Row', Row)
+        app.component('C', C)
         app.component('FeatureGrid', FeatureGrid)
         app.component('Accordion', Accordion)
         app.component('AccordionItem', AccordionItem)
@@ -62,15 +60,6 @@ export default {
         app.component('YoutubeVideo', YoutubeVideo)
     },
     setup() {
-        const {isDark} = useData()
-
-        const updateHtmlTheme = () => {
-            if (isDark.value) {
-                document.documentElement.setAttribute('data-bs-theme', 'dark')
-            } else {
-                document.documentElement.removeAttribute('data-bs-theme')
-            }
-        }
         const {lang} = useData()
         const {locale} = useI18n()
 
@@ -78,16 +67,6 @@ export default {
             locale.value = newLang
         }, {immediate: true})
 
-
-        onMounted(() => {
-            updateHtmlTheme()
-        })
-
-        watch(isDark, () => {
-            nextTick(() => {
-                updateHtmlTheme()
-            })
-        })
     }
 
 } satisfies Theme

@@ -51,8 +51,8 @@
 
 <script lang="ts" setup>
 import {computed} from 'vue'
-import Card from '../core/Card.vue'
-import AccordionItem from '../core/AccordionItem.vue'
+import Card from '../core/basic/Card.vue'
+import AccordionItem from '../core/accordion/AccordionItem.vue'
 import type {Feature, Product} from './product.types'
 
 const props = defineProps<{ product: Product }>()

@@ -163,5 +163,5 @@ enterprise-level automation and intelligence without the SaaS price tag or loss 
 workflow, empower your team, and maintain complete sovereignty over your data.
 
 Ready to transform your support workflow?
-Visit [Open Ticket AI Demo](https://open-ticket-ai.com) to see a demo and bridge your
+Visit [Open Ticket AI Demo](../index.md) to see a demo and bridge your
 intelligence gap.

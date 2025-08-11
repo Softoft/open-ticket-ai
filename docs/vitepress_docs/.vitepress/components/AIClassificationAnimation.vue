@@ -5,7 +5,7 @@
             <h3 class="text-2xl font-bold mb-5 border-none p-0">
                 {{ t('otai_animation.title') }}
             </h3>
-            <div class="border p-4 md:p-5 rounded-lg dark:border-gray-500 border-gray-700">
+            <div class="border p-4 md:p-5 rounded-lg border-gray-700">
                 <div class="text-center mb-3">
                     <button
 
@@ -72,7 +72,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, onMounted, ref, useTemplateRef, watch, watchEffect} from 'vue'
+import {computed, ref, useTemplateRef, watch, watchEffect} from 'vue'
 import * as d3 from 'd3'
 import {useWindowSize} from '../composables/useWindowSize'
 import {useI18n} from 'vue-i18n'
@@ -103,7 +103,7 @@ const numberQueues = computed(() => {
 const size = computed(() => {
     return {
         w: Math.min(windowWidth.value * 0.8, widthBreakpointMd),
-        h: Math.min(windowHeight.value * 0.5, 600)
+        h: Math.min(windowHeight.value * 0.4, 600)
     }
 })
 
@@ -141,12 +141,6 @@ const queues = computed(() => {
     return windowWidth.value < widthBreakpointMd ? allQueues.slice(0, numberQueues.value) : allQueues
 })
 /* ── colour themes ──────────────────────────────── */
-const light = {
-    stroke: '#444',
-    text: '#212121',
-    alpha: 0.20,
-    palette: {}
-}
 const dark = {
     stroke: '#9ca3af',
     text: '#e6e6e6',
@@ -154,18 +148,9 @@ const dark = {
     palette: {}
 }
 allQueues.forEach(q => {
-    light.palette[q.id] = q.color.light
     dark.palette[q.id] = q.color.dark
 })
-const theme = ref(light)
-
-function detectTheme() {
-    theme.value = document.documentElement.classList.contains('dark') ? dark : light
-}
-
-
-new MutationObserver(detectTheme)
-    .observe(document.documentElement, {attributes: true, attributeFilter: ['class']})
+const theme = ref(dark)
 
 /* ── node positions (top-down) ───────────────────── */
 const coreNodes = computed(() => [
@@ -306,9 +291,6 @@ function handleClick() {
 }
 
 
-onMounted(() => {
-    detectTheme()
-});
 watch(targetIsVisible, (isVisible) => {
     if (isVisible) {
         launchEmail(queues.value[Math.random() * queues.value.length | 0].id)

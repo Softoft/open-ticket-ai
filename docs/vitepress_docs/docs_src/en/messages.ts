@@ -16,6 +16,7 @@ export default {
         confidenceColumnHeader: 'Confidence',
         queueRowHeader: 'Queue',
         priorityRowHeader: 'Priority',
+        apiText: 'You can use the Model that powers this demo through our API'
     },
     otai_animation: {
         startAnimationText: 'Send Email',
@@ -81,4 +82,11 @@ export default {
             guaranteedResponse: 'Guaranteed Response Time: Within 1 Business Day',
         },
     },
+    otai_contact_form: {
+        title: 'Contact',
+        email_label: 'Your email',
+        message_label: 'Your message',
+        submit_text: 'Send',
+        email_us_text: 'or Email us at',
+    }
 }

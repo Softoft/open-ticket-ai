@@ -9,41 +9,16 @@ functions = "netlify/functions"
 from = "/api/german_prediction/v1/classify"
 to = "/.netlify/functions/classify"
 status = 200
-
-# --- Passthrough for already-localized routes (avoid loops) ---
 [[redirects]]
-from = "/de"
-to = "/de"
-status = 200
-[[redirects]]
-from = "/en"
-to = "/en"
-status = 200
-[[redirects]]
-from = "/fr"
-to = "/fr"
-status = 200
-[[redirects]]
-from = "/es"
-to = "/es"
+from = "/*.*"
+to = "/:splat"
 status = 200
 
 [[redirects]]
-from = "/de/*"
-to = "/de/:splat"
+from = "/assets/*"
+to = "/assets/:splat"
 status = 200
-[[redirects]]
-from = "/en/*"
-to = "/en/:splat"
-status = 200
-[[redirects]]
-from = "/fr/*"
-to = "/fr/:splat"
-status = 200
-[[redirects]]
-from = "/es/*"
-to = "/es/:splat"
-status = 200
+
 
 # --- Root language redirects ---
 [[redirects]]

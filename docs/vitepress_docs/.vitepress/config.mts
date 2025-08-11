@@ -21,7 +21,7 @@ const navGeneratorOptions: NavGeneratorOptions = {
 const navGenerator = new NavGenerator(navGeneratorOptions);
 export default withMermaid(defineConfig({
 
-    title: 'AI Ticket Classification',
+    title: 'Open Ticket AI',
     srcDir: './docs_src',
     appearance: 'force-dark',
     head: [
@@ -41,8 +41,15 @@ export default withMermaid(defineConfig({
                 crossorigin: 'anonymous'
             }
         ],
+        ['script', {async: '', src: 'https://www.googletagmanager.com/gtag/js?id=G-FBWC3JDZJ4'}],
+        ['script', {}, `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments)}
+      gtag('js', new Date());
+      gtag('config', 'G-FBWC3JDZJ4', { send_page_view: false });
+    `]
     ],
-    description: '',
+    description: 'Open Ticket AI is an open-source, on-premise solution that auto-classifies support tickets by queue and priority—integrates with OTOBO, Znuny, and OTRS.',
     lastUpdated: true,
     cleanUrls: true,
     sitemap: {

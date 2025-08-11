@@ -59,10 +59,7 @@ layout: home
 <AIClassificationAnimation/>
 
 
-<OTAIPredictionDemo/>
-
-You can use the Model that powers this demo through our API:
-[German Ticket Classification API](products/prediction-api/overview.md).
+<OTAIPredictionDemo api-link="products/prediction-api/overview"/>
 
 ---
 <YoutubeVideo
@@ -73,8 +70,6 @@ You can use the Model that powers this demo through our API:
 
 <SyntheticDataPackages/>
 <SupportPlans/>
-
-## Contact
 
 <ContactForm/>
 

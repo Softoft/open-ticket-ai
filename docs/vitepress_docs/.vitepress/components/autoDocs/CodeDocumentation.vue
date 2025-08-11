@@ -85,9 +85,9 @@ import {computed} from 'vue'
 import {useApiDocs} from '../../composables/useApiDocs'
 import FunctionDoc from './FunctionDoc.vue'
 import Docstring from './Docstring.vue'
-import Badge from '../core/Badge.vue'
-import Card from '../core/Card.vue'
-import Accordion from '../core/Accordion.vue'
+import Badge from '../core/basic/Badge.vue'
+import Card from '../core/basic/Card.vue'
+import Accordion from '../core/accordion/Accordion.vue'
 import CodeDocumentation from './CodeDocumentation.vue'
 
 interface Props {
