@@ -5,63 +5,63 @@
             <h3 class="text-2xl font-bold mb-5 border-none p-0">
                 {{ t('otai_animation.title') }}
             </h3>
-            <div class="border p-4 md:p-5 rounded-lg border-gray-700">
-                <svg ref="svgEl" :viewBox="`0 0 ${size.w} ${size.h}`" class="router-svg">
-                    <g v-for="node in nodes" :key="node.id">
-                        <rect
-                            :id="node.id==='inbox' ? 'inbox-box'
+            <svg ref="svgEl" :viewBox="`0 0 ${size.w} ${size.h}`" class="router-svg border rounded-lg border-gray-800">
+                <g v-for="node in nodes" :key="node.id">
+                    <rect
+                        :id="node.id==='inbox' ? 'inbox-box'
                                 : node.id==='ai'    ? 'ai-box'
-                                : null"
-                            :fill="node.fill.value"
-                            :fill-opacity="node.alpha.value"
-                            :height="nodeH"
-                            :stroke="theme.stroke"
-                            :width="nodeW"
-                            :x="node.x.value - nodeW / 2"
-                            :y="node.y.value - nodeH / 2"
-                            :class="node.class"
-                            @click="node.onClick ? node.onClick() : null"
-                            rx="6"
-                        />
-                        <text
-                            :fill="theme.text"
-                            :font-size="Math.round(Math.min(26, Math.max(12, nodeH * 0.25)))"
-                            :x="node.x.value"
-                            :y="node.y.value + 5"
-                            style="user-select:none"
-                            text-anchor="middle"
-                        >
-                            {{ node.label.value }}
-                        </text>
-                    </g>
-
-                    <path
-                        id="inbox-ai"
-                        :d="quad(mailPos, nodesMap.ai, -40)"
-                        fill="none"
-                        stroke="transparent"
+                                : node.id"
+                        :class="node.class"
+                        :fill="node.fill.value"
+                        :fill-opacity="node.alpha.value"
+                        :height="nodeH"
+                        :stroke="theme.stroke"
+                        :width="nodeW"
+                        :x="node.x.value - nodeW / 2"
+                        :y="node.y.value - nodeH / 2"
+                        rx="6"
+                        @click="node.onClick ? node.onClick() : null"
                     />
-                    <path
-                        v-for="e in outEdges"
-                        :id="e.id"
-                        :key="e.id"
-                        :d="e.d"
-                        fill="none"
-                        stroke="transparent"
-                    />
+                    <text
+                        :class="node.labelClass"
+                        :fill="theme.text"
+                        :font-size="Math.round(Math.min(26, Math.max(12, nodeH * 0.25)))"
+                        :x="node.x.value"
+                        :y="node.y.value + 5"
+                        style="user-select:none"
+                        text-anchor="middle"
+                        @click="node.onClick ? node.onClick() : null"
+                    >
+                        {{ node.label.value }}
+                    </text>
+                </g>
 
-                    <!-- ③ Dynamic layers -->
-                    <g id="envelopes"/> <!-- flying mail icon -->
-                    <g id="tickets"/> <!-- coloured ticket dots -->
-                </svg>
-            </div>
+                <path
+                    id="inbox-ai"
+                    :d="quad(mailPos, nodesMap.ai, -40)"
+                    fill="none"
+                    stroke="transparent"
+                />
+                <path
+                    v-for="e in outEdges"
+                    :id="e.id"
+                    :key="e.id"
+                    :d="e.d"
+                    fill="none"
+                    stroke="transparent"
+                />
+
+                <!-- ③ Dynamic layers -->
+                <g id="envelopes"/> <!-- flying mail icon -->
+                <g id="tickets"/> <!-- coloured ticket dots -->
+            </svg>
         </div>
     </ClientOnly>
     <div ref="el" class="w-100 h-2"></div>
 </template>
 
 <script lang="ts" setup>
-import {computed, ComputedRef, ref, useTemplateRef, watch, Ref} from 'vue'
+import {computed, ComputedRef, ref, Ref, useTemplateRef, watch} from 'vue'
 import * as d3 from 'd3'
 import {useI18n} from 'vue-i18n'
 import {breakpointsBootstrapV5, useBreakpoints, useElementVisibility, useWindowSize} from '@vueuse/core'
@@ -75,10 +75,10 @@ const breakpoints = useBreakpoints(breakpointsBootstrapV5)
 const {t} = useI18n()
 const busy = ref(false)
 /* ── canvas & layout ────────────────────────────── */
-const smallNodeWidthFactor = 0.8; // for small screens
-const largeNodeWidthFactor = 0.7; // for medium screens
+const smallNodeWidthFactor = 0.7; // for small screens
+const largeNodeWidthFactor = 0.65; // for medium screens
 const extraLargeNodeWidthFactor = 0.6; // for large screens
-
+const padding = 10;
 const standardSize = {
     w: 1200,
     h: 400
@@ -113,6 +113,17 @@ const nodeW = computed(() => {
 const nodeH = computed(() => {
     return nodeW.value * 0.4
 })
+
+
+const dotScale: ComputedRef<number> = computed(() => {
+    return Math.max(size.value.w / standardSize.w, 1)
+})
+
+
+const envelopeScale: ComputedRef<number> = computed(() => {
+    return Math.max(size.value.w / standardSize.w, 1)
+})
+
 const svgEl = ref(null)
 type Position = {
     x: Ref<number>,
@@ -159,11 +170,11 @@ const theme = {
 
 /* ── node positions (top-down) ───────────────────── */
 const coreNodes: ComputedRef<Node[]> = computed(() => [
-        {
+    {
         id: 'button',
         label: computed(() => busy.value ? t('otai_animation.processingText') : t('otai_animation.startAnimationText')),
         x: ref(0.5 * size.value.w),
-        y: ref(size.value.h * 0.1),
+        y: ref(nodeH.value / 2 + padding),
         fill: ref('#535bf2'),
         alpha: ref(theme.defaultNodeAlpha),
         class: 'fill-blue-600 cursor-pointer hover:opacity-80',
@@ -174,7 +185,7 @@ const coreNodes: ComputedRef<Node[]> = computed(() => [
         id: 'ai',
         label: ref('Open Ticket AI'),
         x: ref(0.5 * size.value.w),
-        y: ref(size.value.h * 0.30),
+        y: ref(size.value.h * 0.50),
         fill: ref('#535bf2'),
         alpha: ref(theme.defaultNodeAlpha),
         class: '',
@@ -186,14 +197,14 @@ const coreNodes: ComputedRef<Node[]> = computed(() => [
 /* 2) alle Nodes als computed  – reagiert automatisch auf breakpoints */
 const nodes = computed(() => {
     const between = 1 / (queues.value.length - 1 || 1)
-    const maxWidth = size.value.w - nodeW.value
+    const maxWidth = size.value.w - nodeW.value - padding * 2
     const queueNodes = queues.value.map((q, i) => ({
         id: q.id,
         label: ref(q.label),
         fill: ref(q.fill),
         alpha: ref(theme.defaultNodeAlpha),
-        x: ref(maxWidth * i * between + (nodeW.value * 0.5)),
-        y: ref(size.value.h - nodeH.value * 0.5 - 20),
+        x: ref(maxWidth * i * between + (nodeW.value * 0.5) + padding),
+        y: ref(size.value.h - nodeH.value * 0.5 - padding),
         class: 'hover:opacity-80 queue-node',
         labelClass: '',
         onClick: null
@@ -242,7 +253,8 @@ function createEnvelope() {
 
     /* g wrapper so rect & flap move together */
     const envelope = envelopeLayer.append('g')
-        .attr('transform', `translate(${mailPos.value.x},${mailPos.value.y}) scale(1.2)`)
+        .attr('transform', `translate(${mailPos.value.x},${mailPos.value.y})`)
+
 
     /* envelope body */
     envelope.append('rect')
@@ -259,6 +271,11 @@ function createEnvelope() {
         .attr('fill', 'none')
         .attr('stroke', theme.stroke)
         .attr('stroke-width', 2)
+
+    envelope.selectAll('rect, polyline')
+        .attr('transform', `scale(${envelopeScale.value})`)
+        .attr('stroke-linecap', 'round')
+        .attr('stroke-linejoin', 'round')
     return envelope
 }
 
@@ -266,27 +283,33 @@ function createEnvelope() {
 function launchEmail(dest: Node) {
     if (busy.value) return
     busy.value = true
-    const envelope = createEnvelope()
-    const mailInPath = d3.select('#inbox-ai').node()
 
-    envelope.transition()
-        .duration(1000)
-        .ease(d3.easeCubicOut)
-        .attrTween('transform', () => alongPath(mailInPath, 1.2))
+    const mailInPath = d3.select('#inbox-ai').node()
+    d3.select('#button')
+        .transition().duration(160).attr('stroke-width', 6)
+        .transition().duration(160).attr('stroke-width', 1)
         .on('end', () => {
-            d3.select('#ai-box')
-                .transition().duration(160).attr('stroke-width', 6)
-                .transition().duration(160).attr('stroke-width', 1)
-            envelope.remove()
-            launchTicket(dest)
+            const envelope = createEnvelope()
+            envelope.transition()
+                .duration(1000)
+                .ease(d3.easeCubicOut)
+                .attrTween('transform', () => alongPath(mailInPath, 1.2))
+                .on('end', () => {
+                    d3.select('#ai-box')
+                        .transition().duration(160).attr('stroke-width', 6)
+                        .transition().duration(160).attr('stroke-width', 1)
+                    envelope.remove()
+                    launchTicket(dest)
+                })
         })
+
 }
 
 function launchTicket(dest: Node) {
     const g = d3.select(svgEl.value).select('#tickets')
     const aiToQueue = d3.select(`#ai-${dest.id}`).node()
     const dot = g.append('circle')
-        .attr('r', 7)
+        .attr('r', 7 * dotScale.value)
         .attr('fill', '#9ca3af')
 
 
@@ -299,6 +322,9 @@ function launchTicket(dest: Node) {
         .ease(d3.easeCubicInOut)
         .attrTween('transform', () => alongPath(aiToQueue))
         .on('end', () => {
+            d3.select(`#${dest.id}`)
+                .transition().duration(160).attr('stroke-width', 6)
+                .transition().duration(160).attr('stroke-width', 1)
             busy.value = false
         })
         .remove()
@@ -306,7 +332,7 @@ function launchTicket(dest: Node) {
 
 }
 
-function getRandomQueueNode(){
+function getRandomQueueNode() {
     const queueNodes = nodes.value.filter(n => n.class.includes('queue-node'))
     return queueNodes[Math.random() * queueNodes.length | 0]
 }

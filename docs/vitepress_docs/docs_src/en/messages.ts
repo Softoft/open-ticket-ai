@@ -24,7 +24,7 @@ export default {
         title: 'OTAI Animation',
     },
     servicePackages: {
-        title: 'Support Packages',
+        title: 'Services',
         buttonText: 'Choose Plan',
         essential: {
             name: 'Essential Launch',
@@ -52,7 +52,7 @@ export default {
         }
     },
     supportPlans: {
-        title: 'Services',
+        title: 'Support Packages',
         buttonText: 'Choose Plan',
         pricePeriod: 'month',
         basic: {

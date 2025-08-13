@@ -71,8 +71,10 @@
     .content-container {
         @apply w-full !max-w-screen-lg;
     }
-    .VPHome .container {
-        @apply w-full !max-w-screen-xl;
+    @media (min-width: 1024px) {
+        .content-container {
+            @apply w-full !max-w-screen-xl !p-0;
+        }
     }
 
     /* ------------------------------------------------------- */

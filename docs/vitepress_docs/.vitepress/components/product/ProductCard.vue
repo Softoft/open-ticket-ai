@@ -4,7 +4,7 @@
         class="group flex flex-col h-full bg-gray-900 border border-gray-700 rounded-xl overflow-hidden transition duration-200 hover:shadow-xl hover:scale-[1.02]">
         <template #header>
             <div class="text-center px-4 min-h-32">
-                <h3 class="!text-3xl font-semibold text-white">{{ product.name }}</h3>
+                <h3 class="!text-xl font-semibold text-white">{{ product.name }}</h3>
                 <div class="mt-2">
                     <span class="text-2xl font-bold text-white">{{ formattedPrice }}€</span>
                     <span v-if="product.pricePeriod" class="text-sm text-gray-400">/ {{ product.pricePeriod }}</span>

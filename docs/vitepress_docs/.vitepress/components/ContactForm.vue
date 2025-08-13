@@ -1,6 +1,6 @@
 <!-- components/ContactForm.vue -->
 <template>
-    <div class="w-100 pt-1 pb-10 px-14 bg-gray-900 rounded-lg">
+    <div class="w-100 pt-1 pb-5 lg:pb-10 px-5 lg:px-14 bg-gray-900 rounded-lg">
         <h2 class="!mt-1 !mb-6 w-full text-center text-vp-text border-0 !border-t-0">{{
                 $t('otai_contact_form.title')
             }}</h2>

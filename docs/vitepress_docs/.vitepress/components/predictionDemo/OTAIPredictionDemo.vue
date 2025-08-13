@@ -1,6 +1,6 @@
 <template>
 
-    <section class="w-100 pt-1 pb-10 px-14 bg-gray-900 rounded-lg">
+    <section class="w-100 pt-1 pb-5 lg:pb-10 px-5 lg:px-14 bg-gray-900 rounded-lg">
         <h2 class="!mt-1 !mb-6 w-full text-center text-vp-text border-0 !border-t-0">{{
                 t('otai_prediction_demo_component.title')
             }}</h2>
@@ -135,7 +135,7 @@ const queueResult = ref<any>(null)
 const prioResult = ref<any>(null)
 
 // select logic
-const selected = ref(exampleOptions[0].value)
+const selected = ref('')
 
 function applyExample() {
     const selectedOption = exampleOptions.find(opt => opt.value === selected.value)

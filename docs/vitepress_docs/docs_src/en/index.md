@@ -39,10 +39,10 @@ features:
         title: Highly Customizable
 hero:
     actions:
-        -   link: /get-started
+        -   link: /products/overview
             text: Get Started
             theme: brand
-        -   link: /concepts/community-edition-overview
+        -   link: /products/overview
             text: Feature Overview
             theme: alt
     image:
@@ -61,7 +61,7 @@ layout: home
 
 <OTAIPredictionDemo api-link="products/prediction-api/overview"/>
 
----
+## Explanation Video
 <YoutubeVideo
     videoId="Kz5kWb8w5Bg"
     title="Open Ticket AI — The Open-Source Solution for Automated Ticket Classification"
