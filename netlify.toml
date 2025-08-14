@@ -9,6 +9,7 @@ functions = "netlify/functions"
 from = "/api/german_prediction/v1/classify"
 to = "/.netlify/functions/classify"
 status = 200
+
 [[redirects]]
 from = "/*.*"
 to = "/:splat"
@@ -19,6 +20,9 @@ from = "/assets/*"
 to = "/assets/:splat"
 status = 200
 
+[[redirects]]
+from = "/sitemap.xml"
+to = "/sitemap.xml"
 
 # --- Root language redirects ---
 [[redirects]]
@@ -61,28 +65,24 @@ force = true
 from = "/*"
 to = "/de/:splat"
 status = 302
-force = true
 conditions = { Language = ["de"] }
 
 [[redirects]]
 from = "/*"
 to = "/en/:splat"
 status = 302
-force = true
 conditions = { Language = ["en"] }
 
 [[redirects]]
 from = "/*"
 to = "/fr/:splat"
 status = 302
-force = true
 conditions = { Language = ["fr"] }
 
 [[redirects]]
 from = "/*"
 to = "/es/:splat"
 status = 302
-force = true
 conditions = { Language = ["es"] }
 
 # Fallback catch-all -> English
@@ -90,4 +90,3 @@ conditions = { Language = ["es"] }
 from = "/*"
 to = "/en/:splat"
 status = 302
-force = true

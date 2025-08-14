@@ -1,4 +1,4 @@
-import AIClassificationAnimation from "../components/AIClassificationAnimation.vue";
+import AIClassificationAnimation from "../components/animation/AIClassificationAnimation.vue";
 import YoutubeVideo from '../components/YoutubeVideo.vue'
 
 var __VUE_PROD_DEVTOOLS__ = false
