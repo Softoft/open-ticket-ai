@@ -11,6 +11,22 @@ to = "/.netlify/functions/classify"
 status = 200
 
 [[redirects]]
+  from = "https://ticket-classification.softoft.de/*"
+  to = "https://open-ticket-ai.com/:splat"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/assets/*.js"
+  [headers.values]
+  Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/*.css"
+  [headers.values]
+  Cache-Control = "public, max-age=31536000, immutable"
+
+[[redirects]]
 from = "/*.*"
 to = "/:splat"
 status = 200
@@ -61,32 +77,8 @@ status = 302
 force = true
 
 # --- Catch-all: any non-prefixed path -> language-prefixed path ---
-[[redirects]]
-from = "/*"
-to = "/de/:splat"
-status = 302
-conditions = { Language = ["de"] }
 
 [[redirects]]
 from = "/*"
 to = "/en/:splat"
-status = 302
-conditions = { Language = ["en"] }
-
-[[redirects]]
-from = "/*"
-to = "/fr/:splat"
-status = 302
-conditions = { Language = ["fr"] }
-
-[[redirects]]
-from = "/*"
-to = "/es/:splat"
-status = 302
-conditions = { Language = ["es"] }
-
-# Fallback catch-all -> English
-[[redirects]]
-from = "/*"
-to = "/en/:splat"
-status = 302
+status = 301
